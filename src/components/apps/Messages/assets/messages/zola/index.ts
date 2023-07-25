@@ -1,23 +1,14 @@
 import {ConversationType} from '../../../context/types';
 import zolaAvatar from '@apps/Messages/assets/avatars/Zara.jpg';
 
-//import panopticon from '@apps/Messages/assets/messages/pantopitcon.jpeg';
-import panopticon from '@apps/Messages/assets/messages/zola/pantopitcon.jpeg';
-
 import {
   CONTACT_NAMES,
   getColorFromContacts,
 } from '../../../context/usersMapping';
-import {advertisementExchange} from './advertisment';
-import {skincare} from './skincare';
-import {first_message_to_zara} from './routes/first_message_to_zara';
-import {DigestedItemTypes} from 'components/apps/Messages/reducers/conversationReducer/digestion/types';
-import {nothing_found} from './routes/nothing_found';
-import {why_is_the_contact_zola} from './routes/why_is_the_contact_zola';
-import {why_are_you_in_his_apartment} from './routes/why_are_you_in_his_apartment';
-import {can_you_please_help_me} from './routes/can_you_please_help_me';
 import {how_is_the_phone_coming} from './routes/how_is_the_new_phone';
 import {borked_phone} from './routes/borked_phone';
+import {your_new_video} from './routes/hows_the_new_video';
+import {i_dont_know_what_to_do_with_myself} from './routes/I_really_dont_know_what_to_do_with_myself';
 
 export const zola: ConversationType = {
   name: CONTACT_NAMES.ZOLA,
@@ -25,6 +16,6 @@ export const zola: ConversationType = {
   heroImage: zolaAvatar,
   interfaceColor: getColorFromContacts(CONTACT_NAMES.ZOLA)[0],
   eventBasedRoutes: [how_is_the_phone_coming],
-  routes: [borked_phone],
+  routes: [borked_phone, your_new_video, i_dont_know_what_to_do_with_myself],
   exchanges: [],
 };

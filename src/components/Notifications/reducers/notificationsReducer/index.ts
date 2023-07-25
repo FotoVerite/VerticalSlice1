@@ -15,7 +15,7 @@ const notificationReducer = (
       const notification = Object.assign(action.payload.data, {
         index: state.length,
       });
-      return Object.assign([...state, notification]);
+      return state.concat(notification);
     case NOTIFICATIONS_REDUCER_ACTIONS.UPDATE:
       newState = Object.assign([...state], <NotificationType[]>[]);
       newState[action.payload.index] = Object.assign(

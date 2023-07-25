@@ -114,11 +114,9 @@ export const getSeenRoutes = (
   availableRoutes?: MessageRouteType[],
   availableEventBasedRoutes?: EventBasedRouteType[],
 ) => {
-  const routes = getSeenOptionRoutes(name, events, availableRoutes).concat(
-    getSeenEventRoutes(name, events, availableEventBasedRoutes).sort(
-      (a, b) => a.position - b.position,
-    ),
-  );
+  const routes = getSeenOptionRoutes(name, events, availableRoutes)
+    .concat(getSeenEventRoutes(name, events, availableEventBasedRoutes))
+    .sort((a, b) => a.position - b.position);
   return routes;
 };
 

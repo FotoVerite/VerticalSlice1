@@ -1,0 +1,3 @@
+export enum SPAM1_IDS {
+  SPAM_INTRODUCTION,
+}

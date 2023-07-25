@@ -30,6 +30,7 @@ export enum CONTACT_NAMES {
   ZOLA = 'Zola',
   DEFAULT = 'Default',
   SEAMLESS = '30368',
+  SPAM1 = '1-666-1337',
 }
 
 export type UserMappingType = {
@@ -38,6 +39,7 @@ export type UserMappingType = {
 };
 export const contactConsts: {[key in CONTACT_NAMES]: UserMappingType} = {
   '': {avatar: defaultAvatar, colors: ['#6b6b6d', '#363243']},
+  '1-666-1337': {avatar: defaultAvatar, colors: ['#6b6b6d', '#363243']},
   Arial: {avatar: arialAvatar, colors: ['#dbaf48', '#cdc8bb']},
   Alice: {avatar: aliceAvatar, colors: ['#d0bd28', '#cdc8bb']},
   Chris: {avatar: chrisAvatar, colors: ['#6bd8e4', '#363243']},

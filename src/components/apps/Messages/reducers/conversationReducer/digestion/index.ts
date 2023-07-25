@@ -91,6 +91,8 @@ const appendSeenRoutes = (
     digested.eventBasedRoutes,
   );
 
+  console.log(seenRoutes);
+
   return seenRoutes.reduce((digestedExchanges, routes) => {
     return appendRoute(digestedExchanges, routes, digested.group, config);
   }, digested.exchanges);

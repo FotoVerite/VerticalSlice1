@@ -13,6 +13,28 @@ import {useSafeAreaInsets} from 'react-native-safe-area-context';
 
 import Notification from '../Notification';
 import {NotificationType} from '../reducers/notificationsReducer/types';
+import {P} from 'components/common/StyledText';
+
+const styles = StyleSheet.create({
+  screen: {
+    backgroundColor: '#bebebe52',
+    position: 'absolute',
+    zIndex: 100,
+  },
+  title: {
+    paddingVertical: theme.spacing.p1,
+    marginStart: theme.spacing.p1 / 2,
+  },
+
+  itemSeparator: {
+    height: 10,
+  },
+
+  list: {
+    paddingHorizontal: theme.spacing.p2,
+    flexGrow: 1,
+  },
+});
 
 function Separator() {
   return <View style={styles.itemSeparator} />;
@@ -20,6 +42,12 @@ function Separator() {
 
 const renderItem: ListRenderItem<NotificationType> = ({item}) => (
   <Notification notification={item} />
+);
+
+const HEADER = (
+  <P size={'m'} style={styles.title}>
+    Notification Center
+  </P>
 );
 
 const NotificationsList: FC<{left: SharedValue<number>}> = ({left}) => {
@@ -36,34 +64,19 @@ const NotificationsList: FC<{left: SharedValue<number>}> = ({left}) => {
         {width: width, height: height, left: width},
         {left: left},
       ]}>
-      <Animated.FlatList
-        ref={aref}
-        style={[styles.list, {marginTop: inset.top}]}
-        data={notificationsContext.notifications.state}
-        renderItem={renderItem}
-        ItemSeparatorComponent={Separator}
-        keyExtractor={(item: any, index) => index + '-notification'}
-        scrollEventThrottle={16}
-      />
+      <View style={[styles.list, {marginTop: inset.top}]}>
+        <Animated.FlatList
+          ref={aref}
+          data={notificationsContext.notifications.state}
+          renderItem={renderItem}
+          ListHeaderComponent={HEADER}
+          ItemSeparatorComponent={Separator}
+          keyExtractor={(item: any, index) => index + '-notification'}
+          scrollEventThrottle={16}
+        />
+      </View>
     </Animated.View>
   );
 };
 
 export default NotificationsList;
-
-const styles = StyleSheet.create({
-  screen: {
-    backgroundColor: '#bebebe52',
-    position: 'absolute',
-    zIndex: 100,
-  },
-
-  itemSeparator: {
-    height: 10,
-  },
-
-  list: {
-    paddingHorizontal: theme.spacing.p2,
-    flexGrow: 1,
-  },
-});

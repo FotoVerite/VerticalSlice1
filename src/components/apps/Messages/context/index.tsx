@@ -42,12 +42,13 @@ import {
   sendNotification,
 } from './conversationFunctions';
 import {NotificationsContext} from 'components/Notifications/context';
+import {spam1} from '../assets/messages/spam1';
 
 //defaults for empty app
 export const MessagesContext = React.createContext<MessagesContextTypeDigested>(
   {},
 );
-const conversations = [zola, greg];
+const conversations = [zola, greg, spam1];
 
 export const baseConversation: ConversationType = {
   name: '',
@@ -172,6 +173,7 @@ const MessagesContextProvider: FC<MessagesContextTypeDigest> = props => {
   }, [conversation?.name, setViewEvent]);
 
   useEffect(() => {
+    console.log(viewable.map(view => view.name));
     if (prevConversations && prevConversations !== viewable) {
       const newConversations = viewable.filter(
         c => !prevConversations.includes(c),
