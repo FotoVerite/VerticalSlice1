@@ -5,114 +5,67 @@
  * @format
  */
 
-import React from 'react';
-import type {PropsWithChildren} from 'react';
-import {
-  SafeAreaView,
-  ScrollView,
-  StatusBar,
-  StyleSheet,
-  Text,
-  useColorScheme,
-  View,
-} from 'react-native';
+import {NavigationContainer} from '@react-navigation/native';
+import React, {useRef} from 'react';
 
-import {
-  Colors,
-  DebugInstructions,
-  Header,
-  LearnMoreLinks,
-  ReloadInstructions,
-} from 'react-native/Libraries/NewAppScreen';
-
-type SectionProps = PropsWithChildren<{
-  title: string;
-}>;
-
-function Section({children, title}: SectionProps): JSX.Element {
-  const isDarkMode = useColorScheme() === 'dark';
-  return (
-    <View style={styles.sectionContainer}>
-      <Text
-        style={[
-          styles.sectionTitle,
-          {
-            color: isDarkMode ? Colors.white : Colors.black,
-          },
-        ]}>
-        {title}
-      </Text>
-      <Text
-        style={[
-          styles.sectionDescription,
-          {
-            color: isDarkMode ? Colors.light : Colors.dark,
-          },
-        ]}>
-        {children}
-      </Text>
-    </View>
-  );
-}
+import {SafeAreaProvider} from 'react-native-safe-area-context';
+import Messages from 'components/apps/Messages';
+import ApplicationContextProvider from 'context';
+import {skFontRecords} from 'context/types';
+import {useFont} from '@shopify/react-native-skia';
+import TextBoxEngine from 'components/TextBoxEngine';
+import TextBoxEngineContextProvider from 'components/TextBoxEngine/context';
+import {View} from 'react-native';
+import EventOrchestraContextProvider from 'components/EventOrchestra/context';
+import SnapShotContextProvider from 'components/Snapshot/context';
+import SnapshotView from 'components/Snapshot';
+import {GestureHandlerRootView} from 'react-native-gesture-handler';
+import Notifications from 'components/Notifications';
 
 function App(): JSX.Element {
-  const isDarkMode = useColorScheme() === 'dark';
-
-  const backgroundStyle = {
-    backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
-  };
-
-  return (
-    <SafeAreaView style={backgroundStyle}>
-      <StatusBar
-        barStyle={isDarkMode ? 'light-content' : 'dark-content'}
-        backgroundColor={backgroundStyle.backgroundColor}
-      />
-      <ScrollView
-        contentInsetAdjustmentBehavior="automatic"
-        style={backgroundStyle}>
-        <Header />
-        <View
-          style={{
-            backgroundColor: isDarkMode ? Colors.black : Colors.white,
-          }}>
-          <Section title="Step One">
-            Edit <Text style={styles.highlight}>App.tsx</Text> to change this
-            screen and then come back to see your edits.
-          </Section>
-          <Section title="See Your Changes">
-            <ReloadInstructions />
-          </Section>
-          <Section title="Debug">
-            <DebugInstructions />
-          </Section>
-          <Section title="Learn More">
-            Read the docs to discover what to do next:
-          </Section>
-          <LearnMoreLinks />
-        </View>
-      </ScrollView>
-    </SafeAreaView>
+  const SFPro = useFont(require('@applicationAssets/fonts/SFPro.ttf'), 16);
+  const NotoColor = useFont(
+    require('@applicationAssets/fonts/NotoColorEmoji.ttf'),
+    16,
   );
-}
+  const HelveticaNeue = useFont(
+    require('@applicationAssets/fonts/HelveticaNeue.ttf'),
+    16,
+  );
+  const screenRef = useRef<View>(null);
 
-const styles = StyleSheet.create({
-  sectionContainer: {
-    marginTop: 32,
-    paddingHorizontal: 24,
-  },
-  sectionTitle: {
-    fontSize: 24,
-    fontWeight: '600',
-  },
-  sectionDescription: {
-    marginTop: 8,
-    fontSize: 18,
-    fontWeight: '400',
-  },
-  highlight: {
-    fontWeight: '700',
-  },
-});
+  if (!SFPro || !NotoColor || !HelveticaNeue) {
+    return <></>;
+  } else {
+    const skFontRecord: skFontRecords = {
+      ['SFPro']: SFPro,
+      ['NotoColor']: NotoColor,
+      ['HelveticaNeue']: HelveticaNeue,
+    };
+
+    return (
+      <GestureHandlerRootView style={{flex: 1}}>
+        <SafeAreaProvider>
+          <ApplicationContextProvider fonts={skFontRecord}>
+            <EventOrchestraContextProvider>
+              <TextBoxEngineContextProvider>
+                <NavigationContainer>
+                  <SnapShotContextProvider snapShotRef={screenRef}>
+                    <Notifications>
+                      <SnapshotView snapshotRef={screenRef}>
+                        <Messages />
+                      </SnapshotView>
+                    </Notifications>
+                  </SnapShotContextProvider>
+                </NavigationContainer>
+                <TextBoxEngine screenRef={screenRef} />
+              </TextBoxEngineContextProvider>
+            </EventOrchestraContextProvider>
+          </ApplicationContextProvider>
+        </SafeAreaProvider>
+      </GestureHandlerRootView>
+    );
+  }
+}
 
 export default App;
