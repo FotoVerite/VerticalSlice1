@@ -11,10 +11,8 @@ import {Icon} from 'react-native-elements';
 import theme from 'themes';
 import {MessagesContext, baseConversation} from '../context';
 import {CONVERSATION_REDUCER_ACTIONS} from '../reducers/conversationReducer/types';
-import {clay} from '../assets/messages/clay';
 
 const Header: FC = () => {
-  const navigation = useNavigation<StackNavigationProp<screenParams>>();
   const context = useContext(MessagesContext);
   return (
     <Row style={[styles.container]}>
@@ -37,7 +35,7 @@ const Header: FC = () => {
           onPress={() => {
             context.newMessage.dispatch({
               type: CONVERSATION_REDUCER_ACTIONS.DIGEST_CONVERSATION,
-              payload: clay,
+              payload: baseConversation,
             });
           }}>
           <View style={styles.spacer}>

@@ -66,6 +66,10 @@ export const borked_phone: MessageRouteType = {
         name: CONTACT_NAMES.SELF,
         messages: ['I deleted nearly all my emails instead of archiving.'],
       },
+      {
+        name: CONTACT_NAMES.ZOLA,
+        messages: ['That sounds like an amazing system'],
+      },
     ],
   },
 };

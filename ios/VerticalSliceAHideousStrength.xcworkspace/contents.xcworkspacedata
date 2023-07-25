@@ -2,21 +2,6 @@
 <Workspace
    version = "1.0">
    <FileRef
-      location = "group:../node_modules/react-native-vector-icons/Fonts/Entypo.ttf">
-   </FileRef>
-   <FileRef
-      location = "group:../node_modules/react-native-vector-icons/Fonts/Feather.ttf">
-   </FileRef>
-   <FileRef
-      location = "group:../node_modules/react-native-vector-icons/Fonts/FontAwesome.ttf">
-   </FileRef>
-   <FileRef
-      location = "group:../node_modules/react-native-vector-icons/Fonts/Ionicons.ttf">
-   </FileRef>
-   <FileRef
-      location = "group:../node_modules/react-native-vector-icons/Fonts/MaterialCommunityIcons.ttf">
-   </FileRef>
-   <FileRef
       location = "group:VerticalSliceAHideousStrength.xcodeproj">
    </FileRef>
    <FileRef
