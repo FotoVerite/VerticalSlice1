@@ -1,20 +1,49 @@
 /* eslint-disable react-native/no-inline-styles */
-import React from 'react';
+import React, {useEffect} from 'react';
 import {FC} from 'react';
 import {StyleSheet, View} from 'react-native';
+import Animated, {
+  useAnimatedStyle,
+  useSharedValue,
+  withDelay,
+  withSpring,
+} from 'react-native-reanimated';
 import Svg, {Ellipse} from 'react-native-svg';
 import Icon from 'react-native-vector-icons/FontAwesome';
 
 interface ReactionType {
-  reaction: {name: string; color: string};
+  reaction: {name: string; color: string; delay: number};
+  delay: number;
   left: boolean;
   colors: string[];
+  activeRoute: boolean;
 }
 
-const Reaction: FC<ReactionType> = ({reaction, left, colors: color}) => {
+const Reaction: FC<ReactionType> = ({
+  activeRoute,
+  reaction,
+  left,
+  colors: color,
+}) => {
   const reactionColor = left ? color[2] : '#5a60b8';
+  const scale = useSharedValue(activeRoute ? 0 : 0.8);
+  useEffect(() => {
+    scale.value = withDelay(
+      reaction.delay || 1000,
+      withSpring(0.8, {overshootClamping: false, stiffness: 250}),
+    );
+  }, [activeRoute, reaction.delay, scale]);
+
+  const animatedStyle = useAnimatedStyle(() => {
+    if (activeRoute) {
+      return {transform: [{scale: scale.value}]};
+    } else {
+      return {};
+    }
+  }, [activeRoute]);
+
   return (
-    <View
+    <Animated.View
       style={[
         styles.reaction,
         {
@@ -23,6 +52,7 @@ const Reaction: FC<ReactionType> = ({reaction, left, colors: color}) => {
           right: left ? -15 : undefined,
           transform: [{scaleX: -0.8}, {scaleY: 0.8}],
         },
+        animatedStyle,
       ]}>
       <View style={{transform: [{scaleX: left ? -1 : 1}]}}>
         <Svg viewBox="27.303 21.379 116.792 122.135" width={36} height={36}>
@@ -64,7 +94,7 @@ const Reaction: FC<ReactionType> = ({reaction, left, colors: color}) => {
           },
         ]}
       />
-    </View>
+    </Animated.View>
   );
 };
 export default Reaction;

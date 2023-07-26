@@ -4,7 +4,7 @@ import {SPAM1_IDS} from './routes';
 
 export const spam1_introduction: EventBasedRouteType = {
   id: SPAM1_IDS.SPAM_INTRODUCTION,
-  delay: 1000,
+  delay: 5000,
   exchanges: [
     {
       name: CONTACT_NAMES.SPAM1,

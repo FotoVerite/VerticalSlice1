@@ -14,18 +14,10 @@ import {
   MessagesContextTypeDigested,
 } from './types';
 import {zola} from '../assets/messages/zola';
-import {chris} from '../assets/messages/chris';
 import {useWindowDimensions} from 'react-native';
-import context, {ApplicationContext} from 'context';
-import {seamless} from '../assets/messages/seamless';
-import {movieNight} from '../assets/messages/movie_night';
-import {clay} from '../assets/messages/clay';
-import {grace_russo} from '../assets/messages/grace_russo';
-import {alice} from '../assets/messages/alice';
-import {mileena} from '../assets/messages/mileena';
+import {ApplicationContext} from 'context';
 import {greg} from '../assets/messages/greg';
 import {EventOrchestraContext} from 'components/EventOrchestra/context';
-import {steveLitt} from '../assets/messages/steve_litt';
 import createConversationReducer from '../reducers/conversationReducer';
 import {
   CONVERSATION_REDUCER_ACTIONS,
@@ -33,8 +25,6 @@ import {
 } from '../reducers/conversationReducer/types';
 import {digestConversation} from '../reducers/conversationReducer/digestion';
 import {CONTACT_NAMES} from './usersMapping';
-import {testConvo} from '../assets/messages/test';
-import {testConvo2} from '../assets/messages/test2';
 import {
   viewableConversations,
   conversationHasExchange,
@@ -43,12 +33,13 @@ import {
 } from './conversationFunctions';
 import {NotificationsContext} from 'components/Notifications/context';
 import {spam1} from '../assets/messages/spam1';
+import {micheal} from '../assets/messages/michael';
 
 //defaults for empty app
 export const MessagesContext = React.createContext<MessagesContextTypeDigested>(
   {},
 );
-const conversations = [zola, greg, spam1];
+const conversations: ConversationType[] = [zola, greg, spam1, micheal];
 
 export const baseConversation: ConversationType = {
   name: '',
@@ -74,21 +65,21 @@ const MessagesContextProvider: FC<MessagesContextTypeDigest> = props => {
     [setTheEvent],
   );
 
-  const setPathAsSeen = useCallback(
-    (_name: CONTACT_NAMES, _id: number, chosen?: string) => {
-      setTheEvent(state => {
-        const newState = Object.assign({}, state);
-        const seenRoutes = newState.Message[_name].routes;
-        seenRoutes[_id] = {
-          chosen: chosen ? chosen.toString() : undefined,
-          date: new Date(),
-          position: Object.keys(seenRoutes).length + 1,
-        };
-        return newState;
-      });
-    },
-    [setTheEvent],
-  );
+  // const setPathAsSeen = useCallback(
+  //   (_name: CONTACT_NAMES, _id: number, chosen?: string) => {
+  //     setTheEvent(state => {
+  //       const newState = Object.assign({}, state);
+  //       const seenRoutes = newState.Message[_name].routes;
+  //       seenRoutes[_id] = {
+  //         chosen: chosen ? chosen.toString() : undefined,
+  //         date: new Date(),
+  //         position: Object.keys(seenRoutes).length + 1,
+  //       };
+  //       return newState;
+  //     });
+  //   },
+  //   [setTheEvent],
+  // );
 
   const [media, setMedia] = useState<ReactElement>();
 

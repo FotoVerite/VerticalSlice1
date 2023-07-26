@@ -32,6 +32,7 @@ import {VCardBubble} from './VCardBubble';
 import {NumberBubble} from './NumberBubble';
 
 const renderBubbleType = (
+  dispatch: (action: ConversationReducerActionsType) => Promise<void>,
   item: BubbleItemType,
   index: number,
   scrollHandler: SharedValue<number>,
@@ -55,6 +56,7 @@ const renderBubbleType = (
     case DigestedItemTypes.SNAPSHOT:
       return (
         <SnapshotBubble
+          dispatch={dispatch}
           {...item}
           index={index}
           scrollHandler={scrollHandler}
@@ -152,10 +154,15 @@ export const BaseBubble: FC<{
           </View>
         )}
         {reaction && (
-          <Reaction reaction={reaction} left={leftSide} colors={colors} />
+          <Reaction
+            reaction={reaction}
+            left={leftSide}
+            colors={colors}
+            activeRoute={item.messageDelay != null}
+          />
         )}
         <View>
-          {renderBubbleType(item, index, scrollHandler, scrollRef)}
+          {renderBubbleType(dispatch, item, index, scrollHandler, scrollRef)}
           {group && item.avatar && item.name !== 'Self' && (
             <P size="s" style={styles.name}>
               {item.name}

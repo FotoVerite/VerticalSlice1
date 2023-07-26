@@ -133,6 +133,11 @@ const addConversation = (
   config: ConversationReducerConfigurationType,
   conversation: DigestedConversationType,
 ) => {
+  // Remove any delays
+  conversation.exchanges.forEach(message => {
+    message.typingDelay = undefined;
+    message.messageDelay = undefined;
+  });
   return conversation;
 };
 

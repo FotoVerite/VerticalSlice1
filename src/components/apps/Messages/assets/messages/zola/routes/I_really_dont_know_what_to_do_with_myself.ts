@@ -1,4 +1,7 @@
-import {MessageRouteType} from 'components/apps/Messages/context/types';
+import {
+  ExchangeBlockType,
+  MessageRouteType,
+} from 'components/apps/Messages/context/types';
 import {CONTACT_NAMES} from 'components/apps/Messages/context/usersMapping';
 import {ZARA_ROUTE_IDS} from './routes';
 import {DigestedItemTypes} from 'components/apps/Messages/reducers/conversationReducer/digestion/types';
@@ -12,7 +15,7 @@ const OPTIONS = ZARA_DO_WITH_MYSELF;
 const ZARA = CONTACT_NAMES.ZOLA;
 const SELF = CONTACT_NAMES.SELF;
 
-const exchanges = [
+const exchanges: ExchangeBlockType[] = [
   {
     name: ZARA,
     messages: [
@@ -20,12 +23,22 @@ const exchanges = [
       'You just hate to hear it',
       "And that's why you keep putting up with it.",
       'Plus I actually message you.',
-      {type: DigestedItemTypes.EMOJI, message: '😉'},
+      {
+        type: DigestedItemTypes.EMOJI,
+        message: '😉',
+      },
     ],
   },
   {
     name: SELF,
-    messages: ['Okay point'],
+    messages: [
+      {
+        type: DigestedItemTypes.STRING,
+        message: 'Okay point',
+        reaction: {name: 'heart', color: '#f487d3', delay: 3000},
+        messageDelay: 1500,
+      },
+    ],
   },
 ];
 

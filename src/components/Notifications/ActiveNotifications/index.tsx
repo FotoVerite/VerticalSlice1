@@ -22,10 +22,10 @@ const ActiveNotifications: FC = () => {
     <View pointerEvents="box-none" style={styles.screen}>
       {activeNotifications.map((notification, idx) => (
         <ActiveNotificationContainer
-          key={`${idx}-notification`}
+          key={`${notification.index}-notification-${notification.title}`}
           notification={notification}
           dispatch={notificationsContext.notifications.dispatch}
-          index={idx}
+          index={notification.index}
         />
       ))}
     </View>

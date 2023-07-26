@@ -18,17 +18,20 @@ import {BubblePath} from 'components/apps/Messages/reducers/conversationReducer/
 import {SkImage} from '@shopify/react-native-skia';
 import {SnapshotBubbleRenderer} from './SnapshotBubbleRenderer';
 import {MessagesContext} from 'components/apps/Messages/context';
-import {CONVERSATION_REDUCER_ACTIONS} from 'components/apps/Messages/reducers/conversationReducer/types';
+import {
+  CONVERSATION_REDUCER_ACTIONS,
+  ConversationReducerActionsType,
+} from 'components/apps/Messages/reducers/conversationReducer/types';
 
 export const SnapshotBubble: FC<
   DigestedConversationSnapShotItemType & {
+    dispatch: (action: ConversationReducerActionsType) => Promise<void>;
     index: number;
     scrollHandler: SharedValue<number>;
     scrollRef: React.RefObject<Animated.ScrollView>;
     group?: boolean;
   }
 > = props => {
-  const messageContext = useContext(MessagesContext);
   const snapshotContext = useContext(SnapShotContext);
 
   const opacity = useSharedValue(props.content.image ? 1 : 0);
@@ -52,7 +55,7 @@ export const SnapshotBubble: FC<
       const snapshotImage = snapshotContext.image;
       const aspectRation = snapshotImage.height() / snapshotImage.width();
       const imageHeight = props.width * aspectRation;
-      messageContext.conversation.dispatch({
+      props.dispatch({
         type: CONVERSATION_REDUCER_ACTIONS.UPDATE_MESSAGE,
         payload: {
           index: props.index,
@@ -72,7 +75,7 @@ export const SnapshotBubble: FC<
 
   useEffect(() => {
     if (!renderWaiting) {
-      //context.showNextMessage();
+      props.dispatch({type: CONVERSATION_REDUCER_ACTIONS.CONTINUE_ROUTE});
     }
   }, [renderWaiting]);
 
@@ -82,14 +85,20 @@ export const SnapshotBubble: FC<
       !snapshotContext.indicatorRunning.state &&
       props.messageDelay
     ) {
-      //context.scrollTo.set(-1);
+      props.scrollRef.current?.scrollToEnd({animated: true});
       opacity.value = withTiming(1, {duration: 300}, finished => {
         if (finished) {
           runOnJS(setRenderWaiting)(false);
         }
       });
     }
-  }, [image, snapshotContext.indicatorRunning.state]);
+  }, [
+    image,
+    opacity,
+    props.messageDelay,
+    props.scrollRef,
+    snapshotContext.indicatorRunning.state,
+  ]);
 
   return (
     <View style={{height: props.height}}>

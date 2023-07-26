@@ -140,4 +140,4 @@ export interface VCardMessageWithMeta extends AbstractMessageWithMetaType {
   type: DigestedItemTypes.VCARD;
 }
 
-export type ReactionType = {name: string; color: string};
+export type ReactionType = {name: string; color: string; delay?: number};

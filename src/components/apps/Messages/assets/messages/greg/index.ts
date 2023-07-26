@@ -23,7 +23,13 @@ export const greg: ConversationType = {
       exchanges: [
         {
           name: CONTACT_NAMES.SELF,
-          messages: ['That was very, very good last night.'],
+          messages: [
+            {
+              type: DigestedItemTypes.STRING,
+              message: 'That was very, very good last night.',
+              reaction: {name: 'heart', color: '#f487d3'},
+            },
+          ],
         },
         {
           name: CONTACT_NAMES.GREG,
