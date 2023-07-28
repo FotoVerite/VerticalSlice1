@@ -1,6 +1,7 @@
 import {CONTACT_NAMES} from 'components/apps/Messages/context/usersMapping';
 import {APP_NAMES} from 'components/apps/types';
 import {PropsWithChildren, ReactNode} from 'react';
+import {EventsReducerActionsType} from '../reducers/types';
 
 export type MessageAppContactsEventType = {
   [key in CONTACT_NAMES]: ContactEventType;
@@ -34,6 +35,6 @@ export type EventOrchestraContextTypeDigest = {
 export type EventOrchestraContextTypeDigested = PropsWithChildren<{
   events: {
     state: EventOrchestraObjectType;
-    set: React.Dispatch<React.SetStateAction<EventOrchestraObjectType>>;
+    dispatch: (action: EventsReducerActionsType) => void;
   };
 }>;

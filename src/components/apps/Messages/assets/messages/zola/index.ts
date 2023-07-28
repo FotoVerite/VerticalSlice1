@@ -12,6 +12,7 @@ import {i_dont_know_what_to_do_with_myself} from './routes/I_really_dont_know_wh
 import {i_fell_for_a_spam} from './routes/i_fell_for_a_spam';
 import {zara_do_you_want_any_contacts} from './routes/do_you_want_any_contacts';
 import {zara_contact_conversation} from './routes/contact_conversation';
+import {i_dont_feel_secure} from './routes/i_dont_feel_secure';
 
 export const zola: ConversationType = {
   name: CONTACT_NAMES.ZOLA,
@@ -22,9 +23,10 @@ export const zola: ConversationType = {
   routes: [
     borked_phone,
     your_new_video,
-    i_dont_know_what_to_do_with_myself,
     i_fell_for_a_spam,
+    i_dont_know_what_to_do_with_myself,
     zara_contact_conversation,
+    i_dont_feel_secure,
   ],
   exchanges: [],
 };

@@ -1,12 +1,13 @@
-/* eslint-disable react-native/no-inline-styles */
-/* eslint-disable no-bitwise */
-import React, {FC} from 'react';
+import React, {FC, useContext} from 'react';
 
 import {
   Canvas,
   Group,
   LinearGradient,
   Rect,
+  Text,
+  useClockValue,
+  useComputedValue,
   vec,
 } from '@shopify/react-native-skia';
 
@@ -36,6 +37,19 @@ export const TextBubble: FC<
     leftSide,
     scrollHandler,
   );
+
+  // const clock1 = useClockValue();
+  // const interval = 1000;
+
+  // const animatedHeight = useComputedValue(() => {
+  //   return ((clock1.current % interval) / interval) * height;
+  // }, [clock1]);
+
+  // const animatedTranslate = useComputedValue(() => {
+  //   const amount = ((clock1.current % interval) / interval) * 10 * -1;
+  //   return [{translateX: amount}, {translateY: amount}];
+  // }, [clock1]);
+
   return (
     <Canvas
       style={{
@@ -52,6 +66,16 @@ export const TextBubble: FC<
         </Rect>
       </Group>
       {content}
+      {/* <Group blendMode="multiply" clip={clip}>
+        <Rect
+          x={0}
+          y={animatedHeight}
+          width={width}
+          height={animatedHeight}
+          color="red"
+        />
+        {content}
+      </Group> */}
     </Canvas>
   );
 };

@@ -12,7 +12,7 @@ import micahaelAvatar from '@apps/Messages/assets/avatars/michael_avatar.jpeg';
 
 import steveLitt from '@apps/Messages/assets/avatars/steve_litt.png';
 
-import meleenaAvatar from '@apps/Messages/assets/avatars/mileena.png';
+import meleenaAvatar from '@apps/Messages/assets/avatars/mileena_avatar.jpg';
 import {ImageSourcePropType} from 'react-native';
 
 export enum CONTACT_NAMES {
@@ -50,7 +50,7 @@ export const contactConsts: {[key in CONTACT_NAMES]: UserMappingType} = {
   'Fuck Face': {avatar: gregAvatar, colors: ['#48ee4e', '#363243']},
   'Grace Russo': {avatar: graceAvatar, colors: ['#EE6548', '#363243']},
   Mileena: {avatar: meleenaAvatar, colors: ['#ff0095', '#cdbbc6']},
-  'Maybe: Michael': {avatar: chrisAvatar, colors: ['#f54295', '#8900fa']},
+  'Maybe: Michael': {avatar: gregAvatar, colors: ['#f54295', '#8900fa']},
   'Movie Night': {avatar: darkoAvatar, colors: ['#6b6b6d', '#363243']},
   Self: {avatar: defaultAvatar, colors: ['blue', '#363243']},
   'Steve-0': {avatar: steveLitt, colors: ['#FF002D', '#C3596B']},

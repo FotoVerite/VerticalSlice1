@@ -24,34 +24,16 @@ import {
   CONVERSATION_REDUCER_ACTIONS,
   ConversationReducerActionsType,
 } from '../reducers/conversationReducer/types';
-
-const setPathAsSeen = (
-  set: React.Dispatch<React.SetStateAction<MessageEventType>>,
-  _name: CONTACT_NAMES,
-  _id: number,
-  chosen?: string,
-) => {
-  set(state => {
-    const newState = Object.assign({}, state);
-    const seenRoutes = newState.Message[_name].routes;
-    seenRoutes[_id] = {
-      chosen: chosen ? chosen.toString() : undefined,
-      date: new Date(),
-      position: Object.keys(seenRoutes).length + 1,
-    };
-    return newState;
-  });
-};
+import {
+  EVENTS_REDUCER_ACTIONS,
+  EventsReducerActionsType,
+} from 'components/EventOrchestra/reducers/types';
 export const sendNotification = async (
   conversation: ConversationType,
   events: MessageEventType,
-  setEvent: React.Dispatch<React.SetStateAction<MessageEventType>>,
+  eventDispatch: (action: EventsReducerActionsType) => void,
   dispatch: React.Dispatch<NotificationsReducerActionsType>,
-  conversationDispatch: (
-    action: ConversationReducerActionsType,
-  ) => Promise<void>,
 ) => {
-  let delay = 0;
   let message: MessageType | undefined;
 
   const route = findAvailableRoutes(
@@ -62,7 +44,10 @@ export const sendNotification = async (
   await delayFor(route?.delay || 0);
 
   if (route) {
-    setPathAsSeen(setEvent, conversation.name, route.id);
+    eventDispatch({
+      type: EVENTS_REDUCER_ACTIONS.MESSAGE_APP_ROUTE_SEEN,
+      payload: {routeId: route.id, name: conversation.name},
+    });
     message = getLastMessageFromExchanges(route.exchanges);
   } else if (conversation.exchanges.length > 0) {
     message = conversation.exchanges

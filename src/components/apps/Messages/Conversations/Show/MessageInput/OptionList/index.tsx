@@ -89,6 +89,7 @@ const OptionList: FC<
 
   const options = useMemo(() => {
     if (activeRoute != null) {
+      console.log(activeRoute.options);
       return activeRoute.options.map(option => (
         <Option
           key={`${activeRoute.routes.id}-${option}`}

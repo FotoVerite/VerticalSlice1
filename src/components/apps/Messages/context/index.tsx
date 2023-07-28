@@ -35,12 +35,22 @@ import {NotificationsContext} from 'components/Notifications/context';
 import {spam1} from '../assets/messages/spam1';
 import {micheal} from '../assets/messages/michael';
 import {findAvailableRoutes} from '../reducers/conversationReducer/routing/available';
+import {EVENTS_REDUCER_ACTIONS} from 'components/EventOrchestra/reducers/types';
+import {mileena} from '../assets/messages/mileena';
+import {chris} from '../assets/messages/chris';
 
 //defaults for empty app
 export const MessagesContext = React.createContext<MessagesContextTypeDigested>(
   {},
 );
-const conversations: ConversationType[] = [zola, greg, spam1, micheal];
+const conversations: ConversationType[] = [
+  zola,
+  greg,
+  spam1,
+  micheal,
+  chris,
+  mileena,
+];
 
 export const baseConversation: ConversationType = {
   name: '',
@@ -53,34 +63,8 @@ const MessagesContextProvider: FC<MessagesContextTypeDigest> = props => {
   const eventContext = useContext(EventOrchestraContext);
   const notificationContext = useContext(NotificationsContext);
 
-  const setTheEvent = eventContext.events.set;
+  const eventDispatch = eventContext.events.dispatch;
   const events = eventContext.events.state;
-  const setViewEvent = useCallback(
-    (name: CONTACT_NAMES) =>
-      setTheEvent(_events => {
-        const newState = Object.assign({}, _events);
-        const views = newState.Message[name].views;
-        views.push(new Date());
-        return newState;
-      }),
-    [setTheEvent],
-  );
-
-  // const setPathAsSeen = useCallback(
-  //   (_name: CONTACT_NAMES, _id: number, chosen?: string) => {
-  //     setTheEvent(state => {
-  //       const newState = Object.assign({}, state);
-  //       const seenRoutes = newState.Message[_name].routes;
-  //       seenRoutes[_id] = {
-  //         chosen: chosen ? chosen.toString() : undefined,
-  //         date: new Date(),
-  //         position: Object.keys(seenRoutes).length + 1,
-  //       };
-  //       return newState;
-  //     });
-  //   },
-  //   [setTheEvent],
-  // );
 
   const [media, setMedia] = useState<ReactElement>();
 
@@ -170,9 +154,12 @@ const MessagesContextProvider: FC<MessagesContextTypeDigest> = props => {
 
   useEffect(() => {
     if (conversation?.name != null) {
-      setViewEvent(conversation.name);
+      eventDispatch({
+        type: EVENTS_REDUCER_ACTIONS.MESSAGE_APP_CONVERSATION_SEEN,
+        payload: {name: conversation.name},
+      });
     }
-  }, [conversation?.name, setViewEvent]);
+  }, [conversation?.name, eventDispatch]);
 
   useEffect(() => {
     const filterDispatchedEventRoutes = (
@@ -202,9 +189,8 @@ const MessagesContextProvider: FC<MessagesContextTypeDigest> = props => {
           sendNotification(
             c,
             events,
-            setTheEvent,
+            eventDispatch,
             notificationContext.notifications.dispatch,
-            reducerResolver,
           );
         }
       });
@@ -213,11 +199,11 @@ const MessagesContextProvider: FC<MessagesContextTypeDigest> = props => {
   }, [
     viewable,
     events,
+    eventDispatch,
     prevConversations,
     newMessage?.name,
     conversation?.name,
     notificationContext.notifications.dispatch,
-    setTheEvent,
     reducerResolver,
   ]);
 

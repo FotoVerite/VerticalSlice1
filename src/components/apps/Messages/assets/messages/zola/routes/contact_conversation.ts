@@ -8,8 +8,8 @@ import {mileena} from '../../mileena';
 import {chris} from '../../chris';
 
 export enum ZARA_CONTACT_CONVERSATIONS_OPTIONS {
-  A = `Yeah, give me ${CONTACT_NAMES.MILEENA}`,
-  B = `Yeah I need to talk to ${CONTACT_NAMES.CHRIS}`,
+  A = 'Yeah, give me Mileena',
+  B = 'Yeah I need to talk to Chris',
 }
 
 const OPTIONS = ZARA_CONTACT_CONVERSATIONS_OPTIONS;
@@ -42,7 +42,7 @@ export const zara_contact_conversation: MessageRouteType = {
       },
     ],
     [OPTIONS.B]: [
-      {name: SELF, messages: [OPTIONS.A]},
+      {name: SELF, messages: [OPTIONS.B]},
       {
         name: ZARA,
         messages: [

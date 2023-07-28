@@ -11,6 +11,7 @@ import {
 } from 'components/apps/Messages/reducers/conversationReducer/types';
 import {EventOrchestraContext} from 'components/EventOrchestra/context';
 import {CONTACT_NAMES} from 'components/apps/Messages/context/usersMapping';
+import {EVENTS_REDUCER_ACTIONS} from 'components/EventOrchestra/reducers/types';
 
 const Option: FC<{
   setActive: (boolean: boolean) => void;
@@ -19,29 +20,16 @@ const Option: FC<{
   name: CONTACT_NAMES;
   option: string;
 }> = ({setActive, dispatch, id, name, option}) => {
-  const eventSet = useContext(EventOrchestraContext).events.set;
-
-  const setPathAsSeen = useCallback(
-    (_name: CONTACT_NAMES, _id: number, chosen: string) => {
-      eventSet(state => {
-        const newState = Object.assign({}, state);
-        const seenRoutes = newState.Message[_name].routes;
-        seenRoutes[_id] = {
-          chosen: chosen.toString(),
-          date: new Date(),
-          position: Object.keys(seenRoutes).length + 1,
-        };
-        return newState;
-      });
-    },
-    [eventSet],
-  );
+  const eventDispatch = useContext(EventOrchestraContext).events.dispatch;
 
   return (
     <TouchableOpacity
       onPress={() => {
         setActive(false);
-        setPathAsSeen(name, id, option);
+        eventDispatch({
+          type: EVENTS_REDUCER_ACTIONS.MESSAGE_APP_ROUTE_SEEN,
+          payload: {routeId: id, chosen: option, name: name},
+        });
         dispatch({
           type: CONVERSATION_REDUCER_ACTIONS.START_ROUTE,
           payload: {id: id, chosenOption: option},
