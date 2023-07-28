@@ -34,10 +34,13 @@ const routeHasBeenChosenCheck = (
   }
   const viewedRoutes = messageEvents[name]?.routes || {};
   return routeConditionsKeys.reduce((acc, key) => {
+    const routeCondition = routeConditions[key] || [];
     return (
       acc &&
       viewedRoutes[key] != null &&
-      routeConditions[key].includes(viewedRoutes[key].chosen)
+      (routeCondition == null ||
+        routeCondition.length === 0 ||
+        routeCondition.includes(viewedRoutes[key].chosen))
     );
   }, true);
 };

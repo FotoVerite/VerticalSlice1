@@ -11,6 +11,7 @@ import {your_new_video} from './routes/hows_the_new_video';
 import {i_dont_know_what_to_do_with_myself} from './routes/I_really_dont_know_what_to_do_with_myself';
 import {i_fell_for_a_spam} from './routes/i_fell_for_a_spam';
 import {zara_do_you_want_any_contacts} from './routes/do_you_want_any_contacts';
+import {zara_contact_conversation} from './routes/contact_conversation';
 
 export const zola: ConversationType = {
   name: CONTACT_NAMES.ZOLA,
@@ -23,6 +24,7 @@ export const zola: ConversationType = {
     your_new_video,
     i_dont_know_what_to_do_with_myself,
     i_fell_for_a_spam,
+    zara_contact_conversation,
   ],
   exchanges: [],
 };

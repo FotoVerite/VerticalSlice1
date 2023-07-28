@@ -15,6 +15,7 @@ import {EventOrchestraContext} from 'components/EventOrchestra/context';
 import theme from 'themes';
 import {getLastSeenRoute} from '../../reducers/conversationReducer/routing/seen';
 import {determineLogLine} from '../../context/conversationFunctions';
+import {CONTACT_NAMES} from '../../context/usersMapping';
 
 const ConversationListItem: FC<{conversation: ConversationType}> = ({
   conversation,
@@ -35,6 +36,20 @@ const ConversationListItem: FC<{conversation: ConversationType}> = ({
       ),
     [conversation, eventContext.events.state],
   );
+
+  const unhomelike = (name: CONTACT_NAMES, logline: string) => {
+    if (![CONTACT_NAMES.SPAM1].includes(name)) {
+      return logline;
+    } else if (
+      ![5, 6, 7].includes(
+        eventContext.events.state.Message[CONTACT_NAMES.ZOLA].views.length,
+      )
+    ) {
+      return logline;
+    } else {
+      return "Ŷ̴̨͔̣̮̪̱͙̫̼̣̟͜o̴̬̽̀̊̋̇̒͑̃̏̈́̐ư̶͚͕̩͈̗͎͙̼̫̹͛̓̍́̈́̚'̴̠͈̺͇͉̏͜l̶͍̩͈͓͇͆̀̀̓͠͠l̶̡͓̪͉̩͕̩̪̥̝̥̱̅͋̂̆͗̊̈͋̑̚͠ ̷̛̛͙̺͇̤̪̭̱͒̋̑̀͆̓͂͌̋͑͘͜͝n̶͙̺̩̹̼̟͙̦̂ḙ̴̡͛͝v̵̧̨͔̪̯͚̖̭͓̞̩̮̱́͘ḙ̵̡̭͕̥̬̣̭͓͠ŗ̴͙̹̹̇͐̓͂̎̇̆͗̀̌̆ ̵̗̱̪̝̃́̇̍̇̈́̽̈́̆̌͜b̴̢̧̛͇͚̘̯̼̣̣̰̪̪̯̹̽͐̐͋̌͑͘̕è̸̡̧̘̠͕̩̹̗̫͚̞̇̈́̃͆̊̚͘ ̷̢̤̲͎͚̠̮̮̤̤̬̍g̸̢͕̹̥̦͓̭͈̮̩̥͇̱̿̈́͑̓͂̾͒̈́͌̇̅ͅơ̷̡̤͎͇̝̺͎̪͎̦͇̟͌̌͛̎̀̑̑͑̉͛͜o̴̧̺̰̍̆̈́͗̇͋̐͑̏̑͝d̶̢̧̨̝̞̖̲͇̫̰̭̬͕̈́͒͗̕͜ͅ ̸̤̟̩̝̼̮͓̪̞͔̇̅̀̀̄̚͘̚͠ȩ̸̡̺̲̤̩͈͉̼̍̋̽͂̀ͅñ̷̨̛̛̰̟̬̰͕̝̜͉̰̟͇̳̀̏̔̌̽̕͠͝ǫ̴̼͚̼̱͈͚̥̩̪̯͂̅͒͒̅ư̴̜̭͓̅͊̌̒̒͋g̶̳͇̐̊̚h̶̨̫͉̦̬͎͕͇̲͎͋͑͒̒̿̓";
+    }
+  };
   return (
     <TouchableOpacity
       onPress={() => {

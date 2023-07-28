@@ -1,4 +1,4 @@
-import React, {FC} from 'react';
+import React, {FC, useEffect} from 'react';
 import {formatMoment} from 'common';
 import {Bold, P} from 'components/common/StyledText';
 import {Row} from 'components/common/layout';
@@ -7,6 +7,8 @@ import {View, Image, StyleSheet, useWindowDimensions} from 'react-native';
 import {NotificationType} from '../reducers/notificationsReducer/types';
 import theme from 'themes';
 import {TouchableWithoutFeedback} from 'react-native-gesture-handler';
+import Sound from 'react-native-sound';
+import pingSound from '../assets/basic-ping.mp3';
 
 const Notification: FC<{
   notification: NotificationType;
@@ -14,6 +16,33 @@ const Notification: FC<{
 }> = props => {
   const {content, image, timestamp, title, onPress} = props.notification;
   const {width} = useWindowDimensions();
+
+  // Enable playback in silence mode
+  Sound.setCategory('Playback');
+
+  useEffect(() => {
+    if (props.popup) {
+      const ping = new Sound(pingSound, error => {
+        if (error) {
+          console.log('failed to load the sound', error);
+          return;
+        }
+
+        // Play the sound with an onEnd callback
+        ping.play(success => {
+          if (success) {
+            ping.release();
+          } else {
+            ping.release();
+          }
+        });
+      });
+      return () => {
+        ping.release();
+      };
+    }
+  }, [props.popup]);
+
   return (
     <TouchableWithoutFeedback
       onPress={() => {

@@ -52,7 +52,7 @@ const ActiveNotificationContainer: FC<{
         },
       });
     }
-  }, [deactivated]);
+  }, [deactivated, dispatch, index, notification]);
 
   useEffect(() => {
     let timer: NodeJS.Timeout;

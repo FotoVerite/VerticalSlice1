@@ -39,7 +39,7 @@ export const i_fell_for_a_spam: MessageRouteType = {
       {
         name: ZARA,
         messages: [
-          'Oh but I love them, Scam’s great parties, if a bit awkward and prone to repeating themself. I remember last time they were just droning on and on about this Nigerian Prince they met.',
+          'Oh but I love them, Scam’s great parties, if a bit awkward and prone to repeating themselves. I remember last time they were just droning on and on about this Nigerian Prince they met.',
         ],
       },
       {
