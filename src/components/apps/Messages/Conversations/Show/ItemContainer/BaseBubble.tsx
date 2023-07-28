@@ -112,15 +112,20 @@ export const BaseBubble: FC<{
     return {opacity: opacity.value};
   });
 
+  const continueRoute = async () => {
+    await delayFor(300);
+    dispatch({
+      type: CONVERSATION_REDUCER_ACTIONS.CONTINUE_ROUTE,
+    });
+  };
+
   useEffect(() => {
     const renderNextMessage = async (delay: number) => {
       await delayFor(delay);
       scrollRef.current?.scrollToEnd({animated: true});
       opacity.value = withTiming(1, {duration: 300}, finished => {
         if (finished) {
-          runOnJS(dispatch)({
-            type: CONVERSATION_REDUCER_ACTIONS.CONTINUE_ROUTE,
-          });
+          runOnJS(continueRoute)();
         }
       });
     };

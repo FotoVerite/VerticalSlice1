@@ -20,6 +20,10 @@ import {delayFor, formatMoment} from 'common';
 import {isMessageWithMeta} from './utility';
 import {CONTACT_NAMES} from './usersMapping';
 import {DigestedItemTypes} from '../reducers/conversationReducer/digestion/types';
+import {
+  CONVERSATION_REDUCER_ACTIONS,
+  ConversationReducerActionsType,
+} from '../reducers/conversationReducer/types';
 
 const setPathAsSeen = (
   set: React.Dispatch<React.SetStateAction<MessageEventType>>,
@@ -43,6 +47,9 @@ export const sendNotification = async (
   events: MessageEventType,
   setEvent: React.Dispatch<React.SetStateAction<MessageEventType>>,
   dispatch: React.Dispatch<NotificationsReducerActionsType>,
+  conversationDispatch: (
+    action: ConversationReducerActionsType,
+  ) => Promise<void>,
 ) => {
   let delay = 0;
   let message: MessageType | undefined;
@@ -76,6 +83,11 @@ export const sendNotification = async (
         content: convertMessageToString(message),
         timestamp: new Date(),
         image: conversation.heroImage,
+        // onPress: () =>
+        //   conversationDispatch({
+        //     type: CONVERSATION_REDUCER_ACTIONS.DIGEST_CONVERSATION,
+        //     payload: conversation,
+        //   }),
       },
     },
   });

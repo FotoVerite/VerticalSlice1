@@ -31,8 +31,13 @@ export const TypingBubble: FC<{
   group: boolean;
 }> = props => {
   const {height, typingDelay, paddingBottom} = props.item;
+  const containerOpacity = useSharedValue(0);
   const opacity = useSharedValue(1);
   const [renderWaiting, setRenderWaiting] = useState(true);
+
+  const containerOpacityAnimation = useAnimatedStyle(() => {
+    return {opacity: containerOpacity.value};
+  });
   const waitingOpacity = useAnimatedStyle(() => {
     return {opacity: opacity.value};
   });
@@ -42,15 +47,16 @@ export const TypingBubble: FC<{
   });
 
   useEffect(() => {
+    containerOpacity.value = withTiming(1, {duration: 200});
     opacity.value = withDelay(
-      1250 + (typingDelay || 0),
+      1350 + (typingDelay || 0),
       withTiming(0, {duration: 300}, finished => {
         if (finished) {
           runOnJS(setRenderWaiting)(false);
         }
       }),
     );
-  }, [opacity, typingDelay]);
+  }, [containerOpacity, opacity, typingDelay]);
 
   useEffect(() => {
     if (props.scrollRef) {
@@ -62,7 +68,8 @@ export const TypingBubble: FC<{
   }, [props]);
 
   return (
-    <View style={{height: height + paddingBottom}}>
+    <Animated.View
+      style={[{height: height + paddingBottom}, containerOpacityAnimation]}>
       {renderWaiting && (
         <Animated.View style={[styles.waiting, waitingOpacity]}>
           <WaitingBubble {...props} />
@@ -71,7 +78,7 @@ export const TypingBubble: FC<{
       <Animated.View style={[styles.main, textOpacity]}>
         <BaseBubble {...props} />
       </Animated.View>
-    </View>
+    </Animated.View>
   );
 };
 

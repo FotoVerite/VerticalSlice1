@@ -55,6 +55,7 @@ export type EventBasedRouteType = {
 };
 
 export type ConversationType = {
+  availableEventRoutes?: number[];
   tags: string[];
   conditions?: RouteConditionsType;
   name: CONTACT_NAMES;

@@ -29,12 +29,7 @@ export const SnapshotBubbleRenderer: FC<
     return null;
   }
   return (
-    <Row
-      style={{
-        alignItems: 'flex-end',
-        padding: 0,
-        margin: 0,
-      }}>
+    <Row style={styles.row}>
       {leftSide && (
         <View style={styles.avatarContainer}>
           {avatar && <Image source={avatar} style={styles.avatar} />}

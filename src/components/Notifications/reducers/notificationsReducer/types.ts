@@ -13,6 +13,7 @@ export type NotificationDataType = {
   content: string;
   timestamp: Date;
   image?: ImageSourcePropType;
+  onPress?: () => void;
 };
 
 export type NotificationType = NotificationDataType & {

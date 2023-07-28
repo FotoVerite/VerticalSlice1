@@ -34,6 +34,7 @@ import {
 import {NotificationsContext} from 'components/Notifications/context';
 import {spam1} from '../assets/messages/spam1';
 import {micheal} from '../assets/messages/michael';
+import {findAvailableRoutes} from '../reducers/conversationReducer/routing/available';
 
 //defaults for empty app
 export const MessagesContext = React.createContext<MessagesContextTypeDigested>(
@@ -96,7 +97,7 @@ const MessagesContextProvider: FC<MessagesContextTypeDigest> = props => {
     filteredConversations,
   );
 
-  const {width, _} = useWindowDimensions();
+  const {width} = useWindowDimensions();
 
   const config = useMemo(() => {
     return {
@@ -152,10 +153,20 @@ const MessagesContextProvider: FC<MessagesContextTypeDigest> = props => {
     [config],
   );
 
-  const viewable = useMemo(
-    () => conversations.filter(viewableConversations(events)),
-    [events],
-  );
+  const viewable = useMemo(() => {
+    const state = conversations.map(c => {
+      return {...c};
+    });
+    return state.filter(viewableConversations(events)).map(_conversation => {
+      const available = findAvailableRoutes(
+        _conversation.name,
+        _conversation.eventBasedRoutes || [],
+        events,
+      );
+      _conversation.availableEventRoutes = available.map(a => a.id);
+      return _conversation;
+    });
+  }, [events]);
 
   useEffect(() => {
     if (conversation?.name != null) {
@@ -164,12 +175,28 @@ const MessagesContextProvider: FC<MessagesContextTypeDigest> = props => {
   }, [conversation?.name, setViewEvent]);
 
   useEffect(() => {
-    console.log(viewable.map(view => view.name));
-    if (prevConversations && prevConversations !== viewable) {
-      const newConversations = viewable.filter(
-        c => !prevConversations.includes(c),
+    const filterDispatchedEventRoutes = (
+      _conversation: ConversationType,
+      prev: ConversationType[],
+    ) => {
+      if (!_conversation.availableEventRoutes) {
+        return false;
+      }
+      const seenIds =
+        prev.find(p => p.name === _conversation.name)?.availableEventRoutes ||
+        [];
+      return (
+        _conversation.availableEventRoutes?.filter(id => !seenIds.includes(id))
+          .length > 0
       );
-      console.log(newConversations);
+    };
+    if (prevConversations && prevConversations !== viewable) {
+      const preAvailableNames = prevConversations.map(c => c.name);
+      const newConversations = viewable.filter(
+        v =>
+          !preAvailableNames.includes(v.name) ||
+          filterDispatchedEventRoutes(v, prevConversations),
+      );
       newConversations.forEach(c => {
         if (c.name !== newMessage?.name && c.name !== conversation?.name) {
           sendNotification(
@@ -177,6 +204,7 @@ const MessagesContextProvider: FC<MessagesContextTypeDigest> = props => {
             events,
             setTheEvent,
             notificationContext.notifications.dispatch,
+            reducerResolver,
           );
         }
       });
@@ -190,6 +218,7 @@ const MessagesContextProvider: FC<MessagesContextTypeDigest> = props => {
     conversation?.name,
     notificationContext.notifications.dispatch,
     setTheEvent,
+    reducerResolver,
   ]);
 
   return (

@@ -2,7 +2,7 @@ import moment, {Moment} from 'moment';
 import {ConversationExchangeType} from '../../../context/types';
 import {DigestedConversationTimeType, DigestedItemTypes} from './types';
 
-const HEIGHT = 60;
+const HEIGHT = 30;
 
 export const createTimeItem = (
   item: ConversationExchangeType,

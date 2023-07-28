@@ -1,5 +1,3 @@
-/* eslint-disable react-native/no-inline-styles */
-/* eslint-disable no-bitwise */
 import React, {FC, useContext, useEffect, useState} from 'react';
 import {View} from 'react-native';
 
@@ -17,7 +15,6 @@ import {SnapShotContext} from 'components/Snapshot/context';
 import {BubblePath} from 'components/apps/Messages/reducers/conversationReducer/digestion/BubblePath';
 import {SkImage} from '@shopify/react-native-skia';
 import {SnapshotBubbleRenderer} from './SnapshotBubbleRenderer';
-import {MessagesContext} from 'components/apps/Messages/context';
 import {
   CONVERSATION_REDUCER_ACTIONS,
   ConversationReducerActionsType,
