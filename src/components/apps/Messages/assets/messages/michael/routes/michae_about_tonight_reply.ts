@@ -11,7 +11,7 @@ import {MICHAEL_IDS} from './routes';
 
 export enum MICHAEL_ABOUT_TONIGHT_REPLY_OPTIONS {
   A = '😈',
-  B = 'BLAH',
+  B = 'Blerg',
 }
 
 const OPTIONS = MICHAEL_ABOUT_TONIGHT_REPLY_OPTIONS;
@@ -107,6 +107,22 @@ export const michael_about_tonight_reply: MessageRouteType = {
       {
         name: SELF,
         messages: [OPTIONS.B],
+      },
+      {
+        name: MICHAEL,
+        messages: ['Whats wrong?'],
+      },
+      {
+        name: SELF,
+        messages: ["It's been a day"],
+      },
+      {
+        name: MICHAEL,
+        messages: ['Is it bad?'],
+      },
+      {
+        name: SELF,
+        messages: ['No, just draining.'],
       },
     ].concat(exchanges),
   },

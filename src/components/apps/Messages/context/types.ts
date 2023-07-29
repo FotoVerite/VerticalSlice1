@@ -36,8 +36,12 @@ export type MessagesContextTypeDigested = PropsWithChildren<{
   media: GenericOrUndefinedStateType<ReactElement>;
 }>;
 
+export type RouteChosenConditionType = {
+  [key: string]: {chosen?: string[]; not_chosen?: string[]};
+};
+
 export type RouteConditionsType = {
-  [key in CONTACT_NAMES]?: {views?: number; routes?: {[key: string]: string[]}};
+  [key in CONTACT_NAMES]?: {views?: number; routes?: RouteChosenConditionType};
 };
 
 export type MessageRouteType = {

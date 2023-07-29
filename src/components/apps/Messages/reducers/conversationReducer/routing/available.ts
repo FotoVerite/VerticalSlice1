@@ -1,6 +1,7 @@
 import {
   MessageAppContactsEventType,
   EventOrchestraObjectType,
+  MessageRouteEventDataType,
 } from 'components/EventOrchestra/context/types';
 import {
   RouteConditionsType,
@@ -22,6 +23,26 @@ const contactHasBeenViewedCheck = (
   return viewCondition <= viewedAmount;
 };
 
+const routeChosenSelected = (
+  chosen?: string[],
+  viewed?: MessageRouteEventDataType,
+) => {
+  if (chosen == null || viewed == null) {
+    return true;
+  }
+  return chosen.includes(viewed.chosen);
+};
+
+const routeNotChosenSelected = (
+  chosen?: string[],
+  viewed?: MessageRouteEventDataType,
+) => {
+  if (chosen == null || viewed == null) {
+    return true;
+  }
+  return !chosen.includes(viewed.chosen);
+};
+
 const routeHasBeenChosenCheck = (
   name: CONTACT_NAMES,
   messageEvents: MessageAppContactsEventType,
@@ -38,9 +59,8 @@ const routeHasBeenChosenCheck = (
     return (
       acc &&
       viewedRoutes[key] != null &&
-      (routeCondition == null ||
-        routeCondition.length === 0 ||
-        routeCondition.includes(viewedRoutes[key].chosen))
+      routeChosenSelected(routeCondition.chosen, viewedRoutes[key]) &&
+      routeNotChosenSelected(routeCondition.chosen, viewedRoutes[key])
     );
   }, true);
 };

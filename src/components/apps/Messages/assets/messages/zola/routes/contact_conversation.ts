@@ -22,7 +22,7 @@ export const zara_contact_conversation: MessageRouteType = {
   conditions: {
     [CONTACT_NAMES.ZOLA]: {
       routes: {
-        [ZARA_ROUTE_IDS.DO_YOU_WANT_ANY_CONTACTS]: [],
+        [ZARA_ROUTE_IDS.DO_YOU_WANT_ANY_CONTACTS]: {},
       },
     },
   },
