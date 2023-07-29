@@ -16,11 +16,7 @@ export const spam1: ConversationType = {
   conditions: {
     [CONTACT_NAMES.ZOLA]: {
       routes: {
-        [ZARA_ROUTE_IDS.YOUR_NEW_VIDEO]: [
-          ZARA_YOUR_NEW_VIDEO_OPTIONS.A,
-          ZARA_YOUR_NEW_VIDEO_OPTIONS.B,
-          ZARA_YOUR_NEW_VIDEO_OPTIONS.C,
-        ],
+        [ZARA_ROUTE_IDS.YOUR_NEW_VIDEO]: {},
       },
     },
   },

@@ -18,11 +18,7 @@ export const i_fell_for_a_spam: MessageRouteType = {
   conditions: {
     [CONTACT_NAMES.SPAM1]: {
       routes: {
-        [SPAM1_IDS.EXCHANGE_ONE]: [
-          SPAM1_FIRST_EXCHANGE_OPTIONS.A,
-          SPAM1_FIRST_EXCHANGE_OPTIONS.B,
-          SPAM1_FIRST_EXCHANGE_OPTIONS.C,
-        ],
+        [SPAM1_IDS.EXCHANGE_ONE]: {},
       },
     },
   },

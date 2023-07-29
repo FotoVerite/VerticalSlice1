@@ -6,6 +6,7 @@ import {
   getColorFromContacts,
 } from 'components/apps/Messages/context/usersMapping';
 import {my_quads} from './routes/my_quads';
+import {but_seriously} from './routes/but_seriously';
 
 export const mileena: ConversationType = {
   name: CONTACT_NAMES.MILEENA,
@@ -13,5 +14,5 @@ export const mileena: ConversationType = {
   heroImage: getAvatarFromContacts(CONTACT_NAMES.MILEENA),
   interfaceColor: getColorFromContacts(CONTACT_NAMES.MILEENA)[0],
   exchanges: [],
-  routes: [my_quads],
+  routes: [my_quads, but_seriously],
 };

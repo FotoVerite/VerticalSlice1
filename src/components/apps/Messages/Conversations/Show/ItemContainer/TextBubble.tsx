@@ -1,4 +1,4 @@
-import React, {FC, useContext} from 'react';
+import React, {FC, useContext, useRef} from 'react';
 
 import {
   Canvas,
@@ -6,6 +6,7 @@ import {
   LinearGradient,
   Rect,
   Text,
+  rect,
   useClockValue,
   useComputedValue,
   vec,
@@ -38,17 +39,27 @@ export const TextBubble: FC<
     scrollHandler,
   );
 
-  // const clock1 = useClockValue();
-  // const interval = 1000;
+  let clock1 = useClockValue();
+  const interval = 250;
+  const lastInterval = useRef(clock1.current);
+  const rectY = useRef(20);
+  const rectHeight = useRef(15);
 
-  // const animatedHeight = useComputedValue(() => {
-  //   return ((clock1.current % interval) / interval) * height;
-  // }, [clock1]);
+  if (true) {
+    clock1 = false;
+  }
 
-  // const animatedTranslate = useComputedValue(() => {
-  //   const amount = ((clock1.current % interval) / interval) * 10 * -1;
-  //   return [{translateX: amount}, {translateY: amount}];
-  // }, [clock1]);
+  const animatedSection = useComputedValue(() => {
+    if (lastInterval.current < clock1.current - interval) {
+      lastInterval.current = clock1.current;
+      rectHeight.current = Math.max(2, Math.floor(Math.random() * height - 10));
+      rectY.current = Math.floor(Math.random() * height - rectHeight.current);
+    }
+    const rHeight =
+      ((clock1.current % interval) / interval) * rectHeight.current;
+
+    return rect(0, rectY.current, width, rHeight);
+  }, [clock1]);
 
   return (
     <Canvas
@@ -66,16 +77,21 @@ export const TextBubble: FC<
         </Rect>
       </Group>
       {content}
-      {/* <Group blendMode="multiply" clip={clip}>
-        <Rect
-          x={0}
-          y={animatedHeight}
-          width={width}
-          height={animatedHeight}
-          color="red"
-        />
-        {content}
-      </Group> */}
+      {false && (
+        <Group clip={animatedSection}>
+          <Group
+            blendMode="difference"
+            clip={clip}
+            transform={[
+              {scale: 1.03},
+              {translateX: -3},
+              {translateY: -2},
+              {skewX: 0.05},
+            ]}>
+            {content}
+          </Group>
+        </Group>
+      )}
     </Canvas>
   );
 };

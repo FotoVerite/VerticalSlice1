@@ -1,4 +1,4 @@
-import {Blur, Canvas, Image} from '@shopify/react-native-skia';
+import {Blur, Canvas, Image, Rect} from '@shopify/react-native-skia';
 import React, {FC, PropsWithChildren, useContext, useRef} from 'react';
 import {StyleSheet, View, useWindowDimensions} from 'react-native';
 import {PanGestureHandler} from 'react-native-gesture-handler';
@@ -14,9 +14,11 @@ import {SnapShotContext} from 'components/Snapshot/context';
 import NotificationsContextProvider from './context';
 import ActiveNotifications from './ActiveNotifications';
 import {APP_WIDE_Z_INDEX_LEVELS} from 'common/types';
+import {useSafeAreaInsets} from 'react-native-safe-area-context';
 
 const Notifications: FC<PropsWithChildren> = ({children}) => {
   const snapshotContext = useContext(SnapShotContext);
+  const insets = useSafeAreaInsets();
   const {width, height} = useWindowDimensions();
   const left = useSharedValue(width);
   const open = useRef<boolean>(false);
@@ -30,7 +32,6 @@ const Notifications: FC<PropsWithChildren> = ({children}) => {
     snapshotContext.background.set(undefined);
     snapshotContext.takeBackground.set(false);
   };
-
   return (
     <NotificationsContextProvider>
       <PanGestureHandler
@@ -55,22 +56,26 @@ const Notifications: FC<PropsWithChildren> = ({children}) => {
             left.value = width + e.nativeEvent.translationX;
           }
         }}>
-        <View style={styles.layout}>
+        <View style={[styles.layout]}>
           <NotificationsList left={left} />
-          {snapshotContext.background.state && (
-            <Canvas
-              pointerEvents="none"
-              style={[{width: width, height: height}, styles.background]}>
+          <Canvas
+            pointerEvents="none"
+            style={[
+              {width: width, height: height - insets.top - insets.bottom},
+              {marginTop: insets.top},
+              styles.background,
+            ]}>
+            {snapshotContext.background.state && (
               <Image
                 x={0}
-                y={0.5}
+                y={0}
                 width={width}
                 height={height}
                 image={snapshotContext.background.state}>
                 <Blur blur={blur} />
               </Image>
-            </Canvas>
-          )}
+            )}
+          </Canvas>
           {children}
         </View>
       </PanGestureHandler>
@@ -84,11 +89,8 @@ export default Notifications;
 const styles = StyleSheet.create({
   layout: {
     flexGrow: 1,
-    backgroundColor: '#f1f1f1',
   },
   background: {
-    marginTop: 12,
-
     position: 'absolute',
     zIndex: APP_WIDE_Z_INDEX_LEVELS.RASTERIZED_BACKGROUND,
   },

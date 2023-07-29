@@ -17,7 +17,7 @@ export const i_dont_feel_secure: MessageRouteType = {
   conditions: {
     [CONTACT_NAMES.ZOLA]: {
       routes: {
-        [ZARA_ROUTE_IDS.CONTACT_CONVERSATION]: [],
+        [ZARA_ROUTE_IDS.CONTACT_CONVERSATION]: {},
       },
     },
   },
