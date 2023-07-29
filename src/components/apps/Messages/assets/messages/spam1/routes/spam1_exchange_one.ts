@@ -5,7 +5,7 @@ import {
 import {CONTACT_NAMES} from 'components/apps/Messages/context/usersMapping';
 import {DigestedItemTypes} from 'components/apps/Messages/reducers/conversationReducer/digestion/types';
 import {SPAM1_IDS} from './routes';
-import spam1_image from '../assets/spam1.jpeg';
+import spam1_image from '../assets/spam1.png';
 
 export enum SPAM1_FIRST_EXCHANGE_OPTIONS {
   A = 'New Phone, Who Dis',
