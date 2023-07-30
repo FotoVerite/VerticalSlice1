@@ -62,8 +62,10 @@ const Notification: FC<{
           <Image source={image} style={styles.image} />
           <View style={styles.contentContainer}>
             <Row style={styles.header}>
-              <View>
-                <Bold style={styles.text}>{title}</Bold>
+              <View style={styles.content}>
+                <Bold style={styles.text} numberOfLines={1}>
+                  {title}
+                </Bold>
                 <P style={styles.text}>{content}</P>
               </View>
               <P style={styles.date}>{formatMoment(moment(timestamp))}</P>
@@ -87,6 +89,10 @@ const styles = StyleSheet.create({
     flexGrow: 1,
     width: 2,
   },
+  content: {
+    flexShrink: 1,
+    marginEnd: theme.spacing.p1,
+  },
   image: {
     height: 50,
     width: 50,
@@ -98,7 +104,7 @@ const styles = StyleSheet.create({
   },
   date: {
     marginLeft: 'auto',
-    marginTop: 0,
+    marginTop: -1,
     color: '#343434',
     fontSize: 13,
   },

@@ -56,10 +56,14 @@ const MessageInput: FC<
       <BlurView
         style={styles.blur}
         blurType="light"
-        blurAmount={25}
-        reducedTransparencyFallbackColor="white"
+        blurAmount={5}
+        reducedTransparencyFallbackColor="red"
       />
-      <MessageTextInput active={active} setActive={setActive} />
+      <MessageTextInput
+        active={active}
+        setActive={setActive}
+        hasRoute={activeRoute != null}
+      />
       <OptionList
         active={active}
         setActive={setActive}

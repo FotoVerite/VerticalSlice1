@@ -62,8 +62,9 @@ const NewMessage: FC = () => {
     <Animated.View
       style={[
         {
-          height:
-            height - (insets.top + insets.bottom + BACKGROUND_HEIGHT_VISIBLE),
+          height: height - (insets.top + BACKGROUND_HEIGHT_VISIBLE),
+          paddingBottom: insets.bottom,
+          backgroundColor: '#cfcdcd',
         },
         styles.screen,
         AnimateMediaTop,
@@ -88,7 +89,7 @@ const NewMessage: FC = () => {
         </Row>
         <NewMessageInput contact={conversation.current?.name} />
       </View>
-      <View style={{flex: 1, flexGrow: 1, backgroundColor: '#c2c0c0'}}>
+      <View style={{flex: 1, flexGrow: 1}}>
         {conversation.current && (
           <>
             <List

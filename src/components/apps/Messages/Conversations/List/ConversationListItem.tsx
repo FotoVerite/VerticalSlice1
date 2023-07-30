@@ -88,6 +88,7 @@ const styles = StyleSheet.create({
   },
   infoRow: {
     flexGrow: 0,
+    alignItems: 'center',
   },
   dateRow: {
     flexGrow: 0,

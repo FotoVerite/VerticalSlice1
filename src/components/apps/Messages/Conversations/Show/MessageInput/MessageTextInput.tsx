@@ -1,15 +1,70 @@
-import React, {FC, useContext} from 'react';
+import React, {FC, useContext, useEffect} from 'react';
 import {View, StyleSheet, TouchableWithoutFeedback} from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import theme from 'themes';
 import Cursor from './Cursor';
 import {MessagesContext} from 'components/apps/Messages/context';
+import Animated, {
+  Easing,
+  interpolate,
+  interpolateColor,
+  useAnimatedStyle,
+  useSharedValue,
+  withRepeat,
+  withSequence,
+  withTiming,
+} from 'react-native-reanimated';
+import {
+  CONTACT_NAMES,
+  getColorFromContacts,
+} from 'components/apps/Messages/context/usersMapping';
 
 const MessageTextInput: FC<{
   active: boolean;
   setActive: (value: boolean) => void;
-}> = ({active, setActive}) => {
-  const activePath = useContext(MessagesContext).conversation.state?.activePath;
+  hasRoute: boolean;
+}> = ({active, setActive, hasRoute}) => {
+  const rotation = useSharedValue(0);
+  const glow = useSharedValue(0);
+  const conversation = useContext(MessagesContext).conversation;
+  const activePath = conversation.state?.activePath;
+
+  const AnimatedIcon = Animated.createAnimatedComponent(Icon);
+
+  useEffect(() => {
+    rotation.value = withTiming(active ? 1 : 0, {easing: Easing.bounce});
+  }, [active, rotation]);
+
+  useEffect(() => {
+    if (hasRoute && !active) {
+      glow.value = withRepeat(
+        withSequence(
+          withTiming(0.4, {duration: 1000, easing: Easing.bounce}),
+          withTiming(0, {duration: 750, easing: Easing.bounce}),
+        ),
+        -1,
+        true,
+      );
+    } else if (active) {
+      glow.value = withTiming(0.5);
+    } else {
+      glow.value = withTiming(0);
+    }
+  }, [active, glow, hasRoute]);
+
+  const animatedIconStyles = useAnimatedStyle(() => {
+    return {
+      color: interpolateColor(
+        glow.value,
+        [0, 1],
+        ['black', conversation.state?.interfaceColor || 'black'],
+      ),
+      transform: [
+        {rotate: `${interpolate(rotation.value, [0, 1], [0, -180])}deg`},
+      ],
+    };
+  }, [active, conversation.state?.interfaceColor]);
+
   return (
     <View style={[styles.container]}>
       <TouchableWithoutFeedback
@@ -20,7 +75,11 @@ const MessageTextInput: FC<{
         }}>
         <View style={[styles.textInput]}>
           {active && <Cursor />}
-          <Icon size={20} name="chevron-up" style={styles.icon} />
+          <AnimatedIcon
+            size={20}
+            name="chevron-down"
+            style={[styles.icon, animatedIconStyles]}
+          />
         </View>
       </TouchableWithoutFeedback>
     </View>
