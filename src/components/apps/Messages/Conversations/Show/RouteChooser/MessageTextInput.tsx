@@ -14,10 +14,6 @@ import Animated, {
   withSequence,
   withTiming,
 } from 'react-native-reanimated';
-import {
-  CONTACT_NAMES,
-  getColorFromContacts,
-} from 'components/apps/Messages/context/usersMapping';
 
 const MessageTextInput: FC<{
   active: boolean;
@@ -36,7 +32,7 @@ const MessageTextInput: FC<{
   }, [active, rotation]);
 
   useEffect(() => {
-    if (hasRoute && !active) {
+    if (hasRoute && !active && activePath != null && activePath.length === 0) {
       glow.value = withRepeat(
         withSequence(
           withTiming(0.4, {duration: 1000, easing: Easing.bounce}),
@@ -50,7 +46,7 @@ const MessageTextInput: FC<{
     } else {
       glow.value = withTiming(0);
     }
-  }, [active, glow, hasRoute]);
+  }, [active, glow, hasRoute, activePath]);
 
   const animatedIconStyles = useAnimatedStyle(() => {
     return {

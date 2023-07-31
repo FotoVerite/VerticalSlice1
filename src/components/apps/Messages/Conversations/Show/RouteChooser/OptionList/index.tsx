@@ -1,9 +1,9 @@
 import React, {
   FC,
+  PropsWithChildren,
   memo,
   useCallback,
   useEffect,
-  useMemo,
   useState,
 } from 'react';
 import {
@@ -20,31 +20,16 @@ import Animated, {
   withDelay,
   withTiming,
 } from 'react-native-reanimated';
-import Option from './Option';
 import theme from 'themes';
-import NoOption from './NoOption';
 import {ConversationShowRefs} from '../..';
-import {MessageRouteType} from 'components/apps/Messages/context/types';
-import {CONTACT_NAMES} from 'components/apps/Messages/context/usersMapping';
-import {ConversationReducerActionsType} from 'components/apps/Messages/reducers/conversationReducer/types';
 
 const OptionList: FC<
   {
     active: boolean;
     setActive: (active: boolean) => void;
-    activeRoute: MessageRouteType | undefined;
-    dispatch: (action: ConversationReducerActionsType) => Promise<void>;
-    name: CONTACT_NAMES;
-  } & ConversationShowRefs
-> = ({
-  active,
-  setActive,
-  activeRoute,
-  animatedScrollRef,
-  dispatch,
-  footerHeight,
-  name,
-}) => {
+  } & ConversationShowRefs &
+    PropsWithChildren
+> = ({active, animatedScrollRef, children, footerHeight}) => {
   const showOptions = useSharedValue(0);
 
   const [optionsHeight, setOptionsHeight] = useState(0);
@@ -87,24 +72,6 @@ const OptionList: FC<
     };
   }, [showOptions, active]);
 
-  const options = useMemo(() => {
-    if (activeRoute != null) {
-      console.log(activeRoute.options);
-      return activeRoute.options.map(option => (
-        <Option
-          key={`${activeRoute.routes.id}-${option}`}
-          id={activeRoute.id}
-          option={option}
-          setActive={setActive}
-          dispatch={dispatch}
-          name={name}
-        />
-      ));
-    } else {
-      return <NoOption setActive={setActive} />;
-    }
-  }, [activeRoute, dispatch, name, setActive]);
-
   return (
     <Animated.View style={[styles.screen, animateOptionsUp]}>
       <View
@@ -120,7 +87,7 @@ const OptionList: FC<
             setOptionsHeight(layoutHeight);
           }
         }}>
-        {options}
+        {children}
       </View>
     </Animated.View>
   );

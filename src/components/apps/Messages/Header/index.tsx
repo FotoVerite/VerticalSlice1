@@ -22,10 +22,10 @@ const Header: FC = () => {
           //navigation.navigate('Desktop');
         }}>
         <View style={styles.spacer}>
-          <Row style={styles.row}>
+          {/* <Row style={styles.row}>
             <Icon name="chevron-left" color={'black'} size={16} />
             <P style={styles.backButton}>Back</P>
-          </Row>
+          </Row> */}
         </View>
       </TouchableWithoutFeedback>
       <P style={styles.header}>Messages</P>
@@ -40,7 +40,7 @@ const Header: FC = () => {
           }}>
           <View style={styles.spacer}>
             <Row style={styles.plusIcon}>
-              <Icon name="add-circle-outline" color={'black'} size={24} />
+              <Icon name="add-circle-outline" color={'black'} size={20} />
             </Row>
           </View>
         </TouchableWithoutFeedback>
@@ -55,9 +55,10 @@ const styles = StyleSheet.create({
   backButton: {paddingStart: 0, color: 'black'},
   container: {
     paddingHorizontal: theme.spacing.p1,
-    paddingVertical: theme.spacing.p1,
+    paddingVertical: 4,
     marginTop: 12,
     flexGrow: 0,
+    alignItems: 'flex-end',
   },
   header: {
     textAlign: 'center',
@@ -72,8 +73,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   plusIcon: {
-    alignItems: 'center',
+    alignItems: 'flex-end',
     marginStart: 'auto',
-    marginEnd: theme.spacing.p2,
   },
 });

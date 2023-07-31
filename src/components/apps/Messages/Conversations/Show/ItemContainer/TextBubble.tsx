@@ -16,6 +16,7 @@ import Animated, {SharedValue} from 'react-native-reanimated';
 import {DigestedConversationStringItemType} from 'components/apps/Messages/reducers/conversationReducer/digestion/types';
 
 import {useHeightDeterminedGradient} from './hooks/useHeightDeterminedGradient';
+import {useGlitchEffect} from './hooks/useGlitchEffect';
 
 export const TextBubble: FC<
   DigestedConversationStringItemType & {
@@ -39,27 +40,7 @@ export const TextBubble: FC<
     scrollHandler,
   );
 
-  let clock1 = useClockValue();
-  const interval = 250;
-  const lastInterval = useRef(clock1.current);
-  const rectY = useRef(20);
-  const rectHeight = useRef(15);
-
-  if (true) {
-    clock1 = false;
-  }
-
-  const animatedSection = useComputedValue(() => {
-    if (lastInterval.current < clock1.current - interval) {
-      lastInterval.current = clock1.current;
-      rectHeight.current = Math.max(2, Math.floor(Math.random() * height - 10));
-      rectY.current = Math.floor(Math.random() * height - rectHeight.current);
-    }
-    const rHeight =
-      ((clock1.current % interval) / interval) * rectHeight.current;
-
-    return rect(0, rectY.current, width, rHeight);
-  }, [clock1]);
+  const glitchEffect = useGlitchEffect(height, width, content, clip);
 
   return (
     <Canvas
@@ -77,21 +58,7 @@ export const TextBubble: FC<
         </Rect>
       </Group>
       {content}
-      {false && (
-        <Group clip={animatedSection}>
-          <Group
-            blendMode="difference"
-            clip={clip}
-            transform={[
-              {scale: 1.03},
-              {translateX: -3},
-              {translateY: -2},
-              {skewX: 0.05},
-            ]}>
-            {content}
-          </Group>
-        </Group>
-      )}
+      {false && glitchEffect}
     </Canvas>
   );
 };

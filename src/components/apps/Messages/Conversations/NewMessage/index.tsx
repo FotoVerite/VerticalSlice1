@@ -1,17 +1,14 @@
-import React, {FC, ReactElement, useContext, useRef} from 'react';
+import React, {FC, useContext, useRef} from 'react';
 import {
   StyleSheet,
-  Image,
   TouchableWithoutFeedback,
   View,
   useWindowDimensions,
-  ImageSourcePropType,
 } from 'react-native';
 import Animated, {
   interpolate,
   useAnimatedRef,
   useAnimatedStyle,
-  useScrollViewOffset,
   useSharedValue,
   withTiming,
 } from 'react-native-reanimated';
@@ -22,10 +19,10 @@ import {MessagesContext} from 'components/apps/Messages/context';
 import {Row} from 'components/common/layout';
 import {Bold, P} from 'components/common/StyledText';
 import NewMessageInput from './NewMessageInput';
-import MessageInput from '../Show/MessageInput';
-import {ConversationType, DigestedConversationType} from '../../context/types';
+import {DigestedConversationType} from '../../context/types';
 import {CONVERSATION_REDUCER_ACTIONS} from '../../reducers/conversationReducer/types';
 import List from '../Show/List';
+import RouteChooser from '../Show/RouteChooser';
 
 const BACKGROUND_HEIGHT_VISIBLE = 30;
 
@@ -99,9 +96,10 @@ const NewMessage: FC = () => {
               footerHeight={footerHeight}
               key={conversation.current?.name}
             />
-            <MessageInput
-              dispatch={context.newMessage.dispatch}
-              conversation={conversation.current}
+            <RouteChooser
+              dispatch={context.conversation.dispatch}
+              availableRoute={context.conversation.state?.availableRoute}
+              name={context.conversation.state?.name}
               footerHeight={footerHeight}
               animatedScrollRef={animatedScrollRef}
             />
@@ -113,23 +111,6 @@ const NewMessage: FC = () => {
 };
 
 export default NewMessage;
-
-export const MediaImageElement: FC<{
-  source: ImageSourcePropType;
-  aspectRatio: number;
-}> = ({source, aspectRatio}) => {
-  return (
-    <Image
-      source={source}
-      style={[
-        styles.image,
-        {
-          aspectRatio: aspectRatio,
-        },
-      ]}
-    />
-  );
-};
 
 const styles = StyleSheet.create({
   header: {

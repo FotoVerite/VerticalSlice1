@@ -75,18 +75,18 @@ export default Search;
 
 const styles = StyleSheet.create({
   searchInput: {
-    maxHeight: 40,
+    maxHeight: 30,
     borderColor: '#dfdede',
     borderStyle: 'solid',
     borderWidth: 2,
     borderRadius: theme.BorderRadius.small,
-    height: 40,
+    height: 30,
     backgroundColor: '#ddddcc',
     marginHorizontal: theme.spacing.p1,
     alignItems: 'center',
     paddingHorizontal: 12,
     flexDirection: 'row',
-    marginBottom: 2,
+    marginBottom: 4,
   },
   textInput: {
     flexGrow: 1,

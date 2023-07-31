@@ -5,18 +5,16 @@ import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import {P} from 'components/common/StyledText';
 import {Row} from 'components/common/layout';
 import theme from 'themes';
-import {CONTACT_NAMES} from 'components/apps/Messages/context/usersMapping';
 
 const Option: FC<{
-  setChosen: (string: string) => void;
+  cb: () => void;
   id: number;
-  name: CONTACT_NAMES;
   option: string;
-}> = ({setChosen, option}) => {
+}> = ({cb, option}) => {
   return (
     <TouchableOpacity
       onPress={() => {
-        setChosen(option);
+        cb();
       }}>
       <Row style={styles.container}>
         <View style={styles.content}>

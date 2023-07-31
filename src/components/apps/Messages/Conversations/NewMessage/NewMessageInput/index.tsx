@@ -1,10 +1,10 @@
-import React, {FC, useContext} from 'react';
+import React, {FC} from 'react';
 import {View, StyleSheet, TouchableWithoutFeedback} from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import theme from 'themes';
-import Cursor from '../../Show/MessageInput/Cursor';
 import {P} from 'components/common/StyledText';
 import {Row} from 'components/common/layout';
+import Cursor from '../../Show/RouteChooser/Cursor';
 
 const NewMessageInput: FC<{
   contact?: string;

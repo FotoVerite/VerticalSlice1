@@ -1,4 +1,4 @@
-import React, {FC, useContext, useEffect, useRef} from 'react';
+import React, {FC, useContext, useEffect, useRef, useState} from 'react';
 import {useWindowDimensions, StyleSheet} from 'react-native';
 import Animated, {
   useSharedValue,
@@ -15,6 +15,7 @@ import {MessagesContext} from '../../context';
 import List from './List';
 import MessageInput from './MessageInput';
 import theme from 'themes';
+import RouteChooser from './RouteChooser';
 
 export type ConversationShowRefs = {
   footerHeight: SharedValue<number>;
@@ -26,9 +27,11 @@ const Conversation: FC<{shrink: SharedValue<number>}> = ({shrink}) => {
   const insets = useSafeAreaInsets();
   const context = useContext(MessagesContext);
   const footerHeight = useSharedValue(0);
+  const showConversation = useSharedValue(0);
 
   const digestedConversation = useRef(context.conversation.state);
   const animatedScrollRef = useAnimatedRef<Animated.ScrollView>();
+
   if (
     context.conversation.state != null &&
     digestedConversation.current !== context.conversation.state
@@ -36,19 +39,17 @@ const Conversation: FC<{shrink: SharedValue<number>}> = ({shrink}) => {
     digestedConversation.current = context.conversation.state;
   }
 
-  const showMessage = useSharedValue(0);
-
   useEffect(() => {
     if (context.conversation.state) {
-      showMessage.value = withDelay(300, withTiming(1, {duration: 750}));
+      showConversation.value = withDelay(300, withTiming(1, {duration: 750}));
     } else {
-      showMessage.value = withTiming(0, {duration: 750});
+      showConversation.value = withTiming(0, {duration: 750});
     }
-  }, [context.conversation.state, showMessage]);
+  }, [context.conversation.state, showConversation]);
 
   const AnimatedStyles = useAnimatedStyle(() => {
     return {
-      marginLeft: interpolate(showMessage.value, [0, 1], [width, 0]),
+      marginLeft: interpolate(showConversation.value, [0, 1], [width, 0]),
       backgroundColor: interpolateColor(
         shrink.value,
         [0, 1],
@@ -73,9 +74,10 @@ const Conversation: FC<{shrink: SharedValue<number>}> = ({shrink}) => {
         footerHeight={footerHeight}
         key={digestedConversation.current?.name}
       />
-      <MessageInput
+      <RouteChooser
         dispatch={context.conversation.dispatch}
-        conversation={digestedConversation.current}
+        availableRoute={context.conversation.state?.availableRoute}
+        name={context.conversation.state?.name}
         footerHeight={footerHeight}
         animatedScrollRef={animatedScrollRef}
       />
