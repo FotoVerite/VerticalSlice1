@@ -6,12 +6,11 @@ import {
   DigestedConversationEmojiItemType,
   DigestedConversationGlyphItemType,
   DigestedConversationImageItemType,
-  DigestedConversationListItem,
   DigestedConversationNumberItemType,
   DigestedConversationSnapShotItemType,
   DigestedConversationStringItemType,
   DigestedConversationVCardItemType,
-  DigestedItemTypes,
+  MESSAGE_TYPE,
 } from './types';
 import {SkFont} from '@shopify/react-native-skia';
 import {
@@ -80,7 +79,7 @@ export const SkMessageItem = (
       : DEFAULT_BOTTOM_PADDING,
     name: name,
     offset: positionAcc,
-    clip: [DigestedItemTypes.EMOJI].includes(message.type)
+    clip: [MESSAGE_TYPE.EMOJI].includes(message.type)
       ? undefined
       : createPath(calculations, hasTail, leftSide),
     colors: getColorFromContacts(name),
@@ -90,6 +89,7 @@ export const SkMessageItem = (
     reaction: message.reaction,
     messageDelay: message.messageDelay,
     typingDelay: message.typingDelay,
+    effect: message.effect,
   };
 
   return skItem;
@@ -115,28 +115,28 @@ const calculateWidthHeightAndContent = (
 ) => {
   const itemWidth = leftSide ? width * 0.7 - 30 : width * 0.7;
   switch (message.type) {
-    case DigestedItemTypes.EMOJI:
+    case MESSAGE_TYPE.EMOJI:
       return {width: itemWidth, height: 60, content: message.message};
-    case DigestedItemTypes.SNAPSHOT:
+    case MESSAGE_TYPE.SNAPSHOT:
       return {
         width: itemWidth,
         height: 0,
         content: message.message,
       };
-    case DigestedItemTypes.IMAGE:
+    case MESSAGE_TYPE.IMAGE:
       const imageDimensions = Image.resolveAssetSource(
         message.message as ImageSourcePropType,
       );
       const aspectRation = imageDimensions.height / imageDimensions.width;
       const imageHeight = itemWidth * aspectRation;
       return {width: itemWidth, height: imageHeight, content: message.message};
-    case DigestedItemTypes.NUMBER:
+    case MESSAGE_TYPE.NUMBER:
       return {
         width: calculatedItemWidth(font, message.message.name, itemWidth),
         height: 30,
         content: message.message,
       };
-    case DigestedItemTypes.STRING:
+    case MESSAGE_TYPE.STRING:
       const [boxHeight, boxWidth, textNodes] = GetDimensionsAndSkiaNodes(
         font,
         font,
@@ -150,7 +150,7 @@ const calculateWidthHeightAndContent = (
         content: textNodes,
       };
 
-    case DigestedItemTypes.GLYPH:
+    case MESSAGE_TYPE.GLYPH:
       const [glyphHeight, glyphWidth, glyphNodes] = GetDimensionsAndSkiaNodes(
         font,
         font,
@@ -159,7 +159,7 @@ const calculateWidthHeightAndContent = (
         leftSide,
       );
       return {width: glyphWidth, height: glyphHeight, content: glyphNodes};
-    case DigestedItemTypes.VCARD:
+    case MESSAGE_TYPE.VCARD:
       return {
         width: 180,
         height: 60,

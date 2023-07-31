@@ -13,7 +13,6 @@ import Animated, {
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {MessagesContext} from '../../context';
 import List from './List';
-import MessageInput from './MessageInput';
 import theme from 'themes';
 import RouteChooser from './RouteChooser';
 

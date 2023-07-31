@@ -2,7 +2,7 @@ import React, {FC, memo} from 'react';
 import Animated, {SharedValue} from 'react-native-reanimated';
 import {
   DigestedConversationListItem,
-  DigestedItemTypes,
+  MESSAGE_TYPE,
 } from 'components/apps/Messages/reducers/conversationReducer/digestion/types';
 
 import {BlockTimeStamp} from './BlockTimeStamp';
@@ -18,7 +18,7 @@ const ListItem: FC<{
   scrollRef: React.RefObject<Animated.ScrollView>;
   group: boolean;
 }> = ({dispatch, item, index, scrollHandler, scrollRef, group}) => {
-  if (item.type === DigestedItemTypes.TIME) {
+  if (item.type === MESSAGE_TYPE.TIME) {
     return <BlockTimeStamp dispatch={dispatch} {...item} />;
   } else if (item.messageDelay && item.leftSide) {
     return (

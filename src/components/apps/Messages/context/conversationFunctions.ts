@@ -18,12 +18,8 @@ import {
 } from '../reducers/conversationReducer/routing/available';
 import {delayFor, formatMoment} from 'common';
 import {isMessageWithMeta} from './utility';
-import {CONTACT_NAMES} from './usersMapping';
-import {DigestedItemTypes} from '../reducers/conversationReducer/digestion/types';
-import {
-  CONVERSATION_REDUCER_ACTIONS,
-  ConversationReducerActionsType,
-} from '../reducers/conversationReducer/types';
+import {MESSAGE_TYPE} from '../reducers/conversationReducer/digestion/types';
+
 import {
   EVENTS_REDUCER_ACTIONS,
   EventsReducerActionsType,
@@ -181,11 +177,11 @@ const getLastMessageFromExchanges = (exchanges: ExchangeBlockType[]) => {
 const convertMessageToString = (message: MessageType) => {
   if (isMessageWithMeta(message)) {
     switch (message.type) {
-      case DigestedItemTypes.NUMBER:
+      case MESSAGE_TYPE.NUMBER:
         return `${message.message.name}`;
-      case DigestedItemTypes.SNAPSHOT:
+      case MESSAGE_TYPE.SNAPSHOT:
         return message.message.filename;
-      case DigestedItemTypes.VCARD:
+      case MESSAGE_TYPE.VCARD:
         return `${message.message.name} Contact Card`;
       default:
         return message.message;

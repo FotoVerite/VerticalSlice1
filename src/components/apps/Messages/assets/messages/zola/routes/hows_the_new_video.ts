@@ -1,7 +1,7 @@
 import {MessageRouteType} from 'components/apps/Messages/context/types';
 import {CONTACT_NAMES} from 'components/apps/Messages/context/usersMapping';
 import {ZARA_ROUTE_IDS} from './routes';
-import {DigestedItemTypes} from 'components/apps/Messages/reducers/conversationReducer/digestion/types';
+import {MESSAGE_TYPE} from 'components/apps/Messages/reducers/conversationReducer/digestion/types';
 
 export enum ZARA_YOUR_NEW_VIDEO_OPTIONS {
   A = "How's the grind going?",
@@ -16,16 +16,13 @@ const SELF = CONTACT_NAMES.SELF;
 const exchanges = [
   {
     name: ZARA,
-    messages: [
-      {type: DigestedItemTypes.EMOJI, message: '😩'},
-      'No clue honestly',
-    ],
+    messages: [{type: MESSAGE_TYPE.EMOJI, message: '😩'}, 'No clue honestly'],
   },
   {
     name: SELF,
     messages: [
       "You'll think of something soon to rev yourself up!",
-      {type: DigestedItemTypes.EMOJI, message: '💪'},
+      {type: MESSAGE_TYPE.EMOJI, message: '💪'},
     ],
   },
   {

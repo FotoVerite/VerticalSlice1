@@ -1,9 +1,13 @@
 import {FlexAlignType, ImageSourcePropType} from 'react-native';
-import {ConversationType, ReactionType} from '../../../context/types';
+import {
+  ConversationType,
+  ReactionType,
+  RouteConditionsType,
+} from '../../../context/types';
 import {Glyph, SkFont, SkImage, SkPath} from '@shopify/react-native-skia';
 import {CONTACT_NAMES} from '../../../context/usersMapping';
 
-export enum DigestedItemTypes {
+export enum MESSAGE_TYPE {
   EMOJI = 'emoji',
   TIME = 'time',
   IMAGE = 'image',
@@ -13,6 +17,14 @@ export enum DigestedItemTypes {
   STRING = 'string',
   VCARD = 'vcard',
 }
+export enum EFFECT_TYPE {
+  GLITCH,
+}
+
+export type MessageEffectType = {
+  type: EFFECT_TYPE;
+  conditions?: RouteConditionsType;
+};
 
 export type GlyphContent = {
   font: SkFont;
@@ -45,7 +57,7 @@ export interface DigestedConversationTimeType
   extends AbstractDigestedConversationItemType {
   content: string;
   alignItems: undefined;
-  type: DigestedItemTypes.TIME;
+  type: MESSAGE_TYPE.TIME;
 }
 
 export interface AbstractMetaDigestedConversationItemType
@@ -56,53 +68,54 @@ export interface AbstractMetaDigestedConversationItemType
   name: CONTACT_NAMES;
   leftSide: boolean;
   reaction?: ReactionType;
+  effect?: MessageEffectType;
 }
 
 export interface DigestedConversationStringItemType
   extends AbstractMetaDigestedConversationItemType {
   clip: SkPath;
   content: React.JSX.Element[];
-  type: DigestedItemTypes.STRING;
+  type: MESSAGE_TYPE.STRING;
 }
 
 export interface DigestedConversationGlyphItemType
   extends AbstractMetaDigestedConversationItemType {
   clip: SkPath;
   content: React.JSX.Element[];
-  type: DigestedItemTypes.GLYPH;
+  type: MESSAGE_TYPE.GLYPH;
 }
 
 export interface DigestedConversationImageItemType
   extends AbstractMetaDigestedConversationItemType {
   clip: SkPath;
   content: string;
-  type: DigestedItemTypes.IMAGE;
+  type: MESSAGE_TYPE.IMAGE;
 }
 
 export interface DigestedConversationEmojiItemType
   extends AbstractMetaDigestedConversationItemType {
   content: string;
-  type: DigestedItemTypes.EMOJI;
+  type: MESSAGE_TYPE.EMOJI;
 }
 
 export interface DigestedConversationNumberItemType
   extends AbstractMetaDigestedConversationItemType {
   content: ConversationType;
   clip: SkPath;
-  type: DigestedItemTypes.NUMBER;
+  type: MESSAGE_TYPE.NUMBER;
 }
 
 export interface DigestedConversationSnapShotItemType
   extends AbstractMetaDigestedConversationItemType {
   content: {image?: SkImage; backup: string; filename: string};
-  type: DigestedItemTypes.SNAPSHOT;
+  type: MESSAGE_TYPE.SNAPSHOT;
 }
 
 export interface DigestedConversationVCardItemType
   extends AbstractMetaDigestedConversationItemType {
   content: ConversationType;
   clip: SkPath;
-  type: DigestedItemTypes.VCARD;
+  type: MESSAGE_TYPE.VCARD;
 }
 
 export type BubbleItemType =

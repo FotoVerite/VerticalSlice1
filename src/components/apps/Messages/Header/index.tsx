@@ -39,9 +39,9 @@ const Header: FC = () => {
             });
           }}>
           <View style={styles.spacer}>
-            <Row style={styles.plusIcon}>
+            {/* <Row style={styles.plusIcon}>
               <Icon name="add-circle-outline" color={'black'} size={20} />
-            </Row>
+            </Row> */}
           </View>
         </TouchableWithoutFeedback>
       </View>

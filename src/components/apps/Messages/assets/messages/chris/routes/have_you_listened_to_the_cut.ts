@@ -1,7 +1,7 @@
 import {MessageRouteType} from 'components/apps/Messages/context/types';
 import {CONTACT_NAMES} from 'components/apps/Messages/context/usersMapping';
 import {CHRIS_ROUTE_IDS} from './routes';
-import {DigestedItemTypes} from 'components/apps/Messages/reducers/conversationReducer/digestion/types';
+import {MESSAGE_TYPE} from 'components/apps/Messages/reducers/conversationReducer/digestion/types';
 
 export enum CHRIS_HAVE_YOU_LISTENED_TO_MY_CUT_OPTIONS {
   A = 'Have you listened to the cut I sent you yet?',
@@ -33,7 +33,7 @@ export const have_you_listened_to_my_cut: MessageRouteType = {
         messages: [
           'Welp, stop sucking, my dude',
           'I mean sucking isn’t always bad but in this case.',
-          {type: DigestedItemTypes.EMOJI, message: '😈'},
+          {type: MESSAGE_TYPE.EMOJI, message: '😈'},
         ],
       },
       {
@@ -49,7 +49,7 @@ export const have_you_listened_to_my_cut: MessageRouteType = {
       {
         name: SELF,
         messages: [
-          {type: DigestedItemTypes.EMOJI, message: '🫠🫠🫠'},
+          {type: MESSAGE_TYPE.EMOJI, message: '🫠🫠🫠'},
           'Your humor is awful. It’s like getting hit in the face by a shit pie.',
         ],
       },

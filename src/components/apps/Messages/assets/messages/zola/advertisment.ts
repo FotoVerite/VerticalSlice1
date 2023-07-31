@@ -1,6 +1,6 @@
 import {CONTACT_NAMES} from 'components/apps/Messages/context/usersMapping';
 import {ConversationExchangeType} from '../../../context/types';
-import {DigestedItemTypes} from 'components/apps/Messages/reducers/conversationReducer/digestion/types';
+import {MESSAGE_TYPE} from 'components/apps/Messages/reducers/conversationReducer/digestion/types';
 
 //import panopticon from '@apps/Messages/assets/messages/pantopitcon.jpeg';
 
@@ -29,7 +29,7 @@ export const advertisementExchange: ConversationExchangeType = {
     {
       name: CONTACT_NAMES.ZOLA,
       messages: [
-        {type: DigestedItemTypes.EMOJI, message: '🙄'},
+        {type: MESSAGE_TYPE.EMOJI, message: '🙄'},
         "I don't want to give 2019 attitude. Maybe I'll start doing livestreams in a hot tub",
       ],
     },

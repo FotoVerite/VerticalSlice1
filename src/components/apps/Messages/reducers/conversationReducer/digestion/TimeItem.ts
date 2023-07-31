@@ -1,6 +1,6 @@
 import moment, {Moment} from 'moment';
 import {ConversationExchangeType} from '../../../context/types';
-import {DigestedConversationTimeType, DigestedItemTypes} from './types';
+import {DigestedConversationTimeType, MESSAGE_TYPE} from './types';
 
 const HEIGHT = 30;
 
@@ -15,7 +15,7 @@ export const createTimeItem = (
     paddingBottom: 0,
     offset: positionAcc,
     content: formatMoment(moment(item.time)),
-    type: DigestedItemTypes.TIME,
+    type: MESSAGE_TYPE.TIME,
   } as DigestedConversationTimeType;
   return listItem;
 };

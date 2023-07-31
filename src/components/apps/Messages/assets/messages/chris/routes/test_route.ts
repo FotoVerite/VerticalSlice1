@@ -1,4 +1,4 @@
-import {DigestedItemTypes} from 'components/apps/Messages/reducers/conversationReducer/digestion/types';
+import {MESSAGE_TYPE} from 'components/apps/Messages/reducers/conversationReducer/digestion/types';
 import {
   ExchangeBlockType,
   MessageRouteType,
@@ -23,7 +23,7 @@ const exchanges: ExchangeBlockType[] = [
     name: CONTACT_NAMES.SELF,
     messages: [
       {
-        type: DigestedItemTypes.SNAPSHOT,
+        type: MESSAGE_TYPE.SNAPSHOT,
         message: {
           backup: getAvatarFromContacts(CONTACT_NAMES.GREG)!,
           filename: 'CHRIS_SNAPSHOT',

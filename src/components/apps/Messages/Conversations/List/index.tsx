@@ -93,7 +93,6 @@ const styles = StyleSheet.create({
   },
 
   list: {
-    paddingHorizontal: theme.spacing.p2,
     flexGrow: 1,
   },
 });

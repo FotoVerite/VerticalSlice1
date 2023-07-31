@@ -1,6 +1,6 @@
 import aliceAvatar from '@apps/Messages/assets/avatars/alice_avator.jpg';
 import metroidDread from '@apps/Messages/assets/messages/alice/MetroidDread.jpeg';
-import {DigestedItemTypes} from 'components/apps/Messages/reducers/conversationReducer/digestion/types';
+import {MESSAGE_TYPE} from 'components/apps/Messages/reducers/conversationReducer/digestion/types';
 import {ConversationType} from 'components/apps/Messages/context/types';
 import {
   CONTACT_NAMES,
@@ -21,8 +21,8 @@ export const alice: ConversationType = {
         {
           name: CONTACT_NAMES.ALICE,
           messages: [
-            {type: DigestedItemTypes.STRING, message: `And done!`},
-            {type: DigestedItemTypes.IMAGE, message: metroidDread},
+            {type: MESSAGE_TYPE.STRING, message: `And done!`},
+            {type: MESSAGE_TYPE.IMAGE, message: metroidDread},
           ],
         },
         {

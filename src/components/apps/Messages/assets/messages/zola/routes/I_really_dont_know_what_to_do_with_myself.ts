@@ -4,7 +4,7 @@ import {
 } from 'components/apps/Messages/context/types';
 import {CONTACT_NAMES} from 'components/apps/Messages/context/usersMapping';
 import {ZARA_ROUTE_IDS} from './routes';
-import {DigestedItemTypes} from 'components/apps/Messages/reducers/conversationReducer/digestion/types';
+import {MESSAGE_TYPE} from 'components/apps/Messages/reducers/conversationReducer/digestion/types';
 
 export enum ZARA_DO_WITH_MYSELF {
   A = 'I joke but...',
@@ -24,7 +24,7 @@ const exchanges: ExchangeBlockType[] = [
       "And that's why you keep putting up with it.",
       'Plus I actually message you.',
       {
-        type: DigestedItemTypes.EMOJI,
+        type: MESSAGE_TYPE.EMOJI,
         message: '😉',
       },
     ],
@@ -33,7 +33,7 @@ const exchanges: ExchangeBlockType[] = [
     name: SELF,
     messages: [
       {
-        type: DigestedItemTypes.STRING,
+        type: MESSAGE_TYPE.STRING,
         message: 'Okay point',
         reaction: {name: 'heart', color: '#f487d3', delay: 3000},
         messageDelay: 1500,

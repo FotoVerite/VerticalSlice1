@@ -1,6 +1,6 @@
 import {CONTACT_NAMES} from 'components/apps/Messages/context/usersMapping';
 import {ConversationExchangeType} from '../../../context/types';
-import {DigestedItemTypes} from 'components/apps/Messages/reducers/conversationReducer/digestion/types';
+import {MESSAGE_TYPE} from 'components/apps/Messages/reducers/conversationReducer/digestion/types';
 
 export const skincare: ConversationExchangeType = {
   time: '2021-06-21T14:00:00Z',
@@ -29,7 +29,7 @@ export const skincare: ConversationExchangeType = {
       name: CONTACT_NAMES.SELF,
       messages: [
         {
-          type: DigestedItemTypes.STRING,
+          type: MESSAGE_TYPE.STRING,
           message: "I know I'm cute. God damn spend enough time at the gym.",
           reaction: {name: 'heart', color: '#f487d3'},
         },
@@ -39,7 +39,7 @@ export const skincare: ConversationExchangeType = {
       name: CONTACT_NAMES.ZOLA,
       messages: [
         {
-          type: DigestedItemTypes.STRING,
+          type: MESSAGE_TYPE.STRING,
           message:
             "Well your confidence is intact. The gym is no place to train one's skin though",
           reaction: {name: 'thumbs-down', color: '#c22036'},

@@ -25,12 +25,12 @@ const Header: FC = () => {
         onPress={() => {
           //navigation.navigate('Desktop');
         }}>
-        <Row style={styles.controls}>
+        {/* <Row style={styles.controls}>
           <Icon name="chevron-left" color={'white'} size={16} />
           <P style={styles.backButton}>Back</P>
-        </Row>
+        </Row> */}
       </TouchableHighlight>
-      <Hamburger />
+      {/* <Hamburger /> */}
     </Row>
   );
 };

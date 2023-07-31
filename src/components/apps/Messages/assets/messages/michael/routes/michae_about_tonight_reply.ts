@@ -6,7 +6,7 @@ import {
   CONTACT_NAMES,
   getAvatarFromContacts,
 } from 'components/apps/Messages/context/usersMapping';
-import {DigestedItemTypes} from 'components/apps/Messages/reducers/conversationReducer/digestion/types';
+import {MESSAGE_TYPE} from 'components/apps/Messages/reducers/conversationReducer/digestion/types';
 import {MICHAEL_IDS} from './routes';
 
 export enum MICHAEL_ABOUT_TONIGHT_REPLY_OPTIONS {
@@ -53,7 +53,7 @@ const exchanges: ExchangeBlockType[] = [
     messages: [
       'Contacts are borked. This reads as Maybe Michael',
       {
-        type: DigestedItemTypes.SNAPSHOT,
+        type: MESSAGE_TYPE.SNAPSHOT,
         message: {
           filename: 'MICHAEL_SNAPSHOT',
           backup: getAvatarFromContacts(MICHAEL),
@@ -100,7 +100,7 @@ export const michael_about_tonight_reply: MessageRouteType = {
     [OPTIONS.A]: [
       {
         name: SELF,
-        messages: [{type: DigestedItemTypes.EMOJI, message: '😈'}],
+        messages: [{type: MESSAGE_TYPE.EMOJI, message: '😈'}],
       },
     ].concat(exchanges),
     [OPTIONS.B]: [

@@ -3,7 +3,7 @@ import {getSnapshotPath} from 'components/Snapshot/context';
 import {createTimeItem} from 'components/apps/Messages/reducers/conversationReducer/digestion/TimeItem';
 import {
   DigestedConversationListItem,
-  DigestedItemTypes,
+  MESSAGE_TYPE,
 } from 'components/apps/Messages/reducers/conversationReducer/digestion/types';
 import {
   ConversationExchangeType,
@@ -160,7 +160,7 @@ export const createSkBubbleFromExchange = (
   let message = exchange.messages[index];
   const hasTail = index === exchange.messages.length - 1;
   if (!isMessageWithMeta(message)) {
-    message = {type: DigestedItemTypes.STRING, message: message};
+    message = {type: MESSAGE_TYPE.STRING, message: message};
   }
   return SkMessageItem(itemConfiguration, message, exchange.name, hasTail);
 };
@@ -172,7 +172,7 @@ export const createSkBubbleFromMessage = (
   tail: boolean,
 ) => {
   if (!isMessageWithMeta(message)) {
-    message = {type: DigestedItemTypes.STRING, message: message};
+    message = {type: MESSAGE_TYPE.STRING, message: message};
   }
   return SkMessageItem(itemConfiguration, message, name, tail);
 };
@@ -215,7 +215,7 @@ const resolveSnapshotAndUpdateOffset = async (
   item: DigestedConversationListItem,
 ) => {
   const acc = await memo;
-  if (item.type !== DigestedItemTypes.SNAPSHOT) {
+  if (item.type !== MESSAGE_TYPE.SNAPSHOT) {
     item.offset += acc.offset;
     acc.arr.push(item);
     return acc;

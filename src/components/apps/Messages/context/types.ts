@@ -1,13 +1,13 @@
 import {PropsWithChildren, ReactElement, ReactNode} from 'react';
 import {SharedValue} from 'react-native-reanimated';
-import {DataSourceParam} from '@shopify/react-native-skia';
 
 import {GenericOrUndefinedStateType} from 'types/genericContextTypes';
 import {CONTACT_NAMES} from './usersMapping';
 
 import {
   DigestedConversationListItem,
-  DigestedItemTypes,
+  MESSAGE_TYPE,
+  MessageEffectType,
 } from '../reducers/conversationReducer/digestion/types';
 import {
   AddMessagePayloadType,
@@ -68,6 +68,7 @@ export type ConversationType = {
   group?: boolean;
   routes?: MessageRouteType[];
   eventBasedRoutes?: EventBasedRouteType[];
+  hasAvailableRoute?: boolean;
   interfaceColor: string;
 };
 
@@ -109,40 +110,41 @@ interface AbstractMessageWithMetaType {
   messageDelay?: number;
   typingDelay?: number;
   reaction?: ReactionType;
+  effect?: MessageEffectType;
 }
 
 export interface StringMessageWithMeta extends AbstractMessageWithMetaType {
   message: string;
-  type: DigestedItemTypes.STRING;
+  type: MESSAGE_TYPE.STRING;
 }
 
 export interface ImageMessageWithMeta extends AbstractMessageWithMetaType {
   message: string;
-  type: DigestedItemTypes.IMAGE;
+  type: MESSAGE_TYPE.IMAGE;
 }
 
 export interface EmojiMessageWithMeta extends AbstractMessageWithMetaType {
   message: string;
-  type: DigestedItemTypes.EMOJI;
+  type: MESSAGE_TYPE.EMOJI;
 }
 export interface GlyphMessageWithMeta extends AbstractMessageWithMetaType {
   message: string;
-  type: DigestedItemTypes.GLYPH;
+  type: MESSAGE_TYPE.GLYPH;
 }
 
 export interface NumberMessageWithMeta extends AbstractMessageWithMetaType {
   message: ConversationType;
-  type: DigestedItemTypes.NUMBER;
+  type: MESSAGE_TYPE.NUMBER;
 }
 
 export interface SnapshotMessageWithMeta extends AbstractMessageWithMetaType {
-  type: DigestedItemTypes.SNAPSHOT;
+  type: MESSAGE_TYPE.SNAPSHOT;
   message: {backup: string; filename: string};
 }
 
 export interface VCardMessageWithMeta extends AbstractMessageWithMetaType {
   message: ConversationType;
-  type: DigestedItemTypes.VCARD;
+  type: MESSAGE_TYPE.VCARD;
 }
 
 export type ReactionType = {name: string; color: string; delay?: number};

@@ -1,7 +1,7 @@
 import {MessageRouteType} from 'components/apps/Messages/context/types';
 import {CONTACT_NAMES} from 'components/apps/Messages/context/usersMapping';
 import {ZARA_ROUTE_IDS} from './routes';
-import {DigestedItemTypes} from 'components/apps/Messages/reducers/conversationReducer/digestion/types';
+import {MESSAGE_TYPE} from 'components/apps/Messages/reducers/conversationReducer/digestion/types';
 
 export enum ZARA_I_DONT_FEEL_SECURE_OPTIONS {
   A = 'I wish I felt secure with Michael.',
@@ -36,7 +36,7 @@ export const i_dont_feel_secure: MessageRouteType = {
       {
         name: SELF,
         messages: [
-          {type: DigestedItemTypes.EMOJI, message: '🙁'},
+          {type: MESSAGE_TYPE.EMOJI, message: '🙁'},
           'Gurl please that joke was tired the first time you said it.',
         ],
       },

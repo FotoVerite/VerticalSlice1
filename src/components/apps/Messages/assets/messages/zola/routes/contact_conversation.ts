@@ -3,7 +3,7 @@ import {CONTACT_NAMES} from 'components/apps/Messages/context/usersMapping';
 import {ZARA_ROUTE_IDS} from './routes';
 import {SPAM1_FIRST_EXCHANGE_OPTIONS} from '../../spam1/routes/spam1_exchange_one';
 import {SPAM1_IDS} from '../../spam1/routes/routes';
-import {DigestedItemTypes} from 'components/apps/Messages/reducers/conversationReducer/digestion/types';
+import {MESSAGE_TYPE} from 'components/apps/Messages/reducers/conversationReducer/digestion/types';
 import {mileena} from '../../mileena';
 import {chris} from '../../chris';
 
@@ -34,7 +34,7 @@ export const zara_contact_conversation: MessageRouteType = {
         messages: [
           'Okay.',
           {
-            type: DigestedItemTypes.VCARD,
+            type: MESSAGE_TYPE.VCARD,
             message: mileena,
             reaction: {name: 'heart', color: '#dc1d1d', delay: 3000},
           },
@@ -48,7 +48,7 @@ export const zara_contact_conversation: MessageRouteType = {
         messages: [
           'Okay.',
           {
-            type: DigestedItemTypes.VCARD,
+            type: MESSAGE_TYPE.VCARD,
             message: chris,
             reaction: {name: 'heart', color: '#dc1d1d', delay: 3000},
           },

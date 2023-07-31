@@ -12,10 +12,10 @@ import {MessagesContext} from '../../context';
 
 import {EventOrchestraContext} from 'components/EventOrchestra/context';
 
-import theme from 'themes';
 import {getLastSeenRoute} from '../../reducers/conversationReducer/routing/seen';
 import {determineLogLine} from '../../context/conversationFunctions';
 import {CONTACT_NAMES} from '../../context/usersMapping';
+import theme from 'themes';
 
 const ConversationListItem: FC<{conversation: ConversationType}> = ({
   conversation,
@@ -59,13 +59,28 @@ const ConversationListItem: FC<{conversation: ConversationType}> = ({
         });
       }}>
       <Row>
+        <View
+          style={[
+            styles.availableRouteIndicator,
+            {
+              backgroundColor: conversation.hasAvailableRoute
+                ? conversation.interfaceColor
+                : 'transparent',
+            },
+          ]}
+        />
         <Image source={conversation.heroImage} style={styles.image} />
         <View style={styles.content}>
           <Row style={styles.infoRow}>
             <Bold>{conversation.name}</Bold>
             <Row style={styles.dateRow}>
               <P style={styles.date}>{logLine.time}</P>
-              <Icon name="chevron-right" color={'black'} size={24} />
+              <Icon
+                name="chevron-right"
+                color={'black'}
+                size={24}
+                style={styles.chevron}
+              />
             </Row>
           </Row>
           <P>{logLine.content}</P>
@@ -78,6 +93,14 @@ const ConversationListItem: FC<{conversation: ConversationType}> = ({
 export default ConversationListItem;
 
 const styles = StyleSheet.create({
+  availableRouteIndicator: {
+    height: 12,
+    width: 6,
+    alignSelf: 'center',
+    borderTopEndRadius: theme.BorderRadius.normal,
+    borderBottomEndRadius: theme.BorderRadius.normal,
+    marginEnd: theme.spacing.p1 / 2,
+  },
   image: {
     width: 50,
     height: 50,
@@ -93,11 +116,15 @@ const styles = StyleSheet.create({
   dateRow: {
     flexGrow: 0,
     marginLeft: 'auto',
-    alignItems: 'center',
   },
   date: {},
+  chevron: {
+    marginStart: 'auto',
+    width: 18,
+  },
   content: {
     flex: 1,
     alignSelf: 'center',
+    marginEnd: theme.spacing.p1,
   },
 });

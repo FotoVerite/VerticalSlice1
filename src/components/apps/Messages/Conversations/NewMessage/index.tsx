@@ -97,9 +97,9 @@ const NewMessage: FC = () => {
               key={conversation.current?.name}
             />
             <RouteChooser
-              dispatch={context.conversation.dispatch}
-              availableRoute={context.conversation.state?.availableRoute}
-              name={context.conversation.state?.name}
+              dispatch={context.newMessage.dispatch}
+              availableRoute={context.newMessage.state?.availableRoute}
+              name={context.newMessage.state?.name}
               footerHeight={footerHeight}
               animatedScrollRef={animatedScrollRef}
             />

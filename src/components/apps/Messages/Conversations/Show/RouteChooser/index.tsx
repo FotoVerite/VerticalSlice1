@@ -86,8 +86,9 @@ const MessageInput: FC<
       previousOptions.current = nodes;
       return nodes;
     } else {
-      const nodes = [<NoOption setActive={setActive} />];
+      const nodes = [<NoOption setActive={setActive} key={'non-active'} />];
       previousOptions.current = nodes;
+      return nodes;
     }
   }, [activeRoute, dispatch, eventDispatch, name, setActive]);
 

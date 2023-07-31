@@ -38,6 +38,7 @@ import {findAvailableRoutes} from '../reducers/conversationReducer/routing/avail
 import {EVENTS_REDUCER_ACTIONS} from 'components/EventOrchestra/reducers/types';
 import {mileena} from '../assets/messages/mileena';
 import {chris} from '../assets/messages/chris';
+import {customer_service} from '../assets/messages/customer_service';
 
 //defaults for empty app
 export const MessagesContext = React.createContext<MessagesContextTypeDigested>(
@@ -45,11 +46,11 @@ export const MessagesContext = React.createContext<MessagesContextTypeDigested>(
 );
 const conversations: ConversationType[] = [
   zola,
-  greg,
   spam1,
   micheal,
   chris,
   mileena,
+  customer_service,
 ];
 
 export const baseConversation: ConversationType = {
@@ -73,6 +74,11 @@ const MessagesContextProvider: FC<MessagesContextTypeDigest> = props => {
       conversations
         .filter(viewableConversations(events))
         .filter(c => conversationHasExchange(c, events))
+        .map(c => {
+          c.hasAvailableRoute =
+            findAvailableRoutes(c.name, c.routes || [], events).length > 0;
+          return c;
+        })
         .sort(sortConversations(events)),
     [events],
   );

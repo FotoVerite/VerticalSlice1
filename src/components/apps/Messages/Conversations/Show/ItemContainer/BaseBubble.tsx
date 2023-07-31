@@ -14,7 +14,7 @@ import theme from 'themes';
 import {
   BubbleItemType,
   DigestedConversationListItem,
-  DigestedItemTypes,
+  MESSAGE_TYPE,
 } from 'components/apps/Messages/reducers/conversationReducer/digestion/types';
 import {delayFor} from 'common';
 import {
@@ -39,13 +39,13 @@ const renderBubbleType = (
   scrollRef: React.RefObject<Animated.ScrollView>,
 ) => {
   switch (item.type) {
-    case DigestedItemTypes.EMOJI:
+    case MESSAGE_TYPE.EMOJI:
       return <EmojiBubble {...item} />;
-    case DigestedItemTypes.IMAGE:
+    case MESSAGE_TYPE.IMAGE:
       return <ImageBubble {...item} />;
-    case DigestedItemTypes.GLYPH:
+    case MESSAGE_TYPE.GLYPH:
       return <GlyphBubble {...item} scrollHandler={scrollHandler} />;
-    case DigestedItemTypes.NUMBER:
+    case MESSAGE_TYPE.NUMBER:
       return (
         <NumberBubble
           {...item}
@@ -53,7 +53,7 @@ const renderBubbleType = (
           scrollRef={scrollRef}
         />
       );
-    case DigestedItemTypes.SNAPSHOT:
+    case MESSAGE_TYPE.SNAPSHOT:
       return (
         <SnapshotBubble
           dispatch={dispatch}
@@ -63,7 +63,7 @@ const renderBubbleType = (
           scrollRef={scrollRef}
         />
       );
-    case DigestedItemTypes.STRING:
+    case MESSAGE_TYPE.STRING:
       return (
         <TextBubble
           {...item}
@@ -72,7 +72,7 @@ const renderBubbleType = (
         />
       );
 
-    case DigestedItemTypes.VCARD:
+    case MESSAGE_TYPE.VCARD:
       return (
         <VCardBubble
           {...item}
@@ -104,7 +104,7 @@ export const BaseBubble: FC<{
     reaction,
   } = item;
   const opacity = useSharedValue(
-    item.messageDelay && item.type !== DigestedItemTypes.SNAPSHOT ? 0 : 1,
+    item.messageDelay && item.type !== MESSAGE_TYPE.SNAPSHOT ? 0 : 1,
   );
   const sentDispatch = useRef(false);
 
@@ -132,7 +132,7 @@ export const BaseBubble: FC<{
     if (
       !sentDispatch.current &&
       item.messageDelay &&
-      item.type !== DigestedItemTypes.SNAPSHOT
+      item.type !== MESSAGE_TYPE.SNAPSHOT
     ) {
       sentDispatch.current = true;
       renderNextMessage(

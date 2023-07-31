@@ -1,19 +1,18 @@
-import React, {FC, useContext, useRef} from 'react';
+import React, {FC} from 'react';
 
 import {
   Canvas,
   Group,
   LinearGradient,
   Rect,
-  Text,
-  rect,
-  useClockValue,
-  useComputedValue,
   vec,
 } from '@shopify/react-native-skia';
 
 import Animated, {SharedValue} from 'react-native-reanimated';
-import {DigestedConversationStringItemType} from 'components/apps/Messages/reducers/conversationReducer/digestion/types';
+import {
+  DigestedConversationStringItemType,
+  EFFECT_TYPE,
+} from 'components/apps/Messages/reducers/conversationReducer/digestion/types';
 
 import {useHeightDeterminedGradient} from './hooks/useHeightDeterminedGradient';
 import {useGlitchEffect} from './hooks/useGlitchEffect';
@@ -32,6 +31,7 @@ export const TextBubble: FC<
   width,
   height,
   clip,
+  effect,
 }) => {
   const computedColors = useHeightDeterminedGradient(
     colors,
@@ -58,7 +58,7 @@ export const TextBubble: FC<
         </Rect>
       </Group>
       {content}
-      {false && glitchEffect}
+      {effect?.type == EFFECT_TYPE.GLITCH && glitchEffect}
     </Canvas>
   );
 };
