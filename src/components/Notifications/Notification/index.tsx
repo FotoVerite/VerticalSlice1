@@ -1,7 +1,7 @@
 import React, {FC, useEffect} from 'react';
 import {formatMoment} from 'common';
-import {Bold, P} from 'components/common/StyledText';
-import {Row} from 'components/common/layout';
+import {Bold, P} from 'common/styles/StyledText';
+import {Row} from 'common/styles/layout';
 import moment from 'moment';
 import {View, Image, StyleSheet, useWindowDimensions} from 'react-native';
 import {NotificationType} from '../reducers/notificationsReducer/types';

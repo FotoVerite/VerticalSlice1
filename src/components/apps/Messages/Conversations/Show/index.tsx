@@ -9,6 +9,7 @@ import Animated, {
   useAnimatedRef,
   SharedValue,
   interpolateColor,
+  runOnJS,
 } from 'react-native-reanimated';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {MessagesContext} from '../../context';
@@ -40,11 +41,18 @@ const Conversation: FC<{shrink: SharedValue<number>}> = ({shrink}) => {
 
   useEffect(() => {
     if (context.conversation.state) {
-      showConversation.value = withDelay(300, withTiming(1, {duration: 750}));
+      showConversation.value = withDelay(
+        300,
+        withTiming(1, {duration: 750}, () => {
+          runOnJS(context.listCovered.set)(true);
+        }),
+      );
     } else {
-      showConversation.value = withTiming(0, {duration: 750});
+      showConversation.value = withTiming(0, {duration: 750}, () => {
+        runOnJS(context.listCovered.set)(false);
+      });
     }
-  }, [context.conversation.state, showConversation]);
+  }, [context.conversation.state, context.listCovered.set, showConversation]);
 
   const AnimatedStyles = useAnimatedStyle(() => {
     return {

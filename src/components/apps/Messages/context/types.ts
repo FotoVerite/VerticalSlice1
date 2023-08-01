@@ -1,7 +1,10 @@
 import {PropsWithChildren, ReactElement, ReactNode} from 'react';
 import {SharedValue} from 'react-native-reanimated';
 
-import {GenericOrUndefinedStateType} from 'types/genericContextTypes';
+import {
+  GenericOrUndefinedStateType,
+  GenericStateType,
+} from 'types/genericContextTypes';
 import {CONTACT_NAMES} from './usersMapping';
 
 import {
@@ -29,6 +32,7 @@ export type MessagesContextTypeDigested = PropsWithChildren<{
     state: DigestedConversationType | undefined;
     dispatch: (action: ConversationReducerActionsType) => Promise<void>;
   };
+  listCovered: GenericStateType<boolean>;
   newMessage: {
     state: DigestedConversationType | undefined;
     dispatch: (action: ConversationReducerActionsType) => Promise<void>;
@@ -61,6 +65,7 @@ export type EventBasedRouteType = {
 export type ConversationType = {
   availableEventRoutes?: number[];
   conditions?: RouteConditionsType;
+  effect?: MessageEffectType;
   eventBasedRoutes?: EventBasedRouteType[];
   exchanges: ConversationExchangeType[];
   group?: boolean;
@@ -70,6 +75,7 @@ export type ConversationType = {
   logline?: {content: string; time: string};
   name: CONTACT_NAMES;
   routes?: MessageRouteType[];
+
   tags: string[];
 };
 

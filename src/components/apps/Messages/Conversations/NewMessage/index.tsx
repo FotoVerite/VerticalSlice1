@@ -7,6 +7,7 @@ import {
 } from 'react-native';
 import Animated, {
   interpolate,
+  runOnJS,
   useAnimatedRef,
   useAnimatedStyle,
   useSharedValue,
@@ -16,8 +17,8 @@ import Animated, {
 import theme from 'themes';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {MessagesContext} from 'components/apps/Messages/context';
-import {Row} from 'components/common/layout';
-import {Bold, P} from 'components/common/StyledText';
+import {Row} from 'common/styles/layout';
+import {Bold, P} from 'common/styles/StyledText';
 import NewMessageInput from './NewMessageInput';
 import {DigestedConversationType} from '../../context/types';
 import {CONVERSATION_REDUCER_ACTIONS} from '../../reducers/conversationReducer/types';
@@ -42,9 +43,13 @@ const NewMessage: FC = () => {
   }
   const AnimateMediaTop = useAnimatedStyle(() => {
     if (context.newMessage.state != null) {
-      show.value = withTiming(1, {duration: 750});
+      show.value = withTiming(1, {duration: 750}, () => {
+        runOnJS(context.listCovered.set)(true);
+      });
     } else {
-      show.value = withTiming(0, {duration: 750});
+      show.value = withTiming(0, {duration: 750}, () => {
+        runOnJS(context.listCovered.set)(false);
+      });
     }
     return {
       marginTop: interpolate(

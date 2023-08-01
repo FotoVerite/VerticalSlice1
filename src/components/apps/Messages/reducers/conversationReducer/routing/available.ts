@@ -67,9 +67,12 @@ const routeHasBeenChosenCheck = (
 
 export const messageAppConditionsMet = (
   state: MessageAppContactsEventType,
-  conditions: RouteConditionsType,
+  conditions?: RouteConditionsType,
 ) => {
   let ret = true;
+  if (conditions == null) {
+    return ret;
+  }
   Object.keys(conditions).forEach((key: string) => {
     ret =
       ret && contactHasBeenViewedCheck(key as CONTACT_NAMES, state, conditions);

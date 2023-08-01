@@ -6,6 +6,7 @@ import {
 } from '../../../context/types';
 import {Glyph, SkFont, SkImage, SkPath} from '@shopify/react-native-skia';
 import {CONTACT_NAMES} from '../../../context/usersMapping';
+import {ReactElement} from 'react';
 
 export enum MESSAGE_TYPE {
   EMOJI = 'emoji',
@@ -19,10 +20,12 @@ export enum MESSAGE_TYPE {
 }
 export enum EFFECT_TYPE {
   GLITCH,
+  REPLACEMENT,
 }
 
 export type MessageEffectType = {
   type: EFFECT_TYPE;
+  data: ReactElement;
   conditions?: RouteConditionsType;
 };
 

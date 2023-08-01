@@ -1,11 +1,18 @@
-import React, {FC, useContext, useMemo} from 'react';
+import React, {
+  FC,
+  ReactElement,
+  useContext,
+  useEffect,
+  useMemo,
+  useState,
+} from 'react';
 import {TouchableOpacity, Image, View, StyleSheet} from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
 import {CONVERSATION_REDUCER_ACTIONS} from '../../reducers/conversationReducer/types';
 
-import {Bold, P} from 'components/common/StyledText';
-import {Row} from 'components/common/layout';
+import {Bold, P} from 'common/styles/StyledText';
+import {Row} from 'common/styles/layout';
 
 import {ConversationType} from '../../context/types';
 import {MessagesContext} from '../../context';
@@ -13,6 +20,7 @@ import {MessagesContext} from '../../context';
 import {EventOrchestraContext} from 'components/EventOrchestra/context';
 import {CONTACT_NAMES} from '../../context/usersMapping';
 import theme from 'themes';
+import {messageAppConditionsMet} from '../../reducers/conversationReducer/routing/available';
 
 const ConversationListItem: FC<{conversation: ConversationType}> = ({
   conversation,
@@ -20,7 +28,27 @@ const ConversationListItem: FC<{conversation: ConversationType}> = ({
   const context = useContext(MessagesContext);
   const eventContext = useContext(EventOrchestraContext);
 
-  //const [displayedLogline, setDisplayedLogline] = useState(logLine);
+  const [replacementLogline, setReplacementLogline] = useState<ReactElement>();
+
+  useEffect(() => {
+    if (!conversation.effect) {
+      return;
+    }
+    if (!context.listCovered.state) {
+      return;
+    }
+
+    if (
+      messageAppConditionsMet(
+        eventContext.events.state.Message,
+        conversation.effect.conditions,
+      )
+    ) {
+      setReplacementLogline(React.cloneElement(conversation.effect.data));
+    } else {
+      setReplacementLogline(undefined);
+    }
+  }, [context, conversation, eventContext.events.state]);
 
   const unhomelike = (name: CONTACT_NAMES, logline: string) => {
     if (![CONTACT_NAMES.SPAM1].includes(name)) {
@@ -68,7 +96,11 @@ const ConversationListItem: FC<{conversation: ConversationType}> = ({
               />
             </Row>
           </Row>
-          <P>{conversation.logline?.content}</P>
+          <P>
+            {replacementLogline
+              ? replacementLogline
+              : conversation.logline?.content}
+          </P>
         </View>
       </Row>
     </TouchableOpacity>

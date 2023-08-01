@@ -3,7 +3,7 @@ import {FlatList, ListRenderItem, StyleSheet, View} from 'react-native';
 
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 
-import {P, Bold} from 'components/common/StyledText';
+import {P, Bold} from 'common/styles/StyledText';
 
 import {HexContext} from '../context';
 

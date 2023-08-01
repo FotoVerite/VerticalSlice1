@@ -10,23 +10,6 @@ import notificationReducer from '../reducers/notificationsReducer';
 export const NotificationsContext =
   React.createContext<NotificationsContextTypeDigested>({});
 
-// const notification1 = {
-//   title: 'title',
-//   content: 'Hello this is a notification',
-//   active: true,
-//   timestamp: new Date(),
-//   image: zolaAvatar,
-//   index: 1,
-// };
-// const notification2 = {
-//   title: 'title',
-//   content: 'Hello this is a notification',
-//   active: true,
-//   timestamp: new Date(),
-//   image: zolaAvatar,
-//   index: 2,
-// };
-
 const NotificationsContextProvider: FC<
   NotificationsContextTypeDigest
 > = props => {

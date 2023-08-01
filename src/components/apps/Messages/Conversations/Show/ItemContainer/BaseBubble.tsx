@@ -8,7 +8,7 @@ import Animated, {
 } from 'react-native-reanimated';
 import {Image, View} from 'react-native';
 
-import {Row} from 'components/common/layout';
+import {Row} from 'common/styles/layout';
 import {StyleSheet} from 'react-native';
 import theme from 'themes';
 import {
@@ -27,7 +27,7 @@ import {ImageBubble} from './ImageBubble';
 import {SnapshotBubble} from './SnapshotBubble';
 import {TextBubble} from './TextBubble';
 import Reaction from './Reaction';
-import {P} from 'components/common/StyledText';
+import {P} from 'common/styles/StyledText';
 import {VCardBubble} from './VCardBubble';
 import {NumberBubble} from './NumberBubble';
 

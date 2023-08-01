@@ -13,7 +13,7 @@ import {useSafeAreaInsets} from 'react-native-safe-area-context';
 
 import Notification from '../Notification';
 import {NotificationType} from '../reducers/notificationsReducer/types';
-import {P} from 'components/common/StyledText';
+import {P} from 'common/styles/StyledText';
 
 const styles = StyleSheet.create({
   screen: {

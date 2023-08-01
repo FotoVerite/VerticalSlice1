@@ -15,14 +15,14 @@ import Animated, {
   withTiming,
 } from 'react-native-reanimated';
 
-import {Bold} from 'components/common/StyledText';
+import {Bold} from 'common/styles/StyledText';
 
 import {MessagesContext} from '../context';
 
 import theme from 'themes';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import {BlurView} from '@react-native-community/blur';
-import {Row} from 'components/common/layout';
+import {Row} from 'common/styles/layout';
 import {CONVERSATION_REDUCER_ACTIONS} from '../reducers/conversationReducer/types';
 
 const ConversationHeader: FC<{shrink: SharedValue<number>}> = ({shrink}) => {

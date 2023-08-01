@@ -25,8 +25,8 @@ import Animated, {
 import theme from 'themes';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {MessagesContext} from 'components/apps/Messages/context';
-import {Row} from 'components/common/layout';
-import {P} from 'components/common/StyledText';
+import {Row} from 'common/styles/layout';
+import {P} from 'common/styles/StyledText';
 
 const MediaView: FC = () => {
   const {width, height} = useWindowDimensions();

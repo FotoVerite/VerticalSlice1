@@ -12,7 +12,7 @@ import {HexContext} from '../context';
 import {showTheNotification} from '../controller';
 
 import theme from 'themes';
-import {P} from 'components/common/StyledText';
+import {P} from 'common/styles/StyledText';
 
 const Notification: FC = () => {
   const {width} = useWindowDimensions();

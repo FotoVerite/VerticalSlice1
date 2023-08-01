@@ -3,7 +3,7 @@ import {StyleSheet} from 'react-native';
 
 import {HexContext} from '../context';
 
-import {P} from 'components/common/StyledText';
+import {P} from 'common/styles/StyledText';
 import theme from 'themes';
 
 const Points: FC = () => {

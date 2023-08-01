@@ -21,13 +21,13 @@ import {
   interpolateColor,
   useDerivedValue,
 } from 'react-native-reanimated';
-import {Row} from 'components/common/layout';
+import {Row} from 'common/styles/layout';
 import {StyleSheet} from 'react-native';
 import Reaction from '../Reaction';
 import {DigestedConversationGlyphItemType} from 'components/apps/Messages/reducers/conversationReducer/digestion/types';
 
 import theme from 'themes';
-import {P} from 'components/common/StyledText';
+import {P} from 'common/styles/StyledText';
 import AnimatedGlyph from './AnimatedGlyph';
 import {createNoise2D} from 'simplex-noise';
 

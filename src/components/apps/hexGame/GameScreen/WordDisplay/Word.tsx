@@ -5,7 +5,7 @@ import Animated, {interpolate, useAnimatedStyle} from 'react-native-reanimated';
 import {StyleSheet, Text} from 'react-native';
 import Cursor from './Cursor';
 import {HexContext} from '../../context';
-import {P} from 'components/common/StyledText';
+import {P} from 'common/styles/StyledText';
 import {HexSharedValues} from '../../context/animation';
 
 const WordDisplay: FC = () => {

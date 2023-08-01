@@ -11,7 +11,7 @@ import Animated, {
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 
 import theme from 'themes';
-import {P} from 'components/common/StyledText';
+import {P} from 'common/styles/StyledText';
 
 export type HorrorNotificationType = {
   delay: number;

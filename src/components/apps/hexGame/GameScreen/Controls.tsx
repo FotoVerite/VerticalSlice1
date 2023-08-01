@@ -8,7 +8,7 @@ import {HexSharedValues} from '../context/animation';
 import {checkAnswer} from '../controller';
 import {HexContext} from '../context';
 
-import {Row} from 'components/common/layout';
+import {Row} from 'common/styles/layout';
 
 import theme from 'themes';
 

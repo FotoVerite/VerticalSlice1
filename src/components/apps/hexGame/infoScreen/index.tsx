@@ -7,7 +7,7 @@ import {HexSharedValues} from '../context/animation';
 import FoundWordsList from './FoundWordsList';
 import Hamburger from '../Header/Hamburger';
 import Points from './Points';
-import {Row} from 'components/common/layout';
+import {Row} from 'common/styles/layout';
 
 const InfoScreen: FC = () => {
   const {width, height} = useWindowDimensions();

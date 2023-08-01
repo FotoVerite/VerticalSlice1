@@ -3,7 +3,7 @@ import React, {FC, useEffect} from 'react';
 import {StyleSheet} from 'react-native';
 import {DigestedConversationTimeType} from 'components/apps/Messages/reducers/conversationReducer/digestion/types';
 
-import {P} from 'components/common/StyledText';
+import {P} from 'common/styles/StyledText';
 import {delayFor} from 'common';
 import {
   CONVERSATION_REDUCER_ACTIONS,

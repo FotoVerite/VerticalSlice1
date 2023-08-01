@@ -2,8 +2,8 @@ import React, {FC} from 'react';
 import {TouchableOpacity, View, StyleSheet} from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
-import {P} from 'components/common/StyledText';
-import {Row} from 'components/common/layout';
+import {P} from 'common/styles/StyledText';
+import {Row} from 'common/styles/layout';
 import theme from 'themes';
 
 const NoOption: FC<{

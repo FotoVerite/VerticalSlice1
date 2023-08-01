@@ -2,9 +2,9 @@ import React, {FC} from 'react';
 import {View, StyleSheet, TouchableWithoutFeedback} from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import theme from 'themes';
-import {P} from 'components/common/StyledText';
-import {Row} from 'components/common/layout';
+import {Row} from 'common/styles/layout';
 import Cursor from '../../Show/RouteChooser/Cursor';
+import {P} from 'common/styles/StyledText';
 
 const NewMessageInput: FC<{
   contact?: string;

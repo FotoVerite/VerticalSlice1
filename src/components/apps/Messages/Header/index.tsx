@@ -2,8 +2,8 @@ import React, {FC, useContext} from 'react';
 
 import {useNavigation} from '@react-navigation/native';
 import {StackNavigationProp} from '@react-navigation/stack';
-import {P} from 'components/common/StyledText';
-import {Row} from 'components/common/layout';
+import {P} from 'common/styles/StyledText';
+import {Row} from 'common/styles/layout';
 import {screenParams} from 'navigation/screens';
 import {View, StyleSheet, TouchableWithoutFeedback} from 'react-native';
 import {Icon} from 'react-native-elements';

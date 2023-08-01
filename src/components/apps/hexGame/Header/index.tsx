@@ -8,8 +8,8 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 
 import {screenParams} from 'navigation/screens';
 
-import {P} from 'components/common/StyledText';
-import {Row} from 'components/common/layout';
+import {P} from 'common/styles/StyledText';
+import {Row} from 'common/styles/layout';
 
 import theme from 'themes';
 import Hamburger from './Hamburger';
@@ -25,12 +25,12 @@ const Header: FC = () => {
         onPress={() => {
           //navigation.navigate('Desktop');
         }}>
-        {/* <Row style={styles.controls}>
+        <Row style={styles.controls}>
           <Icon name="chevron-left" color={'white'} size={16} />
           <P style={styles.backButton}>Back</P>
-        </Row> */}
+        </Row>
       </TouchableHighlight>
-      {/* <Hamburger /> */}
+      <Hamburger />
     </Row>
   );
 };

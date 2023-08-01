@@ -16,7 +16,6 @@ import {
 import {zola} from '../assets/messages/zola';
 import {useWindowDimensions} from 'react-native';
 import {ApplicationContext} from 'context';
-import {greg} from '../assets/messages/greg';
 import {EventOrchestraContext} from 'components/EventOrchestra/context';
 import createConversationReducer from '../reducers/conversationReducer';
 import {
@@ -24,7 +23,6 @@ import {
   ConversationReducerActionsType,
 } from '../reducers/conversationReducer/types';
 import {digestConversation} from '../reducers/conversationReducer/digestion';
-import {CONTACT_NAMES} from './usersMapping';
 import {
   viewableConversations,
   conversationHasExchange,
@@ -40,7 +38,6 @@ import {EVENTS_REDUCER_ACTIONS} from 'components/EventOrchestra/reducers/types';
 import {mileena} from '../assets/messages/mileena';
 import {chris} from '../assets/messages/chris';
 import {customer_service} from '../assets/messages/customer_service';
-import {getLastSeenRoute} from '../reducers/conversationReducer/routing/seen';
 
 //defaults for empty app
 export const MessagesContext = React.createContext<MessagesContextTypeDigested>(
@@ -70,21 +67,23 @@ const MessagesContextProvider: FC<MessagesContextTypeDigest> = props => {
   const events = eventContext.events.state;
 
   const [media, setMedia] = useState<ReactElement>();
+  const [listCovered, setListCovered] = useState<boolean>(false);
 
-  const filteredConversations = useMemo(
-    () =>
-      conversations
-        .filter(viewableConversations(events))
-        .filter(c => conversationHasExchange(c, events))
-        .map(c => {
-          c.hasAvailableRoute =
-            findAvailableRoutes(c.name, c.routes || [], events).length > 0;
-          c.logline = determineLogLine(c, events);
-          return c;
-        })
-        .sort(sortConversations(events)),
-    [events],
-  );
+  const filteredConversations = useMemo(() => {
+    const state = conversations.map(c => {
+      return {...c};
+    });
+    return state
+      .filter(viewableConversations(events))
+      .filter(c => conversationHasExchange(c, events))
+      .map(c => {
+        c.hasAvailableRoute =
+          findAvailableRoutes(c.name, c.routes || [], events).length > 0;
+        c.logline = determineLogLine(c, events);
+        return c;
+      })
+      .sort(sortConversations(events));
+  }, [events]);
 
   const [prevConversations, setPreConversations] = useState(
     filteredConversations,
@@ -171,6 +170,15 @@ const MessagesContextProvider: FC<MessagesContextTypeDigest> = props => {
   }, [conversation?.name, eventDispatch]);
 
   useEffect(() => {
+    if (newMessage?.name != null) {
+      eventDispatch({
+        type: EVENTS_REDUCER_ACTIONS.MESSAGE_APP_CONVERSATION_SEEN,
+        payload: {name: newMessage?.name},
+      });
+    }
+  }, [newMessage?.name, eventDispatch]);
+
+  useEffect(() => {
     const filterDispatchedEventRoutes = (
       _conversation: ConversationType,
       prev: ConversationType[],
@@ -232,6 +240,7 @@ const MessagesContextProvider: FC<MessagesContextTypeDigest> = props => {
           state: conversation,
           dispatch: reducerResolver,
         },
+        listCovered: {state: listCovered, set: setListCovered},
       }}>
       {props.children}
     </MessagesContext.Provider>

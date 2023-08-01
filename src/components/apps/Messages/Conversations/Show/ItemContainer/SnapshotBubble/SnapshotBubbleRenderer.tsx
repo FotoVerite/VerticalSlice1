@@ -13,7 +13,7 @@ import {MessagesContext} from 'components/apps/Messages/context';
 
 import {DigestedConversationSnapShotItemType} from 'components/apps/Messages/reducers/conversationReducer/digestion/types';
 
-import {Row} from 'components/common/layout';
+import {Row} from 'common/styles/layout';
 
 import Reaction from '../Reaction';
 import {MediaImageElement} from '../../MediaViewer';
