@@ -21,6 +21,8 @@ import {EventOrchestraContext} from 'components/EventOrchestra/context';
 import {CONTACT_NAMES} from '../../context/usersMapping';
 import theme from 'themes';
 import {messageAppConditionsMet} from '../../reducers/conversationReducer/routing/available';
+import {Jumbled} from '../../Effects/Jumbled';
+import {MessageEffectType} from '../../reducers/conversationReducer/digestion/types';
 
 const ConversationListItem: FC<{conversation: ConversationType}> = ({
   conversation,
@@ -31,38 +33,29 @@ const ConversationListItem: FC<{conversation: ConversationType}> = ({
   const [replacementLogline, setReplacementLogline] = useState<ReactElement>();
 
   useEffect(() => {
-    if (!conversation.effect) {
+    if (!conversation.effects) {
       return;
     }
     if (!context.listCovered.state) {
       return;
     }
-
-    if (
-      messageAppConditionsMet(
+    const viableEffect = conversation.effects.reduce((acc, effect) => {
+      const viable = messageAppConditionsMet(
         eventContext.events.state.Message,
-        conversation.effect.conditions,
-      )
-    ) {
-      setReplacementLogline(React.cloneElement(conversation.effect.data));
+        effect.conditions,
+      );
+      if (viable) {
+        acc.push(effect);
+      }
+      return acc;
+    }, [] as MessageEffectType[])[0];
+    if (viableEffect) {
+      setReplacementLogline(React.cloneElement(viableEffect.data));
     } else {
       setReplacementLogline(undefined);
     }
   }, [context, conversation, eventContext.events.state]);
 
-  const unhomelike = (name: CONTACT_NAMES, logline: string) => {
-    if (![CONTACT_NAMES.SPAM1].includes(name)) {
-      return logline;
-    } else if (
-      ![5, 6, 7].includes(
-        eventContext.events.state.Message[CONTACT_NAMES.ZOLA].views.length,
-      )
-    ) {
-      return logline;
-    } else {
-      return "Ŷ̴̨͔̣̮̪̱͙̫̼̣̟͜o̴̬̽̀̊̋̇̒͑̃̏̈́̐ư̶͚͕̩͈̗͎͙̼̫̹͛̓̍́̈́̚'̴̠͈̺͇͉̏͜l̶͍̩͈͓͇͆̀̀̓͠͠l̶̡͓̪͉̩͕̩̪̥̝̥̱̅͋̂̆͗̊̈͋̑̚͠ ̷̛̛͙̺͇̤̪̭̱͒̋̑̀͆̓͂͌̋͑͘͜͝n̶͙̺̩̹̼̟͙̦̂ḙ̴̡͛͝v̵̧̨͔̪̯͚̖̭͓̞̩̮̱́͘ḙ̵̡̭͕̥̬̣̭͓͠ŗ̴͙̹̹̇͐̓͂̎̇̆͗̀̌̆ ̵̗̱̪̝̃́̇̍̇̈́̽̈́̆̌͜b̴̢̧̛͇͚̘̯̼̣̣̰̪̪̯̹̽͐̐͋̌͑͘̕è̸̡̧̘̠͕̩̹̗̫͚̞̇̈́̃͆̊̚͘ ̷̢̤̲͎͚̠̮̮̤̤̬̍g̸̢͕̹̥̦͓̭͈̮̩̥͇̱̿̈́͑̓͂̾͒̈́͌̇̅ͅơ̷̡̤͎͇̝̺͎̪͎̦͇̟͌̌͛̎̀̑̑͑̉͛͜o̴̧̺̰̍̆̈́͗̇͋̐͑̏̑͝d̶̢̧̨̝̞̖̲͇̫̰̭̬͕̈́͒͗̕͜ͅ ̸̤̟̩̝̼̮͓̪̞͔̇̅̀̀̄̚͘̚͠ȩ̸̡̺̲̤̩͈͉̼̍̋̽͂̀ͅñ̷̨̛̛̰̟̬̰͕̝̜͉̰̟͇̳̀̏̔̌̽̕͠͝ǫ̴̼͚̼̱͈͚̥̩̪̯͂̅͒͒̅ư̴̜̭͓̅͊̌̒̒͋g̶̳͇̐̊̚h̶̨̫͉̦̬͎͕͇̲͎͋͑͒̒̿̓";
-    }
-  };
   return (
     <TouchableOpacity
       onPress={() => {
@@ -96,11 +89,11 @@ const ConversationListItem: FC<{conversation: ConversationType}> = ({
               />
             </Row>
           </Row>
-          <P>
-            {replacementLogline
-              ? replacementLogline
-              : conversation.logline?.content}
-          </P>
+          {replacementLogline ? (
+            replacementLogline
+          ) : (
+            <P>{conversation.logline?.content}</P>
+          )}
         </View>
       </Row>
     </TouchableOpacity>

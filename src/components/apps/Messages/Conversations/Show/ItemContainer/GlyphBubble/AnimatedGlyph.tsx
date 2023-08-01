@@ -28,7 +28,7 @@ const AnimatedGlyph: FC<{
     return [{id: glyph.id, pos: vec(x + xNoise, y + yNoise)}];
   }, [clock]);
   return (
-    <Glyphs x={0} y={0} font={font} color={'white'} glyphs={animatedGlyph} />
+    <Glyphs x={0} y={0} font={font} color={'black'} glyphs={animatedGlyph} />
   );
 };
 

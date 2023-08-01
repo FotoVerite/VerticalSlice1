@@ -65,7 +65,7 @@ export type EventBasedRouteType = {
 export type ConversationType = {
   availableEventRoutes?: number[];
   conditions?: RouteConditionsType;
-  effect?: MessageEffectType;
+  effects?: MessageEffectType[];
   eventBasedRoutes?: EventBasedRouteType[];
   exchanges: ConversationExchangeType[];
   group?: boolean;

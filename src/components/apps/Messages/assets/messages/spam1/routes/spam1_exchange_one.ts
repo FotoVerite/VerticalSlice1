@@ -21,7 +21,7 @@ const exchanges: ExchangeBlockType[] = [
   {
     name: SPAM1,
     messages: [
-      "Hi my name is Kieori and I'm new to the area.",
+      "Hi my name is Kaori and I'm new to the area.",
       {type: MESSAGE_TYPE.IMAGE, message: spam1_image},
     ],
   },
