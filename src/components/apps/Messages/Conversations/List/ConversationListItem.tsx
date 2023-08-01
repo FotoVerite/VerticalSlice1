@@ -11,9 +11,6 @@ import {ConversationType} from '../../context/types';
 import {MessagesContext} from '../../context';
 
 import {EventOrchestraContext} from 'components/EventOrchestra/context';
-
-import {getLastSeenRoute} from '../../reducers/conversationReducer/routing/seen';
-import {determineLogLine} from '../../context/conversationFunctions';
 import {CONTACT_NAMES} from '../../context/usersMapping';
 import theme from 'themes';
 
@@ -23,19 +20,7 @@ const ConversationListItem: FC<{conversation: ConversationType}> = ({
   const context = useContext(MessagesContext);
   const eventContext = useContext(EventOrchestraContext);
 
-  const logLine = useMemo(
-    () =>
-      determineLogLine(
-        conversation,
-        getLastSeenRoute(
-          conversation.name,
-          eventContext.events.state,
-          conversation.routes,
-          conversation.eventBasedRoutes,
-        ),
-      ),
-    [conversation, eventContext.events.state],
-  );
+  //const [displayedLogline, setDisplayedLogline] = useState(logLine);
 
   const unhomelike = (name: CONTACT_NAMES, logline: string) => {
     if (![CONTACT_NAMES.SPAM1].includes(name)) {
@@ -74,7 +59,7 @@ const ConversationListItem: FC<{conversation: ConversationType}> = ({
           <Row style={styles.infoRow}>
             <Bold>{conversation.name}</Bold>
             <Row style={styles.dateRow}>
-              <P style={styles.date}>{logLine.time}</P>
+              <P style={styles.date}>{conversation.logline?.time}</P>
               <Icon
                 name="chevron-right"
                 color={'black'}
@@ -83,7 +68,7 @@ const ConversationListItem: FC<{conversation: ConversationType}> = ({
               />
             </Row>
           </Row>
-          <P>{logLine.content}</P>
+          <P>{conversation.logline?.content}</P>
         </View>
       </Row>
     </TouchableOpacity>

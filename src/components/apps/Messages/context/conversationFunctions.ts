@@ -143,8 +143,14 @@ export const sortConversations =
 
 export const determineLogLine = (
   conversation: ConversationType,
-  routeEvent?: RouteObjectType,
+  events: EventOrchestraObjectType,
 ): {time: string; content: string} => {
+  const routeEvent = getLastSeenRoute(
+    conversation.name,
+    events,
+    conversation.routes,
+    conversation.eventBasedRoutes,
+  );
   if (routeEvent == null) {
     const lastExchange = conversation.exchanges.slice(-1)[0];
     const date = moment(lastExchange?.time || '');

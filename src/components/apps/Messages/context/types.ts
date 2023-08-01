@@ -60,16 +60,17 @@ export type EventBasedRouteType = {
 
 export type ConversationType = {
   availableEventRoutes?: number[];
-  tags: string[];
   conditions?: RouteConditionsType;
-  name: CONTACT_NAMES;
-  heroImage: ImageSourcePropType;
+  eventBasedRoutes?: EventBasedRouteType[];
   exchanges: ConversationExchangeType[];
   group?: boolean;
-  routes?: MessageRouteType[];
-  eventBasedRoutes?: EventBasedRouteType[];
   hasAvailableRoute?: boolean;
+  heroImage: ImageSourcePropType;
   interfaceColor: string;
+  logline?: {content: string; time: string};
+  name: CONTACT_NAMES;
+  routes?: MessageRouteType[];
+  tags: string[];
 };
 
 export type DigestedConversationType = {

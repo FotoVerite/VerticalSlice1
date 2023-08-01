@@ -30,6 +30,7 @@ import {
   conversationHasExchange,
   sortConversations,
   sendNotification,
+  determineLogLine,
 } from './conversationFunctions';
 import {NotificationsContext} from 'components/Notifications/context';
 import {spam1} from '../assets/messages/spam1';
@@ -39,6 +40,7 @@ import {EVENTS_REDUCER_ACTIONS} from 'components/EventOrchestra/reducers/types';
 import {mileena} from '../assets/messages/mileena';
 import {chris} from '../assets/messages/chris';
 import {customer_service} from '../assets/messages/customer_service';
+import {getLastSeenRoute} from '../reducers/conversationReducer/routing/seen';
 
 //defaults for empty app
 export const MessagesContext = React.createContext<MessagesContextTypeDigested>(
@@ -77,6 +79,7 @@ const MessagesContextProvider: FC<MessagesContextTypeDigest> = props => {
         .map(c => {
           c.hasAvailableRoute =
             findAvailableRoutes(c.name, c.routes || [], events).length > 0;
+          c.logline = determineLogLine(c, events);
           return c;
         })
         .sort(sortConversations(events)),
