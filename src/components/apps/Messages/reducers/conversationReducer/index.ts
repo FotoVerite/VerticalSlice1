@@ -19,6 +19,8 @@ import {
 import {createTimeItem} from './digestion/TimeItem';
 import {findAvailableRoutes} from './routing/available';
 import {produce} from 'immer';
+import {CONTACT_NAMES} from '../../context/usersMapping';
+import {convertMessageToString} from '../../context/conversationFunctions';
 
 const createConversationReducer =
   (config: ConversationReducerConfigurationType) =>
@@ -72,17 +74,24 @@ const startRoute = (
   if (route == null) {
     return draft;
   }
+  const path = route.routes[payload.chosenOption];
+  const pendingMessages = digestPath(path);
+  const nextMessageContent = pendingMessages.shift();
+  if (nextMessageContent == null) {
+    return draft;
+  }
   const offset = getListHeight(draft.exchanges);
   addNewTimeBlockToExchanges(config, draft, offset);
-  const path = route.routes[payload.chosenOption];
-  const message = createSkBubbleFromExchange(
-    {...config, ...{group: draft.group || false, positionAcc: offset}},
-    path[0],
-    0,
+  const message = createSkBubbleFromMessage(
+    {...config, ...{group: draft.group || false, positionAcc: offset + 30}},
+    nextMessageContent.messageContent,
+    nextMessageContent.name,
+    nextMessageContent.tail,
   );
-  message.messageDelay = message.messageDelay ||= 400;
+  message.messageDelay = 400;
   draft.exchanges.push(message);
-  draft.nextMessageInQueue = 'hello world';
+  draft.activePath = pendingMessages;
+  draft.routeAtIndex = 1;
   return draft;
 };
 
@@ -126,44 +135,71 @@ const addMessageFromBlock = (
 
 const continueRoute = (
   config: ConversationReducerConfigurationType,
-  state: DigestedConversationType | undefined,
+  draft: DigestedConversationType | undefined,
 ) => {
-  if (state == null) {
-    return state;
+  if (draft?.activePath == null) {
+    return;
   }
-  // const newState = updateMessage(
-  //   state,
-  //   {messageDelay: undefined},
-  //   state.exchanges.length - 1,
+  const nextMessage = draft.activePath[0];
+  const offset = getListHeight(draft.exchanges);
+  if (nextMessage == null) {
+    return draft;
+  }
+  if (
+    nextMessage?.name === CONTACT_NAMES.SELF &&
+    draft.nextMessageInQueue == null
+  ) {
+    draft.nextMessageInQueue = convertMessageToString(
+      nextMessage.messageContent,
+    );
+  } else {
+    const message = createSkBubbleFromMessage(
+      {...config, ...{group: draft.group || false, positionAcc: offset}},
+      nextMessage.messageContent,
+      nextMessage.name,
+      nextMessage.tail,
+    );
+    message.messageDelay = message.messageDelay ||= 400;
+    draft.exchanges.push(message);
+    draft.activePath.shift();
+    draft.routeAtIndex = draft.routeAtIndex || 0 + 1;
+    draft.nextMessageInQueue = undefined;
+  }
+  return draft;
+  // if (state == null) {
+  //   return state;
+  // }
+  // // const newState = updateMessage(
+  // //   state,
+  // //   {messageDelay: undefined},
+  // //   state.exchanges.length - 1,
+  // // );
+  // const newState = Object.assign({}, state);
+  // const activePath = [...newState.activePath];
+  // const payload = activePath.shift();
+  // if (payload == null) {
+  //   newState.availableRoute = findAvailableRoutes(
+  //     newState.name,
+  //     newState.routes || [],
+  //     config.events,
+  //   )[0];
+  //   return newState;
+  // }
+  // const offset = getListHeight(newState.exchanges);
+  // const itemConfiguration = Object.assign(config, {
+  //   group: newState.group || false,
+  //   positionAcc: offset,
+  // });
+  // const message = createSkBubbleFromMessage(
+  //   itemConfiguration,
+  //   payload.messageContent,
+  //   payload.name,
+  //   payload.tail,
   // );
-  const newState = Object.assign({}, state);
-  const activePath = [...newState.activePath];
-
-  const payload = activePath.shift();
-
-  if (payload == null) {
-    newState.availableRoute = findAvailableRoutes(
-      newState.name,
-      newState.routes || [],
-      config.events,
-    )[0];
-    return newState;
-  }
-  const offset = getListHeight(newState.exchanges);
-  const itemConfiguration = Object.assign(config, {
-    group: newState.group || false,
-    positionAcc: offset,
-  });
-  const message = createSkBubbleFromMessage(
-    itemConfiguration,
-    payload.messageContent,
-    payload.name,
-    payload.tail,
-  );
-  message.messageDelay = message.messageDelay ||= 400;
-  newState.activePath = activePath;
-  newState.exchanges = newState.exchanges.concat(message);
-  return newState;
+  // message.messageDelay = message.messageDelay ||= 400;
+  // newState.activePath = activePath;
+  // newState.exchanges = newState.exchanges.concat(message);
+  // return newState;
 };
 
 const addConversation = (

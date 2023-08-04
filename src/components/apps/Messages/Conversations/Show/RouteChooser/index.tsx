@@ -1,36 +1,16 @@
-import React, {
-  FC,
-  ReactElement,
-  ReactNode,
-  memo,
-  useCallback,
-  useContext,
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-} from 'react';
+import React, {FC, memo, useCallback, useMemo, useState} from 'react';
 import {StyleSheet, useWindowDimensions} from 'react-native';
 import {BlurView} from '@react-native-community/blur';
 import Animated from 'react-native-reanimated';
 
-import MessageTextInput from './MessageTextInput';
-import OptionList from './OptionList';
-
 import {ConversationShowRefs} from '..';
 
 import theme from 'themes';
-import {
-  DigestedConversationType,
-  MessageRouteType,
-} from 'components/apps/Messages/context/types';
+import {DigestedConversationType} from 'components/apps/Messages/context/types';
 import {
   CONVERSATION_REDUCER_ACTIONS,
   ConversationReducerActionsType,
 } from 'components/apps/Messages/reducers/conversationReducer/types';
-import NoOption from './OptionList/NoOption';
-import Option from './OptionList/Option';
-import {EVENTS_REDUCER_ACTIONS} from 'components/EventOrchestra/reducers/types';
 import SingleOptionDisplay from './SingleOptionDisplay';
 import {convertMessageToString} from 'components/apps/Messages/context/conversationFunctions';
 
@@ -44,13 +24,13 @@ const MessageInput: FC<
 
   const {width} = useWindowDimensions();
 
-  const {nextMessageInQueue, availableRoute} = conversation;
+  const {nextMessageInQueue, availableRoute, activePath} = conversation;
 
   const displayedText = useMemo(() => {
     if (nextMessageInQueue) {
       return convertMessageToString(nextMessageInQueue);
     }
-    if (availableRoute) {
+    if (availableRoute && activePath.length === 0) {
       const {options} = availableRoute;
       if (options.length === 1) {
         return options[0];
@@ -58,8 +38,8 @@ const MessageInput: FC<
         return '...';
       }
     }
-    return '';
-  }, [nextMessageInQueue, availableRoute]);
+    return undefined;
+  }, [nextMessageInQueue, availableRoute, activePath]);
 
   const callback = useCallback(() => {
     if (nextMessageInQueue) {
@@ -77,16 +57,12 @@ const MessageInput: FC<
       }
     }
     return dispatch({type: CONVERSATION_REDUCER_ACTIONS.CONTINUE_ROUTE});
-  }, [nextMessageInQueue, availableRoute, dispatch]);
+  }, [nextMessageInQueue, availableRoute]);
 
   return (
     <Animated.View style={[{width: width}, styles.container]}>
       <BlurView style={styles.blur} blurType="light" blurAmount={5} />
-      <SingleOptionDisplay
-        text={displayedText}
-        cb={callback}
-        key={displayedText}
-      />
+      <SingleOptionDisplay text={displayedText} cb={callback} />
     </Animated.View>
   );
 };

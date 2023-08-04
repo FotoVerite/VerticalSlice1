@@ -3,7 +3,7 @@ import {View, StyleSheet, TouchableWithoutFeedback} from 'react-native';
 import theme from 'themes';
 import {Row} from 'common/styles/layout';
 import ChevronButton, {MESSAGE_SEND_BUTTON_STATE} from '../ChevronButton';
-import DisplayedText, {DISPLAYED_TEXT_STATES} from '../DIsplayedText';
+import DisplayedText, {DISPLAYED_TEXT_STATES} from '../DisplayedText';
 
 const SingleOptionDisplay: FC<{
   text?: string;
@@ -20,6 +20,7 @@ const SingleOptionDisplay: FC<{
   useEffect(() => {
     setTextState(DISPLAYED_TEXT_STATES.DISPLAYED);
     if (text != null) {
+      sent.current = false;
       setButtonState(MESSAGE_SEND_BUTTON_STATE.SENDABLE);
     } else {
       setButtonState(MESSAGE_SEND_BUTTON_STATE.INACTIVE);
@@ -33,14 +34,15 @@ const SingleOptionDisplay: FC<{
           if (!sent.current) {
             sent.current = true;
             setTextState(DISPLAYED_TEXT_STATES.SENT);
+            setButtonState(MESSAGE_SEND_BUTTON_STATE.WAITING);
           }
         }}>
         <View style={[styles.textInput]}>
           <Row>
             {text ? (
-              <DisplayedText text={text} state={textState} cb={cb} />
+              <DisplayedText text={text} state={textState} cb={cb} key={text} />
             ) : (
-              <View style={{flexGrow: 1}} />
+              <View style={{flexGrow: 1, minHeight: 35}} />
             )}
             <View>
               <ChevronButton state={buttonState} />

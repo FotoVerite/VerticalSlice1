@@ -33,6 +33,7 @@ export enum MESSAGE_SEND_BUTTON_STATE {
   HAS_CONTENT,
   OPEN,
   SENDABLE,
+  WAITING,
 }
 
 export const ChevronButton: FC<{
@@ -47,11 +48,11 @@ export const ChevronButton: FC<{
     },
     [MESSAGE_SEND_BUTTON_STATE.OPEN]: {active: 1, sendable: 0, chevron: 1},
     [MESSAGE_SEND_BUTTON_STATE.SENDABLE]: {active: 1, sendable: 1, chevron: 2},
+    [MESSAGE_SEND_BUTTON_STATE.WAITING]: {active: 1, sendable: 2, chevron: 2},
   };
   const buttonActive = useSharedValue(startingValues[state].active);
   const buttonSendable = useSharedValue(startingValues[state].sendable);
   const chevronState = useSharedValue(startingValues[state].chevron);
-  console.log(state, chevronState.value, startingValues[state].chevron);
 
   useEffect(() => {
     switch (state) {
@@ -77,6 +78,11 @@ export const ChevronButton: FC<{
         buttonSendable.value = withTiming(1);
         chevronState.value = withTiming(2);
         break;
+      case MESSAGE_SEND_BUTTON_STATE.WAITING:
+        buttonActive.value = withTiming(1);
+        buttonSendable.value = withTiming(2);
+        chevronState.value = withTiming(2);
+        break;
       case MESSAGE_SEND_BUTTON_STATE.INACTIVE:
         buttonActive.value = withTiming(0);
         buttonSendable.value = withTiming(0);
@@ -89,8 +95,8 @@ export const ChevronButton: FC<{
     return {
       backgroundColor: interpolateColor(
         buttonSendable.value,
-        [0, 1],
-        ['transparent', 'purple'],
+        [0, 1, 2],
+        ['transparent', 'purple', 'black'],
       ),
       transform: [
         {

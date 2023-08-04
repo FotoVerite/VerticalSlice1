@@ -25,7 +25,7 @@ const DisplayedText: FC<{
   const {height, width} = useWindowDimensions();
 
   const sent = useSharedValue(0);
-  const visibility = useSharedValue(1);
+  const visibility = useSharedValue(0);
 
   const blurAndRemove = useCallback(() => {
     'worklet';
@@ -35,6 +35,10 @@ const DisplayedText: FC<{
       }
     });
   }, [cb, visibility]);
+
+  useEffect(() => {
+    visibility.value = withTiming(1);
+  }, [visibility]);
 
   useEffect(() => {
     switch (state) {
@@ -48,7 +52,6 @@ const DisplayedText: FC<{
         break;
       default:
         sent.value = withTiming(0);
-
         break;
     }
   }, [state, sent, visibility, blurAndRemove]);
@@ -63,15 +66,16 @@ const DisplayedText: FC<{
 
   const textAnimation = useAnimatedStyle(() => {
     return {
+      opacity: visibility.value,
       left: interpolate(sent.value, [0, 1], [0, width - textWidth - 44]),
     };
-  }, [sent, textWidth]);
+  }, [sent, visibility, textWidth]);
 
   const containerAnimation = useAnimatedStyle(() => {
     return {
-      height: interpolate(sent.value, [0, 1], [numberOfLines + 15, 35]),
+      height: interpolate(visibility.value, [1, 0], [numberOfLines + 15, 35]),
     };
-  }, [sent, numberOfLines]);
+  }, [visibility, numberOfLines]);
 
   return (
     <>
@@ -89,9 +93,8 @@ const DisplayedText: FC<{
       <Animated.View
         style={[
           {
+            flexGrow: 1,
             minHeight: 35,
-            width: width - 78,
-            height: numberOfLines + 15,
           },
           containerAnimation,
         ]}
