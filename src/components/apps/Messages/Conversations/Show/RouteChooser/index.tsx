@@ -1,5 +1,6 @@
 import React, {
   FC,
+  ReactElement,
   ReactNode,
   memo,
   useCallback,
@@ -19,7 +20,10 @@ import OptionList from './OptionList';
 import {ConversationShowRefs} from '..';
 
 import theme from 'themes';
-import {MessageRouteType} from 'components/apps/Messages/context/types';
+import {
+  DigestedConversationType,
+  MessageRouteType,
+} from 'components/apps/Messages/context/types';
 import {
   CONVERSATION_REDUCER_ACTIONS,
   ConversationReducerActionsType,
@@ -27,86 +31,62 @@ import {
 import NoOption from './OptionList/NoOption';
 import Option from './OptionList/Option';
 import {EVENTS_REDUCER_ACTIONS} from 'components/EventOrchestra/reducers/types';
-import {CONTACT_NAMES} from 'components/apps/Messages/context/usersMapping';
-import {EventOrchestraContext} from 'components/EventOrchestra/context';
+import SingleOptionDisplay from './SingleOptionDisplay';
+import {convertMessageToString} from 'components/apps/Messages/context/conversationFunctions';
 
 const MessageInput: FC<
   ConversationShowRefs & {
-    availableRoute?: MessageRouteType;
-    name?: CONTACT_NAMES;
+    conversation: DigestedConversationType;
     dispatch: (action: ConversationReducerActionsType) => Promise<void>;
   }
-> = ({
-  availableRoute: activeRoute,
-  name,
-  footerHeight,
-  animatedScrollRef,
-  dispatch,
-}) => {
-  const eventDispatch = useContext(EventOrchestraContext).events.dispatch;
+> = ({conversation, footerHeight, animatedScrollRef, dispatch}) => {
   const [active, _setActive] = useState(false);
 
   const {width} = useWindowDimensions();
 
-  const setActive = useCallback((state: boolean) => {
-    _setActive(state);
-  }, []);
+  const {nextMessageInQueue, availableRoute} = conversation;
 
-  useEffect(() => {
-    if (!name) {
-      setActive(false);
+  const displayedText = useMemo(() => {
+    if (nextMessageInQueue) {
+      return convertMessageToString(nextMessageInQueue);
     }
-  }, [name, setActive]);
+    if (availableRoute) {
+      const {options} = availableRoute;
+      if (options.length === 1) {
+        return options[0];
+      } else {
+        return '...';
+      }
+    }
+    return '';
+  }, [nextMessageInQueue, availableRoute]);
 
-  const previousOptions = useRef<ReactNode[]>();
-
-  const options = useMemo(() => {
-    if (name == null) {
-      return previousOptions.current;
+  const callback = useCallback(() => {
+    if (nextMessageInQueue) {
+      return dispatch({type: CONVERSATION_REDUCER_ACTIONS.CONTINUE_ROUTE});
     }
-    if (activeRoute != null && name != null) {
-      const nodes = activeRoute.options.map(option => (
-        <Option
-          key={`${activeRoute.routes.id}-${option}`}
-          id={activeRoute.id}
-          option={option}
-          cb={() => {
-            setActive(false);
-            eventDispatch({
-              type: EVENTS_REDUCER_ACTIONS.MESSAGE_APP_ROUTE_SEEN,
-              payload: {routeId: activeRoute.id, chosen: option, name: name},
-            });
-            dispatch({
-              type: CONVERSATION_REDUCER_ACTIONS.START_ROUTE,
-              payload: {id: activeRoute.id, chosenOption: option},
-            });
-          }}
-        />
-      ));
-      previousOptions.current = nodes;
-      return nodes;
-    } else {
-      const nodes = [<NoOption setActive={setActive} key={'non-active'} />];
-      previousOptions.current = nodes;
-      return nodes;
+    if (availableRoute) {
+      const {options} = availableRoute;
+      if (options.length === 1) {
+        return dispatch({
+          type: CONVERSATION_REDUCER_ACTIONS.START_ROUTE,
+          payload: {chosenOption: options[0]},
+        });
+      } else {
+        return dispatch({type: CONVERSATION_REDUCER_ACTIONS.CONTINUE_ROUTE});
+      }
     }
-  }, [activeRoute, dispatch, eventDispatch, name, setActive]);
+    return dispatch({type: CONVERSATION_REDUCER_ACTIONS.CONTINUE_ROUTE});
+  }, [nextMessageInQueue, availableRoute, dispatch]);
 
   return (
     <Animated.View style={[{width: width}, styles.container]}>
       <BlurView style={styles.blur} blurType="light" blurAmount={5} />
-      <MessageTextInput
-        active={active}
-        setActive={setActive}
-        hasRoute={activeRoute != null}
+      <SingleOptionDisplay
+        text={displayedText}
+        cb={callback}
+        key={displayedText}
       />
-      <OptionList
-        active={active}
-        setActive={setActive}
-        footerHeight={footerHeight}
-        animatedScrollRef={animatedScrollRef}>
-        {options}
-      </OptionList>
     </Animated.View>
   );
 };

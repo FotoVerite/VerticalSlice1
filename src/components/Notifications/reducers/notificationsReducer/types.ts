@@ -27,7 +27,10 @@ export type AddNotificationActionPayloadType = {
 
 export type UpdateNotificationActionPayloadType = {
   type: NOTIFICATIONS_REDUCER_ACTIONS.UPDATE;
-  payload: {data: NotificationDataType; index: number};
+  payload:
+    | {[index in keyof NotificationType]?: NotificationType[index]} & {
+        index: number;
+      };
 };
 
 export type DeleteNotificationActionPayloadType = {

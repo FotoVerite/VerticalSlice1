@@ -1,7 +1,8 @@
 import {
   MessageRouteEventType,
   MessageEventType,
-} from 'components/EventOrchestra/context/types';
+  MessageRouteEventDataType,
+} from 'components/EventOrchestra/reducers/types';
 import {
   EventBasedRouteType,
   ExchangeBlockType,
@@ -16,11 +17,8 @@ export type SeenRouteType = {
 
 export type RouteObjectType = {
   routeId: string;
-  chosen: string;
-  date: Date;
   exchanges: ExchangeBlockType[];
-  position: number;
-};
+} & MessageRouteEventDataType;
 
 export const isMessageWithMeta = (
   message: MessageWithMetaType | string,
@@ -48,7 +46,7 @@ const constructSeenRoutes = (
         {},
         {routeId: key},
         {...value},
-        {exchanges: availableRoutes[key][value.chosen]},
+        {exchanges: availableRoutes[key][value.chosen!]},
       ),
     );
   }

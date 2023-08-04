@@ -104,7 +104,7 @@ const appendRoute = (
 ) => {
   const offset = getListHeight(exchanges);
   const conversationBlock: ConversationExchangeType = {
-    time: route.date.toISOString(),
+    time: route.createdAt.toISOString(),
     exchanges: route.exchanges,
   };
   return exchanges.concat(

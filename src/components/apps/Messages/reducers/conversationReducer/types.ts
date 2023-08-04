@@ -61,7 +61,6 @@ type ResetConversationActionType = {
 type StartRouteActionType = {
   type: CONVERSATION_REDUCER_ACTIONS.START_ROUTE;
   payload: {
-    id: number;
     chosenOption: string;
   };
 };

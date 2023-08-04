@@ -41,7 +41,7 @@ export const sendNotification = async (
 
   if (route) {
     eventDispatch({
-      type: EVENTS_REDUCER_ACTIONS.MESSAGE_APP_ROUTE_SEEN,
+      type: EVENTS_REDUCER_ACTIONS.MESSAGE_APP_ROUTE_CREATE,
       payload: {routeId: route.id, name: conversation.name},
     });
     message = getLastMessageFromExchanges(route.exchanges);
@@ -162,7 +162,7 @@ export const determineLogLine = (
   } else {
     const message = getLastMessageFromExchanges(routeEvent.exchanges);
     return {
-      time: formatMoment(moment(routeEvent.date)),
+      time: formatMoment(moment(routeEvent.createdAt)),
       content: convertMessageToString(message),
     };
   }
@@ -180,7 +180,7 @@ const getLastMessageFromExchanges = (exchanges: ExchangeBlockType[]) => {
   return message;
 };
 
-const convertMessageToString = (message: MessageType) => {
+export const convertMessageToString = (message: MessageType) => {
   if (isMessageWithMeta(message)) {
     switch (message.type) {
       case MESSAGE_TYPE.NUMBER:

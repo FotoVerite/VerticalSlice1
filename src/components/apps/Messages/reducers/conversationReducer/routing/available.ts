@@ -34,13 +34,13 @@ const routeChosenSelected = (
 };
 
 const routeNotChosenSelected = (
-  chosen?: string[],
+  not_chosen?: string[],
   viewed?: MessageRouteEventDataType,
 ) => {
-  if (chosen == null || viewed == null) {
+  if (not_chosen == null || viewed == null) {
     return true;
   }
-  return !chosen.includes(viewed.chosen);
+  return !not_chosen.includes(viewed.chosen);
 };
 
 const routeHasBeenChosenCheck = (
@@ -60,7 +60,7 @@ const routeHasBeenChosenCheck = (
       acc &&
       viewedRoutes[key] != null &&
       routeChosenSelected(routeCondition.chosen, viewedRoutes[key]) &&
-      routeNotChosenSelected(routeCondition.chosen, viewedRoutes[key])
+      routeNotChosenSelected(routeCondition.not_chosen, viewedRoutes[key])
     );
   }, true);
 };

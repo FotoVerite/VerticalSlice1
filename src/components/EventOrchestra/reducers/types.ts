@@ -3,7 +3,8 @@ import {APP_NAMES} from 'components/apps/types';
 
 export enum EVENTS_REDUCER_ACTIONS {
   MESSAGE_APP_CONVERSATION_SEEN,
-  MESSAGE_APP_ROUTE_SEEN,
+  MESSAGE_APP_ROUTE_CREATE,
+  MESSAGE_APP_ROUTE_UPDATE,
 }
 
 export type MessageAppContactsEventType = {
@@ -11,9 +12,12 @@ export type MessageAppContactsEventType = {
 };
 
 export type MessageRouteEventDataType = {
-  date: Date;
+  createdAt: Date;
+  updatedAt: Date;
   chosen?: string;
   position: number;
+  atIndex?: number;
+  finished?: boolean;
 };
 
 export type MessageRouteEventType = {
@@ -36,11 +40,28 @@ export type AddMessageAppConversationSeenEventAction = {
   payload: {name: CONTACT_NAMES};
 };
 
-export type AddMessageAppRouteSeenEventAction = {
-  type: EVENTS_REDUCER_ACTIONS.MESSAGE_APP_ROUTE_SEEN;
-  payload: {name: CONTACT_NAMES; routeId: number; chosen?: string};
+export type CreateMessageAppRouteEventAction = {
+  type: EVENTS_REDUCER_ACTIONS.MESSAGE_APP_ROUTE_CREATE;
+  payload: {
+    name: CONTACT_NAMES;
+    routeId: number;
+    chosen?: string;
+    finished?: boolean;
+    atIndex?: number;
+  };
+};
+
+export type UpdateMessageAppRouteEventAction = {
+  type: EVENTS_REDUCER_ACTIONS.MESSAGE_APP_ROUTE_UPDATE;
+  payload: {
+    name: CONTACT_NAMES;
+    routeId: number;
+    finished?: boolean;
+    atIndex?: number;
+  };
 };
 
 export type EventsReducerActionsType =
   | AddMessageAppConversationSeenEventAction
-  | AddMessageAppRouteSeenEventAction;
+  | CreateMessageAppRouteEventAction
+  | UpdateMessageAppRouteEventAction;

@@ -82,12 +82,16 @@ export type ConversationType = {
 export type DigestedConversationType = {
   activePath: AddMessagePayloadType[];
   availableRoute?: MessageRouteType;
+  chosenRoute?: string;
+  pendingMessages: AddMessagePayloadType[];
+  nextMessageInQueue?: MessageType;
   tags: string[];
   name: CONTACT_NAMES;
   heroImage: ImageSourcePropType;
   exchanges: DigestedConversationListItem[];
   group?: boolean;
   routes: MessageRouteType[];
+  routeAtIndex?: number;
   eventBasedRoutes?: EventBasedRouteType[];
   interfaceColor: string;
 };

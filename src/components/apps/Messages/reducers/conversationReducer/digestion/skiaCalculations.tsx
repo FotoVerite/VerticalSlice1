@@ -100,6 +100,12 @@ export const generateLineQueue = (
   return lineQueue;
 };
 
+const getWidthFromGlyphs = (font, text) => {
+  return font
+    .getGlyphWidths(font.getGlyphIDs(text))
+    .reduce((acc, n) => (acc += n), 0);
+};
+
 const generateTextNodes = (
   lineQueue: LineQueueType,
   font: SkFont,
@@ -114,13 +120,19 @@ const generateTextNodes = (
           y={19 * (index + 1) + 4}
           text={section.content}
           font={section.type === 'text' ? font : emojiFont}
-          color={'white'}
           key={`Text-${section.content}-${sIdx}`}
         />
       )),
     )
     .flat();
-  return [lineCount, textElements] as const;
+
+  const lastSection = lineQueue.slice(-1)[0].slice(-1)[0];
+
+  const cursorVectors = {
+    x: lastSection.starts + getWidthFromGlyphs(font, lastSection.content) - 3,
+    y: lineCount * 19 + 4,
+  };
+  return [lineCount, textElements, cursorVectors] as const;
 };
 
 const generateGlyphs = (
@@ -198,9 +210,54 @@ export const GetDimensionsAndSkiaNodes = (
       calculatedItemWidth(font, line.map(p => p.content).join(''), MAX_WIDTH),
     );
   }, 0);
-  const [lineCount, textNodes] = generateTextNodes(lineQueue, font, emojiFont);
+  const [lineCount, textNodes, cursorVectors] = generateTextNodes(
+    lineQueue,
+    font,
+    emojiFont,
+  );
 
-  return [lineCount * LINE_HEIGHT, calculatedWidth, textNodes] as const;
+  return [
+    lineCount * LINE_HEIGHT,
+    calculatedWidth,
+    textNodes,
+    cursorVectors,
+  ] as const;
+};
+
+export const generateSkiaNode = (
+  font: SkFont,
+  emojiFont: SkFont,
+  sentence: string,
+  width: number,
+  leftSide: boolean,
+) => {
+  const LINE_HEIGHT = 19;
+  const LINE_PADDING = 40;
+  const lineQueue = generateLineQueue(
+    font,
+    emojiFont,
+    sentence,
+    width - LINE_PADDING,
+    leftSide,
+  );
+  const calculatedWidth = lineQueue.reduce((acc, line) => {
+    return Math.max(
+      acc,
+      calculatedItemWidth(font, line.map(p => p.content).join(''), width),
+    );
+  }, 0);
+  const [lineCount, textNodes, cursorVectors] = generateTextNodes(
+    lineQueue,
+    font,
+    emojiFont,
+  );
+
+  return [
+    lineCount * LINE_HEIGHT,
+    calculatedWidth,
+    textNodes,
+    cursorVectors,
+  ] as const;
 };
 
 export const GetDimensionsAndSkiaGlyphs = (

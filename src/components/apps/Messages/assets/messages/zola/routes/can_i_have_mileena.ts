@@ -3,6 +3,7 @@ import {CONTACT_NAMES} from 'components/apps/Messages/context/usersMapping';
 import {ZARA_ROUTE_IDS} from './routes';
 import {MESSAGE_TYPE} from 'components/apps/Messages/reducers/conversationReducer/digestion/types';
 import {mileena} from '../../mileena';
+import {ZARA_CONTACT_CONVERSATIONS_OPTIONS} from './contact_conversation';
 
 export enum ZARA_CAN_I_HAVE_MILEENA {
   A = "Can I have Mel's number also.",
@@ -19,7 +20,7 @@ export const can_i_have_mileena: MessageRouteType = {
     [CONTACT_NAMES.ZOLA]: {
       routes: {
         [ZARA_ROUTE_IDS.CONTACT_CONVERSATION]: {
-          not_chosen: [ZARA_CAN_I_HAVE_MILEENA.A],
+          not_chosen: [ZARA_CONTACT_CONVERSATIONS_OPTIONS.A],
         },
       },
     },

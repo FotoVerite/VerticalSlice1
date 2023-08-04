@@ -12,7 +12,7 @@ import {
   DigestedConversationVCardItemType,
   MESSAGE_TYPE,
 } from './types';
-import {SkFont} from '@shopify/react-native-skia';
+import {SkFont, Vector} from '@shopify/react-native-skia';
 import {
   ConversationType,
   MessageWithMetaType,
@@ -36,6 +36,7 @@ type CalculationsType = {
     | Element[]
     | {filename: string; backup: string}
     | ConversationType;
+  cursorVector: Vector;
 };
 
 type ItemType =
@@ -83,6 +84,7 @@ export const SkMessageItem = (
       ? undefined
       : createPath(calculations, hasTail, leftSide),
     colors: getColorFromContacts(name),
+    cursorVector: calculations.cursorVector,
     avatar: hasTail ? getAvatarFromContacts(name) : undefined,
     leftSide: leftSide,
     type: message.type,
@@ -112,16 +114,22 @@ const calculateWidthHeightAndContent = (
   width: number,
   leftSide: boolean,
   font: SkFont,
-) => {
+): CalculationsType => {
   const itemWidth = leftSide ? width * 0.7 - 30 : width * 0.7;
   switch (message.type) {
     case MESSAGE_TYPE.EMOJI:
-      return {width: itemWidth, height: 60, content: message.message};
+      return {
+        width: itemWidth,
+        height: 60,
+        content: message.message,
+        cursorVector: {x: itemWidth + 2, y: 0},
+      };
     case MESSAGE_TYPE.SNAPSHOT:
       return {
         width: itemWidth,
         height: 0,
         content: message.message,
+        cursorVector: {x: itemWidth + 2, y: 0},
       };
     case MESSAGE_TYPE.IMAGE:
       const imageDimensions = Image.resolveAssetSource(
@@ -129,25 +137,27 @@ const calculateWidthHeightAndContent = (
       );
       const aspectRation = imageDimensions.height / imageDimensions.width;
       const imageHeight = itemWidth * aspectRation;
-      return {width: itemWidth, height: imageHeight, content: message.message};
+      return {
+        width: itemWidth,
+        height: imageHeight,
+        content: message.message,
+        cursorVector: {x: itemWidth + 2, y: 0},
+      };
     case MESSAGE_TYPE.NUMBER:
       return {
         width: calculatedItemWidth(font, message.message.name, itemWidth),
         height: 30,
         content: message.message,
+        cursorVector: {x: itemWidth + 2, y: 0},
       };
     case MESSAGE_TYPE.STRING:
-      const [boxHeight, boxWidth, textNodes] = GetDimensionsAndSkiaNodes(
-        font,
-        font,
-        message.message,
-        width,
-        leftSide,
-      );
+      const [boxHeight, boxWidth, textNodes, cursorVector] =
+        GetDimensionsAndSkiaNodes(font, font, message.message, width, leftSide);
       return {
         width: boxWidth,
         height: boxHeight + BUBBLE_PADDING,
         content: textNodes,
+        cursorVector: cursorVector,
       };
 
     case MESSAGE_TYPE.GLYPH:
@@ -158,14 +168,25 @@ const calculateWidthHeightAndContent = (
         width,
         leftSide,
       );
-      return {width: glyphWidth, height: glyphHeight, content: glyphNodes};
+      return {
+        width: glyphWidth,
+        height: glyphHeight,
+        content: glyphNodes,
+        cursorVector: {x: 1, y: 1},
+      };
     case MESSAGE_TYPE.VCARD:
       return {
         width: 180,
         height: 60,
         content: message.message,
+        cursorVector: {x: 180 + 2, y: 0},
       };
     default:
-      return {width: itemWidth, height: 60, content: ''};
+      return {
+        width: itemWidth,
+        height: 60,
+        content: '',
+        cursorVector: {x: itemWidth + 2, y: 0},
+      };
   }
 };

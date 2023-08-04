@@ -104,7 +104,7 @@ export const BaseBubble: FC<{
     reaction,
   } = item;
   const opacity = useSharedValue(
-    item.messageDelay && item.type !== MESSAGE_TYPE.SNAPSHOT ? 0 : 1,
+    item.messageDelay && item.type !== MESSAGE_TYPE.SNAPSHOT ? 1 : 1,
   );
   const sentDispatch = useRef(false);
 
@@ -135,9 +135,9 @@ export const BaseBubble: FC<{
       item.type !== MESSAGE_TYPE.SNAPSHOT
     ) {
       sentDispatch.current = true;
-      renderNextMessage(
-        item.messageDelay + (item.leftSide ? (item.typingDelay || 0) + 850 : 0),
-      );
+      // renderNextMessage(
+      //   item.messageDelay + (item.leftSide ? (item.typingDelay || 0) + 850 : 0),
+      // );
     }
   }, []);
 

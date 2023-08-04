@@ -57,7 +57,7 @@ export const TextBubble: FC<
           />
         </Rect>
       </Group>
-      {content}
+      <Group color={'white'}>{content}</Group>
       {effect?.type == EFFECT_TYPE.GLITCH && glitchEffect}
     </Canvas>
   );

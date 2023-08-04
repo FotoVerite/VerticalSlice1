@@ -4,7 +4,13 @@ import {
   ReactionType,
   RouteConditionsType,
 } from '../../../context/types';
-import {Glyph, SkFont, SkImage, SkPath} from '@shopify/react-native-skia';
+import {
+  Glyph,
+  SkFont,
+  SkImage,
+  SkPath,
+  Vector,
+} from '@shopify/react-native-skia';
 import {CONTACT_NAMES} from '../../../context/usersMapping';
 import {ReactElement} from 'react';
 
@@ -61,6 +67,7 @@ export interface DigestedConversationTimeType
   content: string;
   alignItems: undefined;
   type: MESSAGE_TYPE.TIME;
+  cursorVectors: Vector;
 }
 
 export interface AbstractMetaDigestedConversationItemType

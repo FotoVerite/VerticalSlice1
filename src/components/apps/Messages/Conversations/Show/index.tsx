@@ -1,4 +1,12 @@
-import React, {FC, useContext, useEffect, useRef, useState} from 'react';
+import React, {
+  FC,
+  ReactElement,
+  useContext,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react';
 import {useWindowDimensions, StyleSheet} from 'react-native';
 import Animated, {
   useSharedValue,
@@ -67,6 +75,30 @@ const Conversation: FC<{shrink: SharedValue<number>}> = ({shrink}) => {
     };
   }, [context.conversation.state]);
 
+  const prevChooser = useRef<ReactElement | undefined>(undefined);
+
+  const chooser = useMemo(() => {
+    if (context.conversation.state) {
+      const node = (
+        <RouteChooser
+          dispatch={context.conversation.dispatch}
+          conversation={context.conversation.state}
+          footerHeight={footerHeight}
+          animatedScrollRef={animatedScrollRef}
+        />
+      );
+      prevChooser.current = node;
+      return node;
+    } else {
+      return prevChooser.current;
+    }
+  }, [
+    animatedScrollRef,
+    context.conversation.dispatch,
+    context.conversation.state,
+    footerHeight,
+  ]);
+
   return (
     <Animated.View
       style={[
@@ -81,13 +113,7 @@ const Conversation: FC<{shrink: SharedValue<number>}> = ({shrink}) => {
         footerHeight={footerHeight}
         key={digestedConversation.current?.name}
       />
-      <RouteChooser
-        dispatch={context.conversation.dispatch}
-        availableRoute={context.conversation.state?.availableRoute}
-        name={context.conversation.state?.name}
-        footerHeight={footerHeight}
-        animatedScrollRef={animatedScrollRef}
-      />
+      {chooser}
     </Animated.View>
   );
 };

@@ -32,10 +32,10 @@ export enum CONTACT_NAMES {
   STEVE_LITT = 'Steve-0',
   TEST = 'Test',
   TEST2 = 'Test2',
-  ZOLA = 'Zola',
+  ZOLA = 'Maybe: Zara',
   DEFAULT = 'Default',
   SEAMLESS = '30368',
-  SPAM1 = '1-666-1337',
+  SPAM1 = '1-222-666-1337',
 }
 
 export type UserMappingType = {
@@ -44,7 +44,7 @@ export type UserMappingType = {
 };
 export const contactConsts: {[key in CONTACT_NAMES]: UserMappingType} = {
   '': {avatar: defaultAvatar, colors: ['#6b6b6d', '#363243']},
-  '1-666-1337': {avatar: defaultAvatar, colors: ['#6b6b6d', '#363243']},
+  '1-222-666-1337': {avatar: defaultAvatar, colors: ['#6b6b6d', '#363243']},
   Arial: {avatar: arialAvatar, colors: ['#dbaf48', '#cdc8bb']},
   Alice: {avatar: aliceAvatar, colors: ['#d0bd28', '#cdc8bb']},
   Chris: {avatar: chrisAvatar, colors: ['#6bd8e4', '#363243']},
@@ -67,7 +67,7 @@ export const contactConsts: {[key in CONTACT_NAMES]: UserMappingType} = {
   'Steve-0': {avatar: steveLitt, colors: ['#FF002D', '#C3596B']},
   Test: {avatar: defaultAvatar, colors: ['#FF002D', '#C3596B']},
   Test2: {avatar: defaultAvatar, colors: ['#FF002D', '#C3596B']},
-  Zola: {avatar: zaraAvatar, colors: ['#b46be4', '#363243']},
+  [CONTACT_NAMES.ZOLA]: {avatar: zaraAvatar, colors: ['#b46be4', '#363243']},
   30368: {avatar: defaultAvatar, colors: ['#6b6b6d', '#363243']},
   Default: {avatar: defaultAvatar, colors: ['#6b6b6d', '#363243']},
 };

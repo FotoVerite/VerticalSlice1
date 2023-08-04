@@ -46,10 +46,7 @@ const ActiveNotificationContainer: FC<{
     if (deactivated) {
       dispatch({
         type: NOTIFICATIONS_REDUCER_ACTIONS.UPDATE,
-        payload: {
-          index: index,
-          data: Object.assign({}, {...notification}, {active: false}),
-        },
+        payload: {active: false, index: index},
       });
     }
   }, [deactivated, dispatch, index, notification]);
