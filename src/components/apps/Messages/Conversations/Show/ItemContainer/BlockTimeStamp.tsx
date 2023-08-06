@@ -15,16 +15,6 @@ export const BlockTimeStamp: FC<
     dispatch: (action: ConversationReducerActionsType) => Promise<void>;
   }
 > = ({dispatch, height, messageDelay, content}) => {
-  // useEffect(() => {
-  //   const continuePath = async () => {
-  //     if (messageDelay) {
-  //       await delayFor(messageDelay);
-  //       dispatch({type: CONVERSATION_REDUCER_ACTIONS.CONTINUE_ROUTE});
-  //     }
-  //   };
-  //   continuePath();
-  // }, []);
-
   return <P style={[styles.time, {height: height}]}>{content}</P>;
 };
 

@@ -13,6 +13,7 @@ import pingSound from '../assets/basic-ping.mp3';
 const Notification: FC<{
   notification: NotificationType;
   popup?: boolean;
+  deactivate?: () => void;
 }> = props => {
   const {content, image, timestamp, title, onPress} = props.notification;
   const {width} = useWindowDimensions();
@@ -29,13 +30,13 @@ const Notification: FC<{
         }
 
         // Play the sound with an onEnd callback
-        ping.play(success => {
-          if (success) {
-            ping.release();
-          } else {
-            ping.release();
-          }
-        });
+        // ping.play(success => {
+        //   if (success) {
+        //     ping.release();
+        //   } else {
+        //     ping.release();
+        //   }
+        // });
       });
       return () => {
         ping.release();
@@ -46,8 +47,9 @@ const Notification: FC<{
   return (
     <TouchableWithoutFeedback
       onPress={() => {
-        if (onPress) {
+        if (onPress && props.popup && props.deactivate) {
           onPress();
+          props.deactivate();
         }
       }}>
       <View

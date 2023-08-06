@@ -38,7 +38,7 @@ const constructSeenRoutes = (
 ) => {
   const ret: RouteObjectType[] = [];
   for (const [key, value] of Object.entries(routeEvents)) {
-    if (availableRoutes[key] == null) {
+    if (availableRoutes[key] == null || !value.finished) {
       continue;
     }
     ret.push(
@@ -116,6 +116,20 @@ export const getSeenRoutes = (
     .concat(getSeenEventRoutes(name, events, availableEventBasedRoutes))
     .sort((a, b) => a.position - b.position);
   return routes;
+};
+
+export const getUnfinishedRouteID = (
+  name: CONTACT_NAMES,
+  events: MessageEventType,
+  availableRoutes?: MessageRouteType[],
+) => {
+  const unfinishedRouteID = Object.keys(events.Message[name]?.routes || {})
+    .filter(key => !events.Message[name].routes[key].finished)
+    .shift();
+  if (!unfinishedRouteID || !availableRoutes) {
+    return undefined;
+  }
+  return unfinishedRouteID;
 };
 
 export const getLastSeenRoute = (

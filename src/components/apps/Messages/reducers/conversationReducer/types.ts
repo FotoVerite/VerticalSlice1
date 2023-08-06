@@ -6,8 +6,8 @@ import {
   MessageType,
 } from '../../context/types';
 import {SkFont} from '@shopify/react-native-skia';
-import {EventOrchestraObjectType} from 'components/EventOrchestra/context/types';
 import {CONTACT_NAMES} from '../../context/usersMapping';
+import {EventOrchestraObjectType} from 'components/EventOrchestra/reducers/types';
 
 export enum CONVERSATION_REDUCER_ACTIONS {
   ADD_CONVERSATION,
@@ -15,6 +15,7 @@ export enum CONVERSATION_REDUCER_ACTIONS {
   ADD_MESSAGE_FROM_BLOCK,
   CONTINUE_ROUTE,
   DIGEST_CONVERSATION,
+  REFRESH_AVAILABLE_ROUTE,
   START_ROUTE,
   UPDATE_MESSAGE,
   RESET,
@@ -49,9 +50,18 @@ type ContinueRouteActionType = {
   type: CONVERSATION_REDUCER_ACTIONS.CONTINUE_ROUTE;
 };
 
-type DigestConversationActionType = {
+export type DigestConversationActionType = {
   type: CONVERSATION_REDUCER_ACTIONS.DIGEST_CONVERSATION;
-  payload: ConversationType;
+  payload: {
+    conversation: ConversationType;
+    events: EventOrchestraObjectType;
+    newMessage?: boolean;
+  };
+};
+
+type RefreshAvailableRouteActionType = {
+  type: CONVERSATION_REDUCER_ACTIONS.REFRESH_AVAILABLE_ROUTE;
+  payload: EventOrchestraObjectType;
 };
 
 type ResetConversationActionType = {
@@ -77,7 +87,6 @@ export type ConversationReducerConfigurationType = {
   font: SkFont;
   emojiFont: SkFont;
   width: number;
-  events: EventOrchestraObjectType;
 };
 
 export type DigestConfigurationType = {
@@ -91,6 +100,7 @@ export type ConversationReducerActionsType =
   | AddConversationActionType
   | ContinueRouteActionType
   | DigestConversationActionType
+  | RefreshAvailableRouteActionType
   | ResetConversationActionType
   | StartRouteActionType
   | UpdateMessageActionType;

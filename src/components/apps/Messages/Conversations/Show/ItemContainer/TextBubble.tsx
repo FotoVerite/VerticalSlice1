@@ -41,7 +41,6 @@ export const TextBubble: FC<
   );
 
   const glitchEffect = useGlitchEffect(height, width, content, clip);
-
   return (
     <Canvas
       style={{
@@ -58,7 +57,7 @@ export const TextBubble: FC<
         </Rect>
       </Group>
       <Group color={'white'}>{content}</Group>
-      {effect?.type == EFFECT_TYPE.GLITCH && glitchEffect}
+      {effect?.type === EFFECT_TYPE.GLITCH && glitchEffect}
     </Canvas>
   );
 };

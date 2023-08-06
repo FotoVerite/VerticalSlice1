@@ -1,6 +1,7 @@
-import React, {FC, useCallback, useContext, useEffect} from 'react';
+import React, {FC, useCallback, useContext, useEffect, useRef} from 'react';
 import {StyleSheet, useWindowDimensions} from 'react-native';
 import Animated, {
+  Easing,
   interpolate,
   runOnJS,
   useAnimatedStyle,
@@ -19,7 +20,7 @@ export enum DISPLAYED_TEXT_STATES {
 const DisplayedText: FC<{
   text: string;
   state: DISPLAYED_TEXT_STATES;
-  cb: () => Promise<void>;
+  cb: () => Promise<void> | (() => void);
 }> = ({cb, state, text}) => {
   const appContext = useContext(ApplicationContext);
   const {height, width} = useWindowDimensions();
@@ -46,7 +47,7 @@ const DisplayedText: FC<{
         sent.value = withTiming(0);
         break;
       case DISPLAYED_TEXT_STATES.SENT:
-        sent.value = withTiming(1, {}, () => {
+        sent.value = withTiming(1, {easing: Easing.out(Easing.circle)}, () => {
           blurAndRemove();
         });
         break;
@@ -58,7 +59,7 @@ const DisplayedText: FC<{
 
   const [numberOfLines, textWidth, nodes, cursorVectors] = generateSkiaNode(
     appContext.fonts.HelveticaNeue,
-    appContext.fonts.HelveticaNeue,
+    appContext.fonts.NotoColor,
     text,
     width - 78,
     false,

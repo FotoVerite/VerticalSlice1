@@ -25,11 +25,11 @@ import {ConversationShowRefs} from '../..';
 
 const OptionList: FC<
   {
-    active: boolean;
+    optionListOpen: boolean;
     setActive: (active: boolean) => void;
   } & ConversationShowRefs &
     PropsWithChildren
-> = ({active, animatedScrollRef, children, footerHeight}) => {
+> = ({optionListOpen: active, animatedScrollRef, children, footerHeight}) => {
   const showOptions = useSharedValue(0);
 
   const [optionsHeight, setOptionsHeight] = useState(0);

@@ -129,7 +129,13 @@ const generateTextNodes = (
   const lastSection = lineQueue.slice(-1)[0].slice(-1)[0];
 
   const cursorVectors = {
-    x: lastSection.starts + getWidthFromGlyphs(font, lastSection.content) - 3,
+    x:
+      lastSection.starts +
+      getWidthFromGlyphs(
+        lastSection.type === 'text' ? font : emojiFont,
+        lastSection.content,
+      ) -
+      3,
     y: lineCount * 19 + 4,
   };
   return [lineCount, textElements, cursorVectors] as const;

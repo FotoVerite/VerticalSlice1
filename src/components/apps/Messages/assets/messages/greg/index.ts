@@ -8,7 +8,8 @@ import {first_message} from './routes/first';
 import {second_message} from './routes/second';
 import {third_message} from './routes/third';
 import {MESSAGE_TYPE} from 'components/apps/Messages/reducers/conversationReducer/digestion/types';
-import {testConvo} from 'components/apps/Messages/assets/messages/test';
+import {mileena} from '../mileena';
+import {chris} from '../chris';
 
 export const greg: ConversationType = {
   name: CONTACT_NAMES.GREG,
@@ -35,18 +36,18 @@ export const greg: ConversationType = {
           name: CONTACT_NAMES.GREG,
           messages: ['Agreed, and this morning'],
         },
-        // {
-        //   name: CONTACT_NAMES.SELF,
-        //   messages: ['Mmmhm'],
-        // },
-        // {
-        //   name: CONTACT_NAMES.GREG,
-        //   messages: [
-        //     'We should plan another session soon',
-        //     {type: DigestedItemTypes.VCARD, message: testConvo},
-        //     {type: DigestedItemTypes.NUMBER, message: testConvo},
-        //   ],
-        // },
+        {
+          name: CONTACT_NAMES.SELF,
+          messages: ['Mmmhm'],
+        },
+        {
+          name: CONTACT_NAMES.GREG,
+          messages: [
+            'We should plan another session soon',
+            {type: MESSAGE_TYPE.VCARD, message: mileena},
+            {type: MESSAGE_TYPE.NUMBER, message: chris},
+          ],
+        },
       ],
     },
   ],

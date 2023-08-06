@@ -1,4 +1,4 @@
-import React, {FC, useEffect, useRef, useState} from 'react';
+import React, {FC, useCallback, useEffect, useRef, useState} from 'react';
 import {LayoutChangeEvent, StyleSheet, useWindowDimensions} from 'react-native';
 import Animated, {
   interpolate,
@@ -42,6 +42,15 @@ const ActiveNotificationContainer: FC<{
     }, 500),
   );
 
+  const deactivate = useCallback(() => {
+    'worklet';
+    opacity.value = withTiming(0, {duration: 500}, finished => {
+      if (finished) {
+        runOnJS(setDeactivated)(true);
+      }
+    });
+  }, [opacity]);
+
   useEffect(() => {
     if (deactivated) {
       dispatch({
@@ -55,16 +64,12 @@ const ActiveNotificationContainer: FC<{
     let timer: NodeJS.Timeout;
     if (!deactivated) {
       timer = setTimeout(() => {
-        opacity.value = withTiming(0, {duration: 500}, finished => {
-          if (finished) {
-            runOnJS(setDeactivated)(true);
-          }
-        });
+        deactivate();
       }, 5000);
     } else {
     }
     return () => clearTimeout(timer);
-  }, [deactivated, opacity]);
+  }, [deactivate, deactivated, opacity]);
 
   useEffect(() => {
     if (notificationHeight) {
@@ -121,7 +126,13 @@ const ActiveNotificationContainer: FC<{
           const itemHeight = layout.nativeEvent.layout.height;
           setNotificationHeight(itemHeight);
         }}>
-        {<Notification notification={notification} popup={true} />}
+        {
+          <Notification
+            notification={notification}
+            popup={true}
+            deactivate={deactivate}
+          />
+        }
       </Animated.View>
     </PanGestureHandler>
   );

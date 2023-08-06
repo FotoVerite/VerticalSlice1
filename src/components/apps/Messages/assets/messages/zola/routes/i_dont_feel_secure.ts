@@ -36,7 +36,7 @@ export const i_dont_feel_secure: MessageRouteType = {
       {
         name: SELF,
         messages: [
-          {type: MESSAGE_TYPE.EMOJI, message: '🙁'},
+          //{type: MESSAGE_TYPE.EMOJI, message: '🙁'},
           'Gurl please that joke was tired the first time you said it.',
         ],
       },

@@ -85,6 +85,7 @@ const Conversation: FC<{shrink: SharedValue<number>}> = ({shrink}) => {
           conversation={context.conversation.state}
           footerHeight={footerHeight}
           animatedScrollRef={animatedScrollRef}
+          key={`${context.conversation.state.name}-chooser`}
         />
       );
       prevChooser.current = node;

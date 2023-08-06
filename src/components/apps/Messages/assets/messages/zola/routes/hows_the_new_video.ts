@@ -25,18 +25,18 @@ const exchanges = [
       {type: MESSAGE_TYPE.EMOJI, message: '💪'},
     ],
   },
-  {
-    name: ZARA,
-    messages: [
-      'To think six months ago I was so happy to get my gold play button and now....',
-    ],
-  },
-  {
-    name: SELF,
-    messages: [
-      "Hey we're supposed to be mourning the potential loss of my social life here",
-    ],
-  },
+  // {
+  //   name: ZARA,
+  //   messages: [
+  //     'To think six months ago I was so happy to get my gold play button and now....',
+  //   ],
+  // },
+  // {
+  //   name: SELF,
+  //   messages: [
+  //     "Hey we're supposed to be mourning the potential loss of my social life here",
+  //   ],
+  // },
   {
     name: ZARA,
     messages: [':/'],
@@ -105,43 +105,43 @@ export const your_new_video: MessageRouteType = {
         name: SELF,
         messages: [OPTIONS.C],
       },
-      {
-        name: ZARA,
-        messages: ['Gah, what a disaster, My face still hurts.'],
-      },
-      {
-        name: SELF,
-        messages: ['It looked painful'],
-      },
-      {
-        name: ZARA,
-        messages: [
-          'Never doing a spon again without trying the actual product first.',
-          "They're were great allowing me to post my allergic reaction take but I don't want to be in that position again",
-        ],
-      },
-      {
-        name: SELF,
-        messages: ['Why did they allow you?'],
-      },
-      {
-        name: ZARA,
-        messages: [
-          'Because their contract forced them to pay, and at least I was able to have a good dialog about products/allergies and how none will be right for everybody.',
-        ],
-      },
-      {
-        name: SELF,
-        messages: ['Are they going to work with you again?'],
-      },
-      {
-        name: ZARA,
-        messages: ['I hope so.', "Still trying to figure out what's next"],
-      },
-      {
-        name: SELF,
-        messages: ['What is next?'],
-      },
+      // {
+      //   name: ZARA,
+      //   messages: ['Gah, what a disaster, My face still hurts.'],
+      // },
+      // {
+      //   name: SELF,
+      //   messages: ['It looked painful'],
+      // },
+      // {
+      //   name: ZARA,
+      //   messages: [
+      //     'Never doing a spon again without trying the actual product first.',
+      //     "They're were great allowing me to post my allergic reaction take but I don't want to be in that position again",
+      //   ],
+      // },
+      // {
+      //   name: SELF,
+      //   messages: ['Why did they allow you?'],
+      // },
+      // {
+      //   name: ZARA,
+      //   messages: [
+      //     'Because their contract forced them to pay, and at least I was able to have a good dialog about products/allergies and how none will be right for everybody.',
+      //   ],
+      // },
+      // {
+      //   name: SELF,
+      //   messages: ['Are they going to work with you again?'],
+      // },
+      // {
+      //   name: ZARA,
+      //   messages: ['I hope so.', "Still trying to figure out what's next"],
+      // },
+      // {
+      //   name: SELF,
+      //   messages: ['What is next?'],
+      // },
     ].concat(exchanges),
   },
 };

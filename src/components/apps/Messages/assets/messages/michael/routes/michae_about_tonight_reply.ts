@@ -10,7 +10,7 @@ import {MESSAGE_TYPE} from 'components/apps/Messages/reducers/conversationReduce
 import {MICHAEL_IDS} from './routes';
 
 export enum MICHAEL_ABOUT_TONIGHT_REPLY_OPTIONS {
-  A = '😈',
+  A = 'Yaaasss',
   B = 'Blerg',
 }
 
@@ -23,7 +23,7 @@ const exchanges: ExchangeBlockType[] = [
     name: MICHAEL,
     messages: [
       'You set up your new phone yet?',
-      'Want to try out that Camera. 😀',
+      'Want to try out that Camera.',
     ],
   },
   {

@@ -19,15 +19,20 @@ import {
   ConversationReducerConfigurationType,
   DigestConfigurationType,
 } from '../types';
-import {EventOrchestraObjectType} from 'components/EventOrchestra/context/types';
 import {SkMessageItem} from './SkMessageItem';
 import {CONTACT_NAMES} from 'components/apps/Messages/context/usersMapping';
 import {
   getSeenRoutes,
   RouteObjectType,
   isMessageWithMeta,
+  getUnfinishedRouteID,
 } from '../routing/seen';
 import {findAvailableRoutes} from '../routing/available';
+import {
+  convertMessageToString,
+  digestPathFromUnfinishedID,
+} from 'components/apps/Messages/context/conversationFunctions';
+import {EventOrchestraObjectType} from 'components/EventOrchestra/reducers/types';
 
 type BaseConfigType = {
   font: SkFont;
@@ -52,16 +57,16 @@ export const getListHeight = (exchanges: DigestedConversationListItem[]) => {
 export const digestConversation = async (
   config: ConversationReducerConfigurationType,
   conversation: ConversationType,
+  events: EventOrchestraObjectType,
 ) => {
   const {exchanges, ...conversationProps} = conversation;
-  const {events, ...configProps} = config;
 
   const digestedExchanges = digestExchanges(
-    configProps,
+    config,
     exchanges,
     conversationProps.group,
   );
-  const digested = Object.assign(conversationProps, {
+  const digested: DigestedConversationType = Object.assign(conversationProps, {
     exchanges: digestedExchanges,
     routes: conversationProps.routes || [],
     activePath: [],
@@ -71,9 +76,56 @@ export const digestConversation = async (
       events,
     )[0],
   });
-  digested.exchanges = appendSeenRoutes(digested, events, configProps);
+
+  digested.exchanges = appendSeenRoutes(digested, events, config);
+  const unfinishedID = getUnfinishedRouteID(
+    conversationProps.name,
+    events,
+    conversationProps.routes || [],
+  );
+
+  if (unfinishedID) {
+    const [time, chosen, seen, pending] = digestPathFromUnfinishedID(
+      unfinishedID,
+      conversation,
+      events,
+    );
+    if (time && chosen && seen && pending) {
+      appendUnfinishedPath(
+        digested,
+        chosen,
+        time,
+        seen || [],
+        pending || [],
+        config,
+      );
+    }
+  }
   digested.exchanges = await resolveSnapshots(digested.exchanges);
   return digested;
+};
+
+const appendUnfinishedPath = (
+  digested: DigestedConversationType,
+  chosen: string,
+  createdAt: Date,
+  seen: AddMessagePayloadType[],
+  pending: AddMessagePayloadType[],
+  config: DigestConfigurationType,
+) => {
+  digested.exchanges = digestPath(
+    digested.exchanges,
+    seen,
+    createdAt,
+    digested.group,
+    config,
+  );
+  digested.routeAtIndex = seen.length;
+  digested.chosenRoute = chosen;
+  digested.activePath = pending;
+  digested.nextMessageInQueue = convertMessageToString(
+    pending[0].messageContent,
+  );
 };
 
 const appendSeenRoutes = (
@@ -152,6 +204,48 @@ export const digestExchanges = (
   return ret;
 };
 
+export const digestPath = (
+  exchanges: DigestedConversationListItem[],
+  payloads: AddMessagePayloadType[],
+  time: Date,
+  group: boolean = false,
+  configuration: DigestConfigurationType,
+) => {
+  const offset = getListHeight(exchanges);
+  const ret: DigestedConversationListItem[] = [];
+  const itemConfiguration: ItemConfigurationType = {
+    font: configuration.font,
+    emojiFont: configuration.emojiFont,
+    width: configuration.width,
+    positionAcc: offset,
+    group: group,
+  };
+
+  const timeBlock: ConversationExchangeType = {
+    time: time.toISOString(),
+    exchanges: [],
+  };
+  const timeExchange = createTimeItem(
+    timeBlock,
+    itemConfiguration.width,
+    itemConfiguration.positionAcc,
+  );
+
+  itemConfiguration.positionAcc += timeExchange.height;
+  ret.push(timeExchange);
+  for (const exchange of payloads) {
+    const item = createSkBubbleFromMessage(
+      itemConfiguration,
+      exchange.messageContent,
+      exchange.name,
+      exchange.tail,
+    );
+    ret.push(item);
+    itemConfiguration.positionAcc += item.height + item.paddingBottom;
+  }
+  return exchanges.concat(ret);
+};
+
 export const createSkBubbleFromExchange = (
   itemConfiguration: ItemConfigurationType,
   exchange: ExchangeBlockType,
@@ -197,7 +291,7 @@ export const resolveSnapshots = async (
   return resolved.arr;
 };
 
-export const digestPath = (path: ExchangeBlockType[]) => {
+export const convertToPathExchanges = (path: ExchangeBlockType[]) => {
   return path.reduce((acc, block) => {
     for (const [index, message] of block.messages.entries()) {
       const tail = block.messages.length - 1 === index;

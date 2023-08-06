@@ -1,15 +1,6 @@
-import React, {
-  FC,
-  ReactElement,
-  useContext,
-  useEffect,
-  useMemo,
-  useState,
-} from 'react';
+import React, {FC, ReactElement, useContext, useEffect, useState} from 'react';
 import {TouchableOpacity, Image, View, StyleSheet} from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
-
-import {CONVERSATION_REDUCER_ACTIONS} from '../../reducers/conversationReducer/types';
 
 import {Bold, P} from 'common/styles/StyledText';
 import {Row} from 'common/styles/layout';
@@ -18,10 +9,8 @@ import {ConversationType} from '../../context/types';
 import {MessagesContext} from '../../context';
 
 import {EventOrchestraContext} from 'components/EventOrchestra/context';
-import {CONTACT_NAMES} from '../../context/usersMapping';
 import theme from 'themes';
 import {messageAppConditionsMet} from '../../reducers/conversationReducer/routing/available';
-import {Jumbled} from '../../Effects/Jumbled';
 import {MessageEffectType} from '../../reducers/conversationReducer/digestion/types';
 
 const ConversationListItem: FC<{conversation: ConversationType}> = ({
@@ -59,10 +48,7 @@ const ConversationListItem: FC<{conversation: ConversationType}> = ({
   return (
     <TouchableOpacity
       onPress={() => {
-        context.conversation.dispatch({
-          type: CONVERSATION_REDUCER_ACTIONS.DIGEST_CONVERSATION,
-          payload: conversation,
-        });
+        context.conversation.digest(conversation);
       }}>
       <Row>
         <View

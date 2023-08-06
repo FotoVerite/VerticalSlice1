@@ -1,8 +1,8 @@
 import {
-  MessageAppContactsEventType,
   EventOrchestraObjectType,
+  MessageAppContactsEventType,
   MessageRouteEventDataType,
-} from 'components/EventOrchestra/context/types';
+} from 'components/EventOrchestra/reducers/types';
 import {
   RouteConditionsType,
   MessageRouteType,
@@ -94,10 +94,11 @@ export const findAvailableRoutes = <
   } else {
     return routes.filter(route => {
       // Convert number to string due to objects keys needing to be strings
+      const finishedRoutes = Object.keys(
+        state.Message[name]?.routes || {},
+      ).filter(key => state.Message[name].routes[key].finished);
       return (
-        !Object.keys(state.Message[name]?.routes || {}).includes(
-          route.id.toString(),
-        ) &&
+        !finishedRoutes.includes(route.id.toString()) &&
         (route.conditions == null ||
           messageAppConditionsMet(state.Message, route.conditions))
       );

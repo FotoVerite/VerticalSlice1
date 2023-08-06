@@ -1,4 +1,11 @@
-import React, {FC, memo, useCallback, useMemo, useState} from 'react';
+import React, {
+  FC,
+  memo,
+  useCallback,
+  useEffect,
+  useMemo,
+  useState,
+} from 'react';
 import {StyleSheet, useWindowDimensions} from 'react-native';
 import {BlurView} from '@react-native-community/blur';
 import Animated from 'react-native-reanimated';
@@ -11,35 +18,42 @@ import {
   CONVERSATION_REDUCER_ACTIONS,
   ConversationReducerActionsType,
 } from 'components/apps/Messages/reducers/conversationReducer/types';
-import SingleOptionDisplay from './SingleOptionDisplay';
+import MessageTextInput from './MessageTextInput';
 import {convertMessageToString} from 'components/apps/Messages/context/conversationFunctions';
+import OptionList from './OptionList';
+import Option from './OptionList/Option';
 
 const MessageInput: FC<
   ConversationShowRefs & {
     conversation: DigestedConversationType;
-    dispatch: (action: ConversationReducerActionsType) => Promise<void>;
+    dispatch: (action: ConversationReducerActionsType) => void;
   }
 > = ({conversation, footerHeight, animatedScrollRef, dispatch}) => {
-  const [active, _setActive] = useState(false);
+  const [optionListOpen, openOptionList] = useState(false);
+  const [chosenOption, setChosenOption] = useState<string>('...');
 
   const {width} = useWindowDimensions();
 
-  const {nextMessageInQueue, availableRoute, activePath} = conversation;
+  const {nextMessageInQueue, availableRoute, chosenRoute} = conversation;
+
+  useEffect(() => {
+    setChosenOption('...');
+  }, [conversation.exchanges, setChosenOption]);
 
   const displayedText = useMemo(() => {
     if (nextMessageInQueue) {
       return convertMessageToString(nextMessageInQueue);
     }
-    if (availableRoute && activePath.length === 0) {
+    if (availableRoute && chosenRoute == null) {
       const {options} = availableRoute;
       if (options.length === 1) {
         return options[0];
       } else {
-        return '...';
+        return chosenOption;
       }
     }
     return undefined;
-  }, [nextMessageInQueue, availableRoute, activePath]);
+  }, [nextMessageInQueue, availableRoute, chosenRoute, chosenOption]);
 
   const callback = useCallback(() => {
     if (nextMessageInQueue) {
@@ -52,17 +66,48 @@ const MessageInput: FC<
           type: CONVERSATION_REDUCER_ACTIONS.START_ROUTE,
           payload: {chosenOption: options[0]},
         });
-      } else {
-        return dispatch({type: CONVERSATION_REDUCER_ACTIONS.CONTINUE_ROUTE});
+      } else if (chosenOption !== '...') {
+        return dispatch({
+          type: CONVERSATION_REDUCER_ACTIONS.START_ROUTE,
+          payload: {chosenOption: chosenOption},
+        });
       }
     }
-    return dispatch({type: CONVERSATION_REDUCER_ACTIONS.CONTINUE_ROUTE});
-  }, [nextMessageInQueue, availableRoute]);
+    return () => {};
+  }, [nextMessageInQueue, availableRoute, dispatch, chosenOption]);
+
+  const Options = useMemo(() => {
+    if (availableRoute) {
+      const nodes = availableRoute.options.map(option => (
+        <Option
+          key={`${availableRoute.routes.id}-${option}`}
+          id={availableRoute.id}
+          option={option}
+          cb={() => {
+            openOptionList(false);
+            setChosenOption(option);
+          }}
+        />
+      ));
+      return nodes;
+    }
+  }, [availableRoute]);
 
   return (
     <Animated.View style={[{width: width}, styles.container]}>
       <BlurView style={styles.blur} blurType="light" blurAmount={5} />
-      <SingleOptionDisplay text={displayedText} cb={callback} />
+      <MessageTextInput
+        text={displayedText}
+        cb={callback}
+        openOptionList={openOptionList}
+      />
+      <OptionList
+        optionListOpen={optionListOpen}
+        setActive={openOptionList}
+        footerHeight={footerHeight}
+        animatedScrollRef={animatedScrollRef}>
+        {Options}
+      </OptionList>
     </Animated.View>
   );
 };
@@ -81,6 +126,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     position: 'absolute',
     bottom: 0,
+    paddingTop: theme.spacing.p1,
   },
   textInput: {
     maxHeight: 40,

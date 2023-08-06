@@ -1,8 +1,4 @@
-import {
-  DigestedConversationType,
-  ExchangeBlockType,
-  MessageRouteType,
-} from '../../context/types';
+import {DigestedConversationType, ExchangeBlockType} from '../../context/types';
 import {
   AddMessagePayloadType,
   CONVERSATION_REDUCER_ACTIONS,
@@ -13,7 +9,7 @@ import {
 import {
   createSkBubbleFromExchange,
   createSkBubbleFromMessage,
-  digestPath,
+  convertToPathExchanges,
   getListHeight,
 } from './digestion';
 import {createTimeItem} from './digestion/TimeItem';
@@ -21,18 +17,22 @@ import {findAvailableRoutes} from './routing/available';
 import {produce} from 'immer';
 import {CONTACT_NAMES} from '../../context/usersMapping';
 import {convertMessageToString} from '../../context/conversationFunctions';
+import {
+  EVENTS_REDUCER_ACTIONS,
+  EventOrchestraObjectType,
+} from 'components/EventOrchestra/reducers/types';
 
 const createConversationReducer =
   (config: ConversationReducerConfigurationType) =>
   (
-    state: DigestedConversationType | undefined,
+    state: DigestedConversationType | undefined | null,
     action: ConversationReducerActionsType,
   ) =>
     conversationReducer(state, action, config);
 
 const conversationReducer = produce(
   (
-    draft: DigestedConversationType | undefined,
+    draft: DigestedConversationType | undefined | null,
     action: ConversationReducerActionsType,
     config: ConversationReducerConfigurationType,
   ) => {
@@ -50,17 +50,38 @@ const conversationReducer = produce(
         return addMessage(config, draft, action.payload);
       case CONVERSATION_REDUCER_ACTIONS.CONTINUE_ROUTE:
         return continueRoute(config, draft);
+      case CONVERSATION_REDUCER_ACTIONS.REFRESH_AVAILABLE_ROUTE:
+        return refreshAvailableRoute(config, draft, action.payload);
       case CONVERSATION_REDUCER_ACTIONS.START_ROUTE:
         return startRoute(config, draft, action.payload);
       case CONVERSATION_REDUCER_ACTIONS.UPDATE_MESSAGE:
         return updateMessage(draft, action.payload.props, action.payload.index);
       case CONVERSATION_REDUCER_ACTIONS.RESET:
-        return undefined;
+        return null;
       default:
         return draft;
     }
   },
 );
+
+const refreshAvailableRoute = (
+  config: ConversationReducerConfigurationType,
+  draft: DigestedConversationType | undefined | null,
+  events: EventOrchestraObjectType,
+) => {
+  if (!draft) {
+    return;
+  }
+  const route = findAvailableRoutes(
+    draft.name,
+    draft.routes || [],
+    events,
+  ).shift();
+  if (route && route.id !== draft.availableRoute?.id) {
+    draft.availableRoute = route;
+  }
+  return draft;
+};
 
 const startRoute = (
   config: ConversationReducerConfigurationType,
@@ -75,7 +96,7 @@ const startRoute = (
     return draft;
   }
   const path = route.routes[payload.chosenOption];
-  const pendingMessages = digestPath(path);
+  const pendingMessages = convertToPathExchanges(path);
   const nextMessageContent = pendingMessages.shift();
   if (nextMessageContent == null) {
     return draft;
@@ -91,7 +112,16 @@ const startRoute = (
   message.messageDelay = 400;
   draft.exchanges.push(message);
   draft.activePath = pendingMessages;
+  draft.chosenRoute = payload.chosenOption;
   draft.routeAtIndex = 1;
+  draft.eventAction = {
+    type: EVENTS_REDUCER_ACTIONS.MESSAGE_APP_ROUTE_CREATE,
+    payload: {
+      name: draft.name,
+      chosen: draft.chosenRoute,
+      routeId: route.id,
+    },
+  };
   return draft;
 };
 
@@ -138,11 +168,27 @@ const continueRoute = (
   draft: DigestedConversationType | undefined,
 ) => {
   if (draft?.activePath == null) {
-    return;
+    return draft;
+  }
+  if (draft.availableRoute == null) {
+    return draft;
   }
   const nextMessage = draft.activePath[0];
   const offset = getListHeight(draft.exchanges);
   if (nextMessage == null) {
+    draft.eventAction = {
+      type: EVENTS_REDUCER_ACTIONS.MESSAGE_APP_ROUTE_UPDATE,
+      payload: {
+        routeId: draft.availableRoute.id,
+        name: draft.name,
+        finished: true,
+      },
+    };
+    draft.nextMessageInQueue = undefined;
+    draft.availableRoute = undefined;
+    draft.routeAtIndex = undefined;
+    draft.chosenRoute = undefined;
+
     return draft;
   }
   if (
@@ -162,44 +208,18 @@ const continueRoute = (
     message.messageDelay = message.messageDelay ||= 400;
     draft.exchanges.push(message);
     draft.activePath.shift();
-    draft.routeAtIndex = draft.routeAtIndex || 0 + 1;
+    draft.routeAtIndex = (draft.routeAtIndex || 0) + 1;
     draft.nextMessageInQueue = undefined;
+    draft.eventAction = {
+      type: EVENTS_REDUCER_ACTIONS.MESSAGE_APP_ROUTE_UPDATE,
+      payload: {
+        routeId: draft.availableRoute.id,
+        name: draft.name,
+        atIndex: draft.routeAtIndex,
+      },
+    };
   }
   return draft;
-  // if (state == null) {
-  //   return state;
-  // }
-  // // const newState = updateMessage(
-  // //   state,
-  // //   {messageDelay: undefined},
-  // //   state.exchanges.length - 1,
-  // // );
-  // const newState = Object.assign({}, state);
-  // const activePath = [...newState.activePath];
-  // const payload = activePath.shift();
-  // if (payload == null) {
-  //   newState.availableRoute = findAvailableRoutes(
-  //     newState.name,
-  //     newState.routes || [],
-  //     config.events,
-  //   )[0];
-  //   return newState;
-  // }
-  // const offset = getListHeight(newState.exchanges);
-  // const itemConfiguration = Object.assign(config, {
-  //   group: newState.group || false,
-  //   positionAcc: offset,
-  // });
-  // const message = createSkBubbleFromMessage(
-  //   itemConfiguration,
-  //   payload.messageContent,
-  //   payload.name,
-  //   payload.tail,
-  // );
-  // message.messageDelay = message.messageDelay ||= 400;
-  // newState.activePath = activePath;
-  // newState.exchanges = newState.exchanges.concat(message);
-  // return newState;
 };
 
 const addConversation = (
@@ -211,6 +231,10 @@ const addConversation = (
     message.typingDelay = undefined;
     message.messageDelay = undefined;
   });
+  conversation.eventAction = {
+    type: EVENTS_REDUCER_ACTIONS.MESSAGE_APP_CONVERSATION_SEEN,
+    payload: {name: conversation.name},
+  };
   return conversation;
 };
 
@@ -241,20 +265,15 @@ const addMessage = (
 };
 
 const updateMessage = (
-  state: DigestedConversationType | undefined,
+  draft: DigestedConversationType | undefined,
   props: DigestedMessageProps,
   index: number,
 ) => {
-  if (state == null) {
-    return state;
+  if (draft == null) {
+    return draft;
   }
-  const newState = Object.assign({}, state);
-  newState.exchanges[index] = Object.assign(
-    {},
-    newState.exchanges[index],
-    props,
-  );
-  return newState;
+  draft.exchanges[index] = {...draft.exchanges[index], ...props};
+  return draft;
 };
 
 export default createConversationReducer;

@@ -33,7 +33,7 @@ export const useGlitchEffect = (
   }, [clock]);
 
   return (
-    <Group clip={animatedClip}>
+    <Group clip={animatedClip} color={'white'}>
       <Group
         blendMode="difference"
         clip={clip}

@@ -67,10 +67,7 @@ export const NumberBubble: FC<
   return (
     <TouchableWithoutFeedback
       onPress={() => {
-        context.newMessage.dispatch({
-          type: CONVERSATION_REDUCER_ACTIONS.DIGEST_CONVERSATION,
-          payload: content,
-        });
+        context.conversation.digest(content, true);
       }}>
       <View>
         <Canvas

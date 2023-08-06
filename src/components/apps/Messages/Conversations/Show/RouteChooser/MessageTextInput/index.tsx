@@ -5,11 +5,12 @@ import {Row} from 'common/styles/layout';
 import ChevronButton, {MESSAGE_SEND_BUTTON_STATE} from '../ChevronButton';
 import DisplayedText, {DISPLAYED_TEXT_STATES} from '../DisplayedText';
 
-const SingleOptionDisplay: FC<{
+const MessageTextInput: FC<{
+  openOptionList: React.Dispatch<React.SetStateAction<boolean>>;
   text?: string;
-  cb: () => Promise<void>;
-}> = ({cb, text}) => {
-  const sent = useRef(false);
+  cb: () => void;
+}> = ({cb, openOptionList, text}) => {
+  const sent = useRef(true);
   const [textState, setTextState] = useState(DISPLAYED_TEXT_STATES.DISPLAYED);
   const [buttonState, setButtonState] = useState(
     text != null
@@ -19,9 +20,11 @@ const SingleOptionDisplay: FC<{
 
   useEffect(() => {
     setTextState(DISPLAYED_TEXT_STATES.DISPLAYED);
-    if (text != null) {
+    if (text != null && text !== '...') {
       sent.current = false;
       setButtonState(MESSAGE_SEND_BUTTON_STATE.SENDABLE);
+    } else if (text === '...') {
+      setButtonState(MESSAGE_SEND_BUTTON_STATE.HAS_CONTENT);
     } else {
       setButtonState(MESSAGE_SEND_BUTTON_STATE.INACTIVE);
     }
@@ -31,10 +34,20 @@ const SingleOptionDisplay: FC<{
     <View style={[styles.container]}>
       <TouchableWithoutFeedback
         onPress={() => {
-          if (!sent.current) {
+          if (text && !sent.current) {
             sent.current = true;
             setTextState(DISPLAYED_TEXT_STATES.SENT);
             setButtonState(MESSAGE_SEND_BUTTON_STATE.WAITING);
+          } else if (text === '...') {
+            setButtonState(MESSAGE_SEND_BUTTON_STATE.OPEN);
+            openOptionList(isOpen => {
+              setButtonState(
+                isOpen
+                  ? MESSAGE_SEND_BUTTON_STATE.HAS_CONTENT
+                  : MESSAGE_SEND_BUTTON_STATE.OPEN,
+              );
+              return !isOpen;
+            });
           }
         }}>
         <View style={[styles.textInput]}>
@@ -54,7 +67,7 @@ const SingleOptionDisplay: FC<{
   );
 };
 
-export default SingleOptionDisplay;
+export default MessageTextInput;
 
 const styles = StyleSheet.create({
   container: {

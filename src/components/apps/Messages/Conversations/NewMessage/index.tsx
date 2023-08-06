@@ -1,4 +1,4 @@
-import React, {FC, useContext, useRef} from 'react';
+import React, {FC, ReactElement, useContext, useMemo, useRef} from 'react';
 import {
   StyleSheet,
   TouchableWithoutFeedback,
@@ -32,6 +32,7 @@ const NewMessage: FC = () => {
   const insets = useSafeAreaInsets();
   const context = useContext(MessagesContext);
   const conversation = useRef<DigestedConversationType>();
+  const prevChooser = useRef<ReactElement | undefined>();
 
   const show = useSharedValue(0);
 
@@ -59,6 +60,29 @@ const NewMessage: FC = () => {
       ),
     };
   }, [context.newMessage.state]);
+
+  const MemoizedRouteChooser = useMemo(() => {
+    if (context.newMessage.state) {
+      const node = (
+        <RouteChooser
+          dispatch={context.newMessage.dispatch}
+          conversation={context.newMessage.state}
+          footerHeight={footerHeight}
+          animatedScrollRef={animatedScrollRef}
+          key={`${context.newMessage.state.name}-chooser`}
+        />
+      );
+      prevChooser.current = node;
+      return node;
+    } else {
+      return prevChooser.current;
+    }
+  }, [
+    animatedScrollRef,
+    context.newMessage.dispatch,
+    context.newMessage.state,
+    footerHeight,
+  ]);
 
   return (
     <Animated.View
@@ -101,13 +125,7 @@ const NewMessage: FC = () => {
               footerHeight={footerHeight}
               key={conversation.current?.name}
             />
-            <RouteChooser
-              dispatch={context.newMessage.dispatch}
-              availableRoute={context.newMessage.state?.availableRoute}
-              name={context.newMessage.state?.name}
-              footerHeight={footerHeight}
-              animatedScrollRef={animatedScrollRef}
-            />
+            {MemoizedRouteChooser}
           </>
         )}
       </View>

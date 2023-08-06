@@ -10,6 +10,7 @@ import React, {
 } from 'react';
 import {
   ConversationType,
+  MessageType,
   MessagesContextTypeDigest,
   MessagesContextTypeDigested,
 } from './types';
@@ -29,15 +30,20 @@ import {
   sortConversations,
   sendNotification,
   determineLogLine,
+  convertMessageToString,
 } from './conversationFunctions';
 import {NotificationsContext} from 'components/Notifications/context';
 import {spam1} from '../assets/messages/spam1';
 import {micheal} from '../assets/messages/michael';
 import {findAvailableRoutes} from '../reducers/conversationReducer/routing/available';
-import {EVENTS_REDUCER_ACTIONS} from 'components/EventOrchestra/reducers/types';
+import {EventOrchestraObjectType} from 'components/EventOrchestra/reducers/types';
 import {mileena} from '../assets/messages/mileena';
 import {chris} from '../assets/messages/chris';
 import {customer_service} from '../assets/messages/customer_service';
+import {CONTACT_NAMES} from './usersMapping';
+import {getUnfinishedRouteID} from '../reducers/conversationReducer/routing/seen';
+import {greg} from '../assets/messages/greg';
+import {NOTIFICATIONS_REDUCER_ACTIONS} from 'components/Notifications/reducers/notificationsReducer/types';
 
 //defaults for empty app
 export const MessagesContext = React.createContext<MessagesContextTypeDigested>(
@@ -58,6 +64,12 @@ export const baseConversation: ConversationType = {
   exchanges: [],
 };
 
+export type SendNotificationType = {
+  conversation: ConversationType;
+  routeID: string;
+  message: MessageType;
+};
+
 const MessagesContextProvider: FC<MessagesContextTypeDigest> = props => {
   const applicationContext = useContext(ApplicationContext);
   const eventContext = useContext(EventOrchestraContext);
@@ -68,6 +80,9 @@ const MessagesContextProvider: FC<MessagesContextTypeDigest> = props => {
 
   const [media, setMedia] = useState<ReactElement>();
   const [listCovered, setListCovered] = useState<boolean>(false);
+  const [sendNotifications, setSendNotifications] = useState<
+    SendNotificationType[]
+  >([]);
 
   const filteredConversations = useMemo(() => {
     const state = conversations.map(c => {
@@ -95,13 +110,11 @@ const MessagesContextProvider: FC<MessagesContextTypeDigest> = props => {
     return {
       font: applicationContext.fonts.HelveticaNeue,
       emojiFont: applicationContext.fonts.NotoColor,
-      events: events,
       width: width,
     };
   }, [
     applicationContext.fonts.HelveticaNeue,
     applicationContext.fonts.NotoColor,
-    events,
     width,
   ]);
 
@@ -116,33 +129,39 @@ const MessagesContextProvider: FC<MessagesContextTypeDigest> = props => {
   );
 
   const reducerResolver = useCallback(
-    async (action: ConversationReducerActionsType) => {
-      if (action.type === CONVERSATION_REDUCER_ACTIONS.DIGEST_CONVERSATION) {
-        const digested = await digestConversation(config, action.payload);
-        dispatchConversation({
-          type: CONVERSATION_REDUCER_ACTIONS.ADD_CONVERSATION,
-          payload: digested,
-        });
-      } else {
-        dispatchConversation(action);
-      }
+    (action: ConversationReducerActionsType) => {
+      dispatchConversation(action);
     },
-    [config],
+    [],
+  );
+
+  const digestConvo = useCallback(
+    async (_conversation: ConversationType) => {
+      const digested = await digestConversation(config, _conversation, events);
+      dispatchConversation({
+        type: CONVERSATION_REDUCER_ACTIONS.ADD_CONVERSATION,
+        payload: digested,
+      });
+    },
+    [config, events],
   );
 
   const newMessageResolver = useCallback(
-    async (action: ConversationReducerActionsType) => {
-      if (action.type === CONVERSATION_REDUCER_ACTIONS.DIGEST_CONVERSATION) {
-        const digested = await digestConversation(config, action.payload);
-        dispatchNewMessage({
-          type: CONVERSATION_REDUCER_ACTIONS.ADD_CONVERSATION,
-          payload: digested,
-        });
-      } else {
-        dispatchNewMessage(action);
-      }
+    (action: ConversationReducerActionsType) => {
+      dispatchNewMessage(action);
     },
-    [config],
+    [],
+  );
+
+  const digestNewMessage = useCallback(
+    async (_conversation: ConversationType) => {
+      const digested = await digestConversation(config, _conversation, events);
+      dispatchNewMessage({
+        type: CONVERSATION_REDUCER_ACTIONS.ADD_CONVERSATION,
+        payload: digested,
+      });
+    },
+    [config, events],
   );
 
   const viewable = useMemo(() => {
@@ -161,22 +180,28 @@ const MessagesContextProvider: FC<MessagesContextTypeDigest> = props => {
   }, [events]);
 
   useEffect(() => {
-    if (conversation?.name != null) {
-      eventDispatch({
-        type: EVENTS_REDUCER_ACTIONS.MESSAGE_APP_CONVERSATION_SEEN,
-        payload: {name: conversation.name},
-      });
+    if (conversation?.eventAction != null) {
+      eventDispatch(conversation.eventAction);
     }
-  }, [conversation?.name, eventDispatch]);
+  }, [conversation?.eventAction, eventDispatch]);
 
   useEffect(() => {
-    if (newMessage?.name != null) {
-      eventDispatch({
-        type: EVENTS_REDUCER_ACTIONS.MESSAGE_APP_CONVERSATION_SEEN,
-        payload: {name: newMessage?.name},
-      });
+    if (newMessage?.eventAction != null) {
+      eventDispatch(newMessage.eventAction);
     }
-  }, [newMessage?.name, eventDispatch]);
+  }, [newMessage?.eventAction, eventDispatch]);
+
+  useEffect(() => {
+    dispatchConversation({
+      type: CONVERSATION_REDUCER_ACTIONS.REFRESH_AVAILABLE_ROUTE,
+      payload: events,
+    });
+
+    dispatchNewMessage({
+      type: CONVERSATION_REDUCER_ACTIONS.REFRESH_AVAILABLE_ROUTE,
+      payload: events,
+    });
+  }, [events]);
 
   useEffect(() => {
     const filterDispatchedEventRoutes = (
@@ -194,8 +219,27 @@ const MessagesContextProvider: FC<MessagesContextTypeDigest> = props => {
           .length > 0
       );
     };
+    const freezeUnfinished = (
+      _conversations: ConversationType[],
+      prev: ConversationType[],
+      _events: EventOrchestraObjectType,
+      conversationBeingViewed?: CONTACT_NAMES,
+    ) => {
+      for (const c of _conversations) {
+        if (
+          conversationBeingViewed === c.name ||
+          getUnfinishedRouteID(c.name, _events, c.routes)
+        ) {
+          const prevConversation = prev.find(p => p.name === c.name);
+          c.availableEventRoutes = prevConversation?.availableEventRoutes || [];
+        }
+      }
+    };
+
     if (prevConversations && prevConversations !== viewable) {
+      freezeUnfinished(viewable, prevConversations, events, conversation?.name);
       const preAvailableNames = prevConversations.map(c => c.name);
+
       const newConversations = viewable.filter(
         v =>
           !preAvailableNames.includes(v.name) ||
@@ -203,12 +247,7 @@ const MessagesContextProvider: FC<MessagesContextTypeDigest> = props => {
       );
       newConversations.forEach(c => {
         if (c.name !== newMessage?.name && c.name !== conversation?.name) {
-          sendNotification(
-            c,
-            events,
-            eventDispatch,
-            notificationContext.notifications.dispatch,
-          );
+          sendNotification(c, events, eventDispatch, setSendNotifications);
         }
       });
       setPreConversations(viewable);
@@ -222,6 +261,42 @@ const MessagesContextProvider: FC<MessagesContextTypeDigest> = props => {
     conversation?.name,
     notificationContext.notifications.dispatch,
     reducerResolver,
+    digestConvo,
+  ]);
+
+  useEffect(() => {
+    const unsentNotifications = [] as SendNotificationType[];
+    sendNotifications.forEach(notification => {
+      const {routeID, message} = notification;
+      const foundEvent = Object.keys(
+        events.Message[notification.conversation.name].routes,
+      ).find(id => id === routeID.toString());
+      if (foundEvent) {
+        notificationContext.notifications.dispatch({
+          type: NOTIFICATIONS_REDUCER_ACTIONS.ADD,
+          payload: {
+            data: {
+              active: true,
+              title: `Message From ${notification.conversation.name}`,
+              content: convertMessageToString(message),
+              timestamp: new Date(),
+              image: notification.conversation.heroImage,
+              onPress: () => digestConvo(notification.conversation),
+            },
+          },
+        });
+      } else {
+        unsentNotifications.push(notification);
+      }
+    });
+    if (unsentNotifications.length !== sendNotifications.length) {
+      setSendNotifications(unsentNotifications);
+    }
+  }, [
+    sendNotifications,
+    events.Message,
+    notificationContext.notifications,
+    digestConvo,
   ]);
 
   return (
@@ -234,10 +309,12 @@ const MessagesContextProvider: FC<MessagesContextTypeDigest> = props => {
         },
         newMessage: {
           state: newMessage,
+          digest: digestNewMessage,
           dispatch: newMessageResolver,
         },
         conversation: {
           state: conversation,
+          digest: digestConvo,
           dispatch: reducerResolver,
         },
         listCovered: {state: listCovered, set: setListCovered},

@@ -71,10 +71,7 @@ export const VCardBubble: FC<
   return (
     <TouchableWithoutFeedback
       onPress={() => {
-        context.newMessage.dispatch({
-          type: CONVERSATION_REDUCER_ACTIONS.DIGEST_CONVERSATION,
-          payload: content,
-        });
+        context.newMessage.digest(content);
       }}>
       <View>
         <Canvas

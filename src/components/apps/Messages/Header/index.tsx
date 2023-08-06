@@ -33,10 +33,7 @@ const Header: FC = () => {
         <TouchableWithoutFeedback
           style={{}}
           onPress={() => {
-            context.newMessage.dispatch({
-              type: CONVERSATION_REDUCER_ACTIONS.DIGEST_CONVERSATION,
-              payload: baseConversation,
-            });
+            context.newMessage.digest(baseConversation);
           }}>
           <View style={styles.spacer}>
             {/* <Row style={styles.plusIcon}>

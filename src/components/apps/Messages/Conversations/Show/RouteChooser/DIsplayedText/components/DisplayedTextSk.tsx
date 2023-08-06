@@ -1,4 +1,4 @@
-import React, {FC, ReactElement, useContext, useEffect} from 'react';
+import React, {FC, ReactElement, useEffect} from 'react';
 
 import {
   Canvas,
@@ -12,14 +12,9 @@ import {
   vec,
 } from '@shopify/react-native-skia';
 
-import {DigestedConversationStringItemType} from 'components/apps/Messages/reducers/conversationReducer/digestion/types';
-import {ApplicationContext} from 'context';
-import {generateSkiaNode} from 'components/apps/Messages/reducers/conversationReducer/digestion/skiaCalculations';
-import {useWindowDimensions} from 'react-native';
 import {
   SharedValue,
   interpolate,
-  useAnimatedStyle,
   useDerivedValue,
   useSharedValue,
   withRepeat,
@@ -39,18 +34,26 @@ export const DisplayedTextSk: FC<{
   sent: SharedValue<number>;
   visibility: SharedValue<number>;
 }> = ({sent, numberOfLines, width, nodes, cursorVector, font, visibility}) => {
-  const shared = useSharedValue(-0.2);
+  const blink = useSharedValue(-0.2);
 
   useEffect(() => {
-    shared.value = withRepeat(withTiming(1, {duration: 500}), -1, true);
-  }, [shared]);
+    blink.value = withRepeat(withTiming(1, {duration: 500}), -1, true);
+  }, [blink]);
 
   const textColor = useDerivedValue(() => {
     return interpolateColors(sent.value, [0, 1], ['black', 'white']);
   }, [sent]);
 
+  const textTranslateX = useDerivedValue(() => {
+    return [{translateX: interpolate(sent.value, [0, 1], [-8, 0])}];
+  }, [sent]);
+
   const cursorOpacity = useDerivedValue(() => {
     return interpolate(sent.value, [0, 1], [1, 0]);
+  }, [sent]);
+
+  const bubbleVisible = useDerivedValue(() => {
+    return interpolate(sent.value, [0, 0.5, 1], [0, 0, 1]);
   }, [sent]);
 
   const clip = BubblePath(width, numberOfLines + 15, 16, true);
@@ -62,7 +65,7 @@ export const DisplayedTextSk: FC<{
         width: width,
       }}>
       <Group opacity={visibility}>
-        <Group clip={clip} opacity={sent}>
+        <Group clip={clip} opacity={bubbleVisible}>
           <Rect x={0} y={0} width={width} height={numberOfLines + 15}>
             <LinearGradient
               colors={getColorFromContacts(CONTACT_NAMES.SELF)}
@@ -71,15 +74,19 @@ export const DisplayedTextSk: FC<{
             />
           </Rect>
         </Group>
-        <Group color={textColor}>{nodes}</Group>
-        <Group opacity={cursorOpacity}>
+
+        <Group color={textColor} transform={textTranslateX}>
+          {nodes}
+        </Group>
+
+        <Group opacity={cursorOpacity} transform={[{translateX: -8}]}>
           <Text
             x={cursorVector.x}
             y={cursorVector.y}
             font={font}
             text={'|'}
             color={'blue'}
-            opacity={shared}
+            opacity={blink}
           />
         </Group>
       </Group>

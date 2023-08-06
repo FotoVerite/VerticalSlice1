@@ -17,6 +17,7 @@ import {
   ConversationReducerActionsType,
 } from '../reducers/conversationReducer/types';
 import {ImageSourcePropType} from 'react-native';
+import {EventsReducerActionsType} from 'components/EventOrchestra/reducers/types';
 export type MessagesSharedValuesType = {
   wordInputShake: SharedValue<number>;
   infoOpened: SharedValue<number>;
@@ -29,13 +30,21 @@ export type MessagesContextTypeDigest = {
 export type MessagesContextTypeDigested = PropsWithChildren<{
   conversations: ConversationType[];
   conversation: {
-    state: DigestedConversationType | undefined;
-    dispatch: (action: ConversationReducerActionsType) => Promise<void>;
+    state: DigestedConversationType | undefined | null;
+    dispatch: (action: ConversationReducerActionsType) => void;
+    digest: (
+      _conversation: ConversationType,
+      newMessage?: boolean,
+    ) => Promise<void>;
   };
   listCovered: GenericStateType<boolean>;
   newMessage: {
-    state: DigestedConversationType | undefined;
-    dispatch: (action: ConversationReducerActionsType) => Promise<void>;
+    state: DigestedConversationType | undefined | null;
+    dispatch: (action: ConversationReducerActionsType) => void;
+    digest: (
+      _conversation: ConversationType,
+      newMessage?: boolean,
+    ) => Promise<void>;
   };
   media: GenericOrUndefinedStateType<ReactElement>;
 }>;
@@ -83,6 +92,7 @@ export type DigestedConversationType = {
   activePath: AddMessagePayloadType[];
   availableRoute?: MessageRouteType;
   chosenRoute?: string;
+  eventAction?: EventsReducerActionsType;
   pendingMessages: AddMessagePayloadType[];
   nextMessageInQueue?: MessageType;
   tags: string[];
