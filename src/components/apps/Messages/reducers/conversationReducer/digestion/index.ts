@@ -32,7 +32,10 @@ import {
   convertMessageToString,
   digestPathFromUnfinishedID,
 } from 'components/apps/Messages/context/conversationFunctions';
-import {EventOrchestraObjectType} from 'components/EventOrchestra/reducers/types';
+import {
+  EVENTS_REDUCER_ACTIONS,
+  EventOrchestraObjectType,
+} from 'components/EventOrchestra/reducers/types';
 
 type BaseConfigType = {
   font: SkFont;
@@ -97,6 +100,7 @@ export const digestConversation = async (
         time,
         seen || [],
         pending || [],
+        unfinishedID,
         config,
       );
     }
@@ -111,6 +115,7 @@ const appendUnfinishedPath = (
   createdAt: Date,
   seen: AddMessagePayloadType[],
   pending: AddMessagePayloadType[],
+  routeID: string,
   config: DigestConfigurationType,
 ) => {
   digested.exchanges = digestPath(
@@ -122,10 +127,21 @@ const appendUnfinishedPath = (
   );
   digested.routeAtIndex = seen.length;
   digested.chosenRoute = chosen;
-  digested.activePath = pending;
-  digested.nextMessageInQueue = convertMessageToString(
-    pending[0].messageContent,
-  );
+  if (true) {
+    digested.activePath = pending;
+    digested.nextMessageInQueue = convertMessageToString(
+      pending[0].messageContent,
+    );
+  } else {
+    digested.eventAction = {
+      type: EVENTS_REDUCER_ACTIONS.MESSAGE_APP_ROUTE_UPDATE,
+      payload: {
+        routeId: routeID,
+        name: digested.name,
+        finished: true,
+      },
+    };
+  }
 };
 
 const appendSeenRoutes = (

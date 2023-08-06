@@ -83,7 +83,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     paddingHorizontal: 12,
     flexDirection: 'row',
-    marginBottom: 2,
     backgroundColor: '#ffffffd8',
+    marginVertical: theme.spacing.p1 / 2,
   },
 });

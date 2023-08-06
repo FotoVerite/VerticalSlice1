@@ -38,7 +38,7 @@ const conversationReducer = produce(
   ) => {
     switch (action.type) {
       case CONVERSATION_REDUCER_ACTIONS.ADD_CONVERSATION:
-        return addConversation(config, action.payload);
+        return addConversation(config, draft, action.payload);
       case CONVERSATION_REDUCER_ACTIONS.ADD_MESSAGE_FROM_BLOCK:
         return addMessageFromBlock(
           config,
@@ -224,9 +224,12 @@ const continueRoute = (
 
 const addConversation = (
   config: ConversationReducerConfigurationType,
+  draft: DigestedConversationType | undefined | null,
   conversation: DigestedConversationType,
 ) => {
-  // Remove any delays
+  if (draft?.chosenRoute && draft?.nextMessageInQueue == null) {
+    return draft;
+  }
   conversation.exchanges.forEach(message => {
     message.typingDelay = undefined;
     message.messageDelay = undefined;

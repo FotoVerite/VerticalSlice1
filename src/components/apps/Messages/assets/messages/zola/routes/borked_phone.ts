@@ -28,48 +28,48 @@ export const borked_phone: MessageRouteType = {
           'Yeaaaah, I kinda sorta, bricked my account and lost all my contacts.',
         ],
       },
-      // {
-      //   name: CONTACT_NAMES.ZOLA,
-      //   messages: ['No, really, how?'],
-      // },
-      // {
-      //   name: CONTACT_NAMES.SELF,
-      //   messages: [
-      //     'Unsure, I think my keychain was using a stale password and I just kept trying to enter it till it locked me out for the next…',
-      //     '5 hours I think.',
-      //   ],
-      // },
-      // {
-      //   name: CONTACT_NAMES.ZOLA,
-      //   messages: ['What will you do with yourself?'],
-      // },
-      // {
-      //   name: CONTACT_NAMES.SELF,
-      //   messages: ['Probably kill myself.'],
-      // },
-      // {
-      //   name: CONTACT_NAMES.ZOLA,
-      //   messages: [{type: MESSAGE_TYPE.EMOJI, message: '😦'}],
-      // },
-      // {
-      //   name: CONTACT_NAMES.SELF,
-      //   messages: [
-      //     'I’m trying to find some of my contacts in the meantime, but I was overzealous with inbox zero.',
-      //   ],
-      // },
+      {
+        name: CONTACT_NAMES.ZOLA,
+        messages: ['No, really, how?'],
+      },
+      {
+        name: CONTACT_NAMES.SELF,
+        messages: [
+          'Unsure, I think my keychain was using a stale password and I just kept trying to enter it till it locked me out for the next…',
+          '5 hours I think.',
+        ],
+      },
+      {
+        name: CONTACT_NAMES.ZOLA,
+        messages: ['What will you do with yourself?'],
+      },
+      {
+        name: CONTACT_NAMES.SELF,
+        messages: ['Probably kill myself.'],
+      },
+      {
+        name: CONTACT_NAMES.ZOLA,
+        messages: [{type: MESSAGE_TYPE.EMOJI, message: '😦'}],
+      },
+      {
+        name: CONTACT_NAMES.SELF,
+        messages: [
+          'I’m trying to find some of my contacts in the meantime, but I was overzealous with inbox zero.',
+        ],
+      },
 
-      // {
-      //   name: CONTACT_NAMES.ZOLA,
-      //   messages: ['Inbox what?'],
-      // },
-      // {
-      //   name: CONTACT_NAMES.SELF,
-      //   messages: ['I deleted nearly all my emails instead of archiving.'],
-      // },
-      // {
-      //   name: CONTACT_NAMES.ZOLA,
-      //   messages: ['That sounds like an amazing system'],
-      // },
+      {
+        name: CONTACT_NAMES.ZOLA,
+        messages: ['Inbox what?'],
+      },
+      {
+        name: CONTACT_NAMES.SELF,
+        messages: ['I deleted nearly all my emails instead of archiving.'],
+      },
+      {
+        name: CONTACT_NAMES.ZOLA,
+        messages: ['That sounds like an amazing system'],
+      },
     ],
   },
 };

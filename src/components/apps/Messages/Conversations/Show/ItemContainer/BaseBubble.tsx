@@ -124,11 +124,12 @@ export const BaseBubble: FC<{
       await delayFor(delay);
       scrollRef.current?.scrollToEnd({animated: true});
       opacity.value = withTiming(1, {duration: 300}, finished => {
-        if (finished) {
+        if (finished && mounted) {
           runOnJS(continueRoute)();
         }
       });
     };
+    let mounted = true;
     if (
       !sentDispatch.current &&
       item.messageDelay &&
@@ -139,6 +140,7 @@ export const BaseBubble: FC<{
         item.messageDelay + (item.leftSide ? (item.typingDelay || 0) + 850 : 0),
       );
     }
+    return () => (mounted = false);
   }, []);
 
   return (

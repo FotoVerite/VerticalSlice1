@@ -19,10 +19,26 @@ const exchanges: ExchangeBlockType[] = [
   {
     name: ZARA,
     messages: [
-      "I'm just speaking the truth",
-      'You just hate to hear it',
-      "And that's why you keep putting up with it.",
-      'Plus I actually message you.',
+      {
+        type: MESSAGE_TYPE.STRING,
+        message: "I'm just speaking the truth",
+        typingDelay: -400,
+      },
+      {
+        type: MESSAGE_TYPE.STRING,
+        message: 'You just hate to hear it',
+        typingDelay: -500,
+      },
+      {
+        type: MESSAGE_TYPE.STRING,
+        message: "And that's why you keep putting up with it.",
+        typingDelay: -600,
+      },
+      {
+        type: MESSAGE_TYPE.STRING,
+        message: 'Plus I actually message you.',
+        typingDelay: -700,
+      },
       {
         type: MESSAGE_TYPE.EMOJI,
         message: '😉',

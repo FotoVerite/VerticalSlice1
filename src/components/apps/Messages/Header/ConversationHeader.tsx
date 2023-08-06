@@ -70,11 +70,16 @@ const ConversationHeader: FC<{shrink: SharedValue<number>}> = ({shrink}) => {
         <View style={styles.spacer}>
           <Row style={styles.row}>
             <TouchableWithoutFeedback
-              onPress={() =>
-                context.conversation.dispatch({
-                  type: CONVERSATION_REDUCER_ACTIONS.RESET,
-                })
-              }>
+              onPress={() => {
+                if (
+                  context.conversation.state?.chosenRoute == null ||
+                  context.conversation.state?.nextMessageInQueue != null
+                ) {
+                  context.conversation.dispatch({
+                    type: CONVERSATION_REDUCER_ACTIONS.RESET,
+                  });
+                }
+              }}>
               <Icon
                 suppressHighlighting={true}
                 name="chevron-left"

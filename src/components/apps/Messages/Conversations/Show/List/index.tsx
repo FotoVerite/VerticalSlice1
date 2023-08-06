@@ -1,6 +1,6 @@
 import {DigestedConversationListItem} from 'components/apps/Messages/reducers/conversationReducer/digestion/types';
 import {DigestedConversationType} from 'components/apps/Messages/context/types';
-import React, {FC} from 'react';
+import React, {FC, useEffect} from 'react';
 import {View, useWindowDimensions, StyleSheet} from 'react-native';
 import Animated, {useScrollViewOffset} from 'react-native-reanimated';
 import theme from 'themes';
@@ -21,6 +21,12 @@ const List: FC<
 > = ({conversation, dispatch, footerHeight, animatedScrollRef}) => {
   const {width} = useWindowDimensions();
   const scrollHandler = useScrollViewOffset(animatedScrollRef);
+
+  useEffect(() => {
+    return () => {
+      console.log(conversation?.name);
+    };
+  }, []);
 
   return (
     <Animated.FlatList
