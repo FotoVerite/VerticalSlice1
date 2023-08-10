@@ -97,16 +97,6 @@ const determineTime = (
   }
 };
 
-const hasExchanges = (
-  conversation: ConversationType,
-  routeEvent?: RouteObjectType,
-) => {
-  if (routeEvent == null) {
-    return conversation.exchanges.length > 0;
-  } else {
-    return routeEvent.exchanges.length > 0;
-  }
-};
 const getTime = (conversation: ConversationType, events: MessageEventType) =>
   determineTime(
     conversation,
@@ -122,15 +112,8 @@ export const conversationHasExchange = (
   conversation: ConversationType,
   events: MessageEventType,
 ) =>
-  hasExchanges(
-    conversation,
-    getLastSeenRoute(
-      conversation.name,
-      events,
-      conversation.routes,
-      conversation.eventBasedRoutes,
-    ),
-  );
+  conversation.exchanges.length > 0 ||
+  Object.keys(events.Message[conversation.name].routes).length > 0;
 
 export const viewableConversations =
   (events: EventOrchestraObjectType) => (conversation: ConversationType) =>

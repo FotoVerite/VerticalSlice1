@@ -48,7 +48,7 @@ const MainScreen: FC = ({}) => {
     <Animated.View style={[styles.screen, AnimateShrink]}>
       <Header />
       <Conversations />
-      {context.conversation && <Conversation shrink={shrink} />}
+      <Conversation shrink={shrink} />
       <ConversationHeader shrink={shrink} />
     </Animated.View>
   );

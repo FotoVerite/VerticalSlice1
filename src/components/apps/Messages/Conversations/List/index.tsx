@@ -15,8 +15,6 @@ import ConversationListItem from './ConversationListItem';
 import {MessagesContext} from '../../context';
 import Search from './Search';
 
-import theme from 'themes';
-
 function Separator() {
   return <View style={styles.itemSeparator} />;
 }

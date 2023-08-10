@@ -24,6 +24,7 @@ const MessageTextInput: FC<{
       sent.current = false;
       setButtonState(MESSAGE_SEND_BUTTON_STATE.SENDABLE);
     } else if (text === '...') {
+      sent.current = true;
       setButtonState(MESSAGE_SEND_BUTTON_STATE.HAS_CONTENT);
     } else {
       setButtonState(MESSAGE_SEND_BUTTON_STATE.INACTIVE);

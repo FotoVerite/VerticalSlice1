@@ -24,16 +24,23 @@ const eventsReducer = produce(
           position: position,
           ...props,
         };
+        console.log('MESSAGE_APP_ROUTE_CREATE', routeInfo[routeId.toString()]);
         return draft;
       }
       case EVENTS_REDUCER_ACTIONS.MESSAGE_APP_ROUTE_UPDATE: {
         const {routeId, ...props} = action.payload;
         const routeInfo = draft.Message[action.payload.name].routes;
+        const copy = {...routeInfo[routeId.toString()]};
         routeInfo[routeId.toString()] = {
           ...routeInfo[routeId.toString()],
           ...props,
           ...{updatedAt: new Date()},
         };
+        console.log(
+          'MESSAGE_APP_ROUTE_UPDATED',
+          copy,
+          routeInfo[routeId.toString()],
+        );
         return draft;
       }
       default:

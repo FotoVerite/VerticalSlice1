@@ -50,16 +50,27 @@ export type MessagesContextTypeDigested = PropsWithChildren<{
 }>;
 
 export type RouteChosenConditionType = {
-  [key: string]: {chosen?: string[]; not_chosen?: string[]};
+  [key: string]: {chosen?: string[]; not_chosen?: string[]; finished?: boolean};
+};
+
+export type RouteViewedConditionType = {
+  lt?: number;
+  lte?: number;
+  gt?: number;
+  gte?: number;
 };
 
 export type RouteConditionsType = {
-  [key in CONTACT_NAMES]?: {views?: number; routes?: RouteChosenConditionType};
+  [key in CONTACT_NAMES]?: {
+    views?: RouteViewedConditionType;
+    routes?: RouteChosenConditionType;
+  };
 };
 
 export type MessageRouteType = {
   id: number;
   conditions?: RouteConditionsType;
+  effects?: MessageEffectType[];
   options: string[];
   routes: {[key: string]: ExchangeBlockType[]};
 };

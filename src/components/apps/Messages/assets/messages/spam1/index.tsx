@@ -25,16 +25,16 @@ export const spam1: ConversationType = {
   },
   effects: [
     {
-      type: EFFECT_TYPE.REPLACEMENT,
+      type: EFFECT_TYPE.LOGLINE_REPLACEMENT,
       conditions: {
-        [CONTACT_NAMES.MICHAEL]: {views: 1},
-        [CONTACT_NAMES.ZOLA]: {views: 8},
+        [CONTACT_NAMES.MICHAEL]: {views: {gt: 1}},
+        [CONTACT_NAMES.ZOLA]: {views: {gt: 8}},
       },
       data: <Jumbled message="You'll never be good enough" />,
     },
     {
-      type: EFFECT_TYPE.REPLACEMENT,
-      conditions: {[CONTACT_NAMES.MICHAEL]: {views: 1}},
+      type: EFFECT_TYPE.LOGLINE_REPLACEMENT,
+      conditions: {[CONTACT_NAMES.MICHAEL]: {views: {gt: 1}}},
       data: <P>You're not the one</P>,
     },
   ],

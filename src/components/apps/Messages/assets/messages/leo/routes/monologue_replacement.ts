@@ -17,14 +17,24 @@ enum OPTIONS {
 export const leo_monologue_replacement = [
   {
     name: SELF,
-    messages: [OPTIONS.A],
+    messages: [
+      "I act like I have it together, but I don't, not at all",
+      "I feel like I'm dead, my lungs full of sea water and bile.",
+      'An anchor, a weight, a promise, with me down...',
+      'Down to the sandy floor, down to an end.',
+      'but I have to go on, move forward when all I want to do is lay in bed and not think ever again.',
+      "I loose access to my account and I don't even know what to do with myself.",
+    ],
   },
   {
     name: SELF,
-    messages: ['I deserve nothing'],
-  },
-  {
-    name: SELF,
-    messages: ['Absolutely nothing'],
+    messages: [
+      "So, I'm just here txting myself, pretending you can hear me.",
+      "I can't even remember either of my brothers' cell phones, I'm such a looser",
+      "I don't know what that says.",
+      'I miss you Leo, every day',
+      "I know it's not my fault",
+      "I know I'm worthless",
+    ],
   },
 ];

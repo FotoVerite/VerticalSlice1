@@ -7,6 +7,7 @@ import {
   getColorFromContacts,
 } from '../../../context/usersMapping';
 import {leo_first_monologue} from './routes/first_monologue';
+import {leo_monologue_replacement} from './routes/monologue_replacement';
 
 export const leo: ConversationType = {
   name: CONTACT_NAMES.LEO,
