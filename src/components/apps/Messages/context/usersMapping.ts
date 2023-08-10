@@ -25,6 +25,7 @@ export enum CONTACT_NAMES {
   GRACE_RUSSO = 'Grace Russo',
   GREG = 'Fuck Face',
   LENNY = 'Maybe: Lenny',
+  LEO = '1-201-657-5252',
   MILEENA = 'Mileena',
   MICHAEL = 'Maybe: Michael',
   MOVIE_NIGHT = 'Movie Night',
@@ -56,6 +57,10 @@ export const contactConsts: {[key in CONTACT_NAMES]: UserMappingType} = {
 
   'Fuck Face': {avatar: gregAvatar, colors: ['#48ee4e', '#363243']},
   'Grace Russo': {avatar: graceAvatar, colors: ['#EE6548', '#363243']},
+  [CONTACT_NAMES.LEO]: {
+    avatar: defaultAvatar,
+    colors: ['#f5d742', '#363243'],
+  },
   [CONTACT_NAMES.LENNY]: {
     avatar: defaultAvatar,
     colors: ['#6b6b6d', '#363243'],

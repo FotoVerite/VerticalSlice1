@@ -14,9 +14,7 @@ export const borked_phone: MessageRouteType = {
     [BORKED_PHONE_OPTIONS.A]: [
       {
         name: CONTACT_NAMES.SELF,
-        messages: [
-          'So, guess who borked his main way of communicating with the world',
-        ],
+        messages: [BORKED_PHONE_OPTIONS.A],
       },
       {
         name: CONTACT_NAMES.ZOLA,

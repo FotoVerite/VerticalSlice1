@@ -44,6 +44,7 @@ import {CONTACT_NAMES} from './usersMapping';
 import {getUnfinishedRouteID} from '../reducers/conversationReducer/routing/seen';
 import {greg} from '../assets/messages/greg';
 import {NOTIFICATIONS_REDUCER_ACTIONS} from 'components/Notifications/reducers/notificationsReducer/types';
+import {leo} from '../assets/messages/leo';
 
 //defaults for empty app
 export const MessagesContext = React.createContext<MessagesContextTypeDigested>(
@@ -56,6 +57,7 @@ const conversations: ConversationType[] = [
   chris,
   mileena,
   customer_service,
+  leo,
 ];
 
 export const baseConversation: ConversationType = {

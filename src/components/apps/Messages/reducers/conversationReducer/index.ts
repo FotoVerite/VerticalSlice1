@@ -21,6 +21,9 @@ import {
   EVENTS_REDUCER_ACTIONS,
   EventOrchestraObjectType,
 } from 'components/EventOrchestra/reducers/types';
+import {isMessageWithMeta} from './routing/seen';
+import {DigestedConversationListItem, MESSAGE_TYPE} from './digestion/types';
+import {BubblePath} from './digestion/BubblePath';
 
 const createConversationReducer =
   (config: ConversationReducerConfigurationType) =>
@@ -206,6 +209,13 @@ const continueRoute = (
       nextMessage.tail,
     );
     message.messageDelay = message.messageDelay ||= 400;
+    const previousMessage = draft.exchanges.slice(-1)[0];
+    previousMessage.messageDelay = undefined;
+    previousMessage.typingDelay = undefined;
+    if (message.name === CONTACT_NAMES.SELF) {
+      message.clip = BubblePath(message.width, message.height, 16, true);
+      removePreviousTail(previousMessage);
+    }
     draft.exchanges.push(message);
     draft.activePath.shift();
     draft.routeAtIndex = (draft.routeAtIndex || 0) + 1;
@@ -220,6 +230,21 @@ const continueRoute = (
     };
   }
   return draft;
+};
+
+const removePreviousTail = (draftMessage: DigestedConversationListItem) => {
+  if (draftMessage.type === MESSAGE_TYPE.TIME) {
+    return;
+  }
+  if (draftMessage.name !== CONTACT_NAMES.SELF) {
+    return;
+  }
+  draftMessage.clip = BubblePath(
+    draftMessage.width,
+    draftMessage.height,
+    16,
+    draftMessage.paddingBottom === 8,
+  );
 };
 
 const addConversation = (
