@@ -30,7 +30,8 @@ export const TypingBubble: FC<{
   scrollRef: React.RefObject<FlatList<DigestedConversationListItem>>;
   group: boolean;
 }> = props => {
-  const {height, typingDelay, paddingBottom} = props.item;
+  const {item, scrollRef, scrollHandler, group} = props;
+  const {height, typingDelay, paddingBottom} = item;
   const containerOpacity = useSharedValue(0);
   const opacity = useSharedValue(1);
   const [renderWaiting, setRenderWaiting] = useState(true);
@@ -59,13 +60,13 @@ export const TypingBubble: FC<{
   }, [containerOpacity, opacity, typingDelay]);
 
   useEffect(() => {
-    if (props.scrollRef) {
-      props.scrollRef.current?.scrollToOffset({
-        offset: props.scrollHandler.value + 40,
+    if (scrollRef) {
+      scrollRef.current?.scrollToOffset({
+        offset: scrollHandler.value + 40,
         animated: true,
       });
     }
-  }, [props]);
+  }, []);
 
   return (
     <Animated.View

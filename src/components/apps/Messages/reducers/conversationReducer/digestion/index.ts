@@ -127,21 +127,10 @@ const appendUnfinishedPath = (
   );
   digested.routeAtIndex = seen.length;
   digested.chosenRoute = chosen;
-  if (true) {
-    digested.activePath = pending;
-    digested.nextMessageInQueue = convertMessageToString(
-      pending[0].messageContent,
-    );
-  } else {
-    digested.eventAction = {
-      type: EVENTS_REDUCER_ACTIONS.MESSAGE_APP_ROUTE_UPDATE,
-      payload: {
-        routeId: routeID,
-        name: digested.name,
-        finished: true,
-      },
-    };
-  }
+  digested.activePath = pending;
+  digested.nextMessageInQueue = convertMessageToString(
+    pending[0].messageContent,
+  );
 };
 
 const appendSeenRoutes = (

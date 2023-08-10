@@ -121,10 +121,13 @@ export const BaseBubble: FC<{
 
   useEffect(() => {
     const renderNextMessage = async (delay: number) => {
+      if (!mounted) {
+        return;
+      }
       await delayFor(delay);
       scrollRef.current?.scrollToEnd({animated: true});
       opacity.value = withTiming(1, {duration: 300}, finished => {
-        if (finished && mounted) {
+        if (finished) {
           runOnJS(continueRoute)();
         }
       });
@@ -140,7 +143,9 @@ export const BaseBubble: FC<{
         item.messageDelay + (item.leftSide ? (item.typingDelay || 0) + 850 : 0),
       );
     }
-    return () => (mounted = false);
+    return () => {
+      mounted = false;
+    };
   }, []);
 
   return (

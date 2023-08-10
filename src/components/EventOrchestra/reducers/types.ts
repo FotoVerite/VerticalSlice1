@@ -11,6 +11,16 @@ export type MessageAppContactsEventType = {
   [key in CONTACT_NAMES]: MessageAppEvents;
 };
 
+export type NotificationsEventType = {}[];
+export enum NOTIFICATION_EVENT_TYPE {
+  MESSAGE,
+}
+export type MessageNotificationEventType = {
+  type: NOTIFICATION_EVENT_TYPE.MESSAGE;
+  payload: {name: CONTACT_NAMES; content: string};
+};
+export type NotificationEvent = MessageNotificationEventType[];
+
 export type MessageRouteEventDataType = {
   createdAt: Date;
   updatedAt: Date;
@@ -30,6 +40,7 @@ export type MessageAppEvents = {
 };
 
 export type MessageEventType = {
+  ['Notifications']: NotificationsEventType;
   [APP_NAMES.MESSAGE]: MessageAppContactsEventType;
 };
 

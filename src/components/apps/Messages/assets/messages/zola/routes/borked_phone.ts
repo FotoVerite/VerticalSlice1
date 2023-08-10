@@ -4,7 +4,7 @@ import {CONTACT_NAMES} from 'components/apps/Messages/context/usersMapping';
 import {ZARA_ROUTE_IDS} from './routes';
 
 export enum BORKED_PHONE_OPTIONS {
-  A = 'So, guess who borked his main way of communicating with the world',
+  A = 'OMG human interaction!',
 }
 
 export const borked_phone: MessageRouteType = {
@@ -18,12 +18,20 @@ export const borked_phone: MessageRouteType = {
       },
       {
         name: CONTACT_NAMES.ZOLA,
+        messages: ["That's a reaction"],
+      },
+      {
+        name: CONTACT_NAMES.SELF,
+        messages: ['So, guess who borked his cell phone account'],
+      },
+      {
+        name: CONTACT_NAMES.ZOLA,
         messages: ['Obviously not you, since you’re talking to me right now. '],
       },
       {
         name: CONTACT_NAMES.SELF,
         messages: [
-          'Yeaaaah, I kinda sorta, bricked my account and lost all my contacts.',
+          'Yeaaaah, I kinda sorta did, froze my account and lost all my contacts.',
         ],
       },
       {

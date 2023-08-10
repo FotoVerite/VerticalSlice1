@@ -10,6 +10,8 @@ import {
   MessageWithMetaType,
 } from 'components/apps/Messages/context/types';
 import {CONTACT_NAMES} from 'components/apps/Messages/context/usersMapping';
+import {EFFECT_TYPE} from '../digestion/types';
+import {messageAppConditionsMet} from './available';
 
 export type SeenRouteType = {
   [index: string]: {[key: string]: ExchangeBlockType[]};
@@ -26,9 +28,23 @@ export const isMessageWithMeta = (
   return (message as MessageWithMetaType).type !== undefined;
 };
 
-const constructAvailableRouteObject = (availableRoutes: MessageRouteType[]) => {
+const constructAvailableRouteObject = (
+  events: MessageEventType,
+  availableRoutes: MessageRouteType[],
+) => {
   const routes: SeenRouteType = {};
-  availableRoutes.forEach(route => (routes[route.id] = route.routes));
+  availableRoutes.forEach(route => {
+    routes[route.id] = route.routes;
+    const FullReplacement = route.effects?.filter(
+      effect => effect.type === EFFECT_TYPE.FULL_REPLACEMENT,
+    )[0];
+    if (
+      FullReplacement &&
+      messageAppConditionsMet(events.Message, FullReplacement.conditions)
+    ) {
+      routes[route.id] = FullReplacement.data;
+    }
+  });
   return routes;
 };
 
@@ -89,7 +105,7 @@ export const getSeenOptionRoutes = (
 
   return constructSeenRoutes(
     routeEvents,
-    constructAvailableRouteObject(availableRoutes),
+    constructAvailableRouteObject(events, availableRoutes),
   );
 };
 

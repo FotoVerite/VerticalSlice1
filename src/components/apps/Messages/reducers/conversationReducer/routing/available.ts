@@ -20,7 +20,20 @@ const contactHasBeenViewedCheck = (
     return true;
   }
   const viewedAmount = messageEvents[name]?.views.length || 0;
-  return viewCondition <= viewedAmount;
+  let ret = true;
+  if (viewCondition.lt) {
+    ret = ret && viewedAmount < viewCondition.lt;
+  }
+  if (viewCondition.lte) {
+    ret = ret && viewedAmount <= viewCondition.lte;
+  }
+  if (viewCondition.gt) {
+    ret = ret && viewedAmount > viewCondition.gt;
+  }
+  if (viewCondition.gte) {
+    ret = ret && viewedAmount >= viewCondition.gte;
+  }
+  return ret;
 };
 
 const routeChosenSelected = (
@@ -52,6 +65,20 @@ const routeNotChosenSelected = (
   return !not_chosen.includes(viewed.chosen);
 };
 
+const routeFinished = (
+  finished?: boolean,
+  viewed?: MessageRouteEventDataType,
+) => {
+  if (!viewed) {
+    return false;
+  }
+
+  if (finished == null) {
+    return true;
+  }
+  return finished == viewed.finished;
+};
+
 const routeHasBeenChosenCheck = (
   name: CONTACT_NAMES,
   messageEvents: MessageAppContactsEventType,
@@ -68,8 +95,9 @@ const routeHasBeenChosenCheck = (
     return (
       acc &&
       viewedRoutes[key] != null &&
+      routeFinished(routeCondition.finished, viewedRoutes[key]) &&
       routeChosenSelected(routeCondition.chosen, viewedRoutes[key]) &&
-      routeNotChosenSelected(routeCondition.not_chosen, viewedRoutes[key])
+      routeNotChosenSelected(routeCondition.chosen, viewedRoutes[key])
     );
   }, true);
 };

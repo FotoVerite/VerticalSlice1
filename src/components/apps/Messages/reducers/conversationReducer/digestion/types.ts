@@ -25,13 +25,14 @@ export enum MESSAGE_TYPE {
   VCARD = 'vcard',
 }
 export enum EFFECT_TYPE {
+  FULL_REPLACEMENT,
   GLITCH,
-  REPLACEMENT,
+  LOGLINE_REPLACEMENT,
 }
 
 export type MessageEffectType = {
   type: EFFECT_TYPE;
-  data: ReactElement;
+  data: any;
   conditions?: RouteConditionsType;
 };
 

@@ -21,16 +21,10 @@ const List: FC<
 > = ({conversation, dispatch, footerHeight, animatedScrollRef}) => {
   const {width} = useWindowDimensions();
   const scrollHandler = useScrollViewOffset(animatedScrollRef);
-
-  useEffect(() => {
-    return () => {
-      console.log(conversation?.name);
-    };
-  }, []);
-
   return (
     <Animated.FlatList
       ref={animatedScrollRef}
+      key={conversation?.name}
       style={[styles.list, {width: width}]}
       data={conversation?.exchanges}
       renderItem={({item, index}) => (
@@ -41,11 +35,10 @@ const List: FC<
           scrollHandler={scrollHandler}
           index={index}
           scrollRef={animatedScrollRef}
-          key={`item-${index}`}
         />
       )}
       keyExtractor={(item: DigestedConversationListItem, index) =>
-        `$conversation.name}-${index}`
+        `${conversation?.name}-${index}`
       }
       ListHeaderComponent={ListHeader}
       ListFooterComponent={<Footer footerHeight={footerHeight} />}
