@@ -119,10 +119,11 @@ const NewMessage: FC = () => {
         {conversation.current && (
           <>
             <List
-              dispatch={context.newMessage.dispatch}
-              conversation={conversation.current}
               animatedScrollRef={animatedScrollRef}
+              conversation={conversation.current}
+              dispatch={context.newMessage.dispatch}
               footerHeight={footerHeight}
+              newMessage={true}
               key={conversation.current?.name}
             />
             {MemoizedRouteChooser}

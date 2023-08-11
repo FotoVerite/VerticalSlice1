@@ -13,12 +13,17 @@ function ListHeader() {
   return <View style={styles.listHeader} />;
 }
 
+function NewMessageListHeader() {
+  return <View />;
+}
+
 const List: FC<
   {
     conversation: DigestedConversationType | undefined;
-    dispatch: (action: ConversationReducerActionsType) => Promise<void>;
+    dispatch: (action: ConversationReducerActionsType) => void;
+    newMessage?: boolean;
   } & ConversationShowRefs
-> = ({conversation, dispatch, footerHeight, animatedScrollRef}) => {
+> = ({animatedScrollRef, conversation, dispatch, footerHeight, newMessage}) => {
   const {width} = useWindowDimensions();
   const scrollHandler = useScrollViewOffset(animatedScrollRef);
   return (
@@ -40,7 +45,7 @@ const List: FC<
       keyExtractor={(item: DigestedConversationListItem, index) =>
         `${conversation?.name}-${index}`
       }
-      ListHeaderComponent={ListHeader}
+      ListHeaderComponent={newMessage ? NewMessageListHeader : ListHeader}
       ListFooterComponent={<Footer footerHeight={footerHeight} />}
       getItemLayout={(data, index) => ({
         length: data[index].height + data[index].paddingBottom,
