@@ -30,7 +30,7 @@ export const TypingBubble: FC<{
   scrollRef: React.RefObject<FlatList<DigestedConversationListItem>>;
   group: boolean;
 }> = props => {
-  const {item, scrollRef, scrollHandler, group} = props;
+  const {item, scrollRef, scrollHandler} = props;
   const {height, typingDelay, paddingBottom} = item;
   const containerOpacity = useSharedValue(0);
   const opacity = useSharedValue(1);

@@ -36,11 +36,10 @@ const constructAvailableRouteObject = (
   availableRoutes.forEach(route => {
     routes[route.id] = route.routes;
     const FullReplacement = route.effects?.filter(
-      effect => effect.type === EFFECT_TYPE.FULL_REPLACEMENT,
+      effect => effect.type === EFFECT_TYPE.FULL_REPLACEMENT && messageAppConditionsMet(events.Message, effect.conditions),
     )[0];
     if (
-      FullReplacement &&
-      messageAppConditionsMet(events.Message, FullReplacement.conditions)
+      FullReplacement
     ) {
       routes[route.id] = FullReplacement.data;
     }

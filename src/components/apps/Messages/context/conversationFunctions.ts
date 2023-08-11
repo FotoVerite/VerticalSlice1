@@ -1,7 +1,3 @@
-import {
-  NotificationsReducerActionsType,
-  NOTIFICATIONS_REDUCER_ACTIONS,
-} from 'components/Notifications/reducers/notificationsReducer/types';
 import moment from 'moment';
 import {
   RouteObjectType,
@@ -24,7 +20,6 @@ import {
   MessageEventType,
 } from 'components/EventOrchestra/reducers/types';
 import {convertToPathExchanges} from '../reducers/conversationReducer/digestion';
-import {CONVERSATION_REDUCER_ACTIONS} from '../reducers/conversationReducer/types';
 import {SendNotificationType} from '.';
 
 export const sendNotification = async (
@@ -66,22 +61,6 @@ export const sendNotification = async (
   if (message == null) {
     return;
   }
-  // setSendNotifications(arr =>
-  //   arr.concat({conversation: conversation, routeID: route?.id}),
-  // );
-  // dispatch({
-  //   type: NOTIFICATIONS_REDUCER_ACTIONS.ADD,
-  //   payload: {
-  //     data: {
-  //       active: true,
-  //       title: `Message From ${conversation.name}`,
-  //       content: convertMessageToString(message),
-  //       timestamp: new Date(),
-  //       image: conversation.heroImage,
-  //       // onPress: () => digest(conversation),
-  //     },
-  //   },
-  // });
 };
 
 const determineTime = (
@@ -93,20 +72,35 @@ const determineTime = (
     const date = moment(lastExchange.time);
     return date;
   } else {
-    return moment(routeEvent.createdAt);
+    return moment(routeEvent.updatedAt);
   }
 };
 
-const getTime = (conversation: ConversationType, events: MessageEventType) =>
-  determineTime(
-    conversation,
-    getLastSeenRoute(
-      conversation.name,
-      events,
-      conversation.routes,
-      conversation.eventBasedRoutes,
-    ),
+const getTime = (conversation: ConversationType, events: MessageEventType) => {
+  const unfinishedID = getUnfinishedRouteID(
+    conversation.name,
+    events,
+    conversation.routes,
   );
+  if (unfinishedID != null) {
+    const [updatedAt] = digestPathFromUnfinishedID(
+      unfinishedID,
+      conversation,
+      events,
+    );
+    return moment(updatedAt);
+  } else {
+    return determineTime(
+      conversation,
+      getLastSeenRoute(
+        conversation.name,
+        events,
+        conversation.routes,
+        conversation.eventBasedRoutes,
+      ),
+    );
+  }
+};
 
 export const conversationHasExchange = (
   conversation: ConversationType,
@@ -150,7 +144,7 @@ export const determineLogLine = (
     conversation.routes,
   );
   if (unfinishedID != null) {
-    const [createdAt, _, seen] = digestPathFromUnfinishedID(
+    const [updatedAt, _, seen] = digestPathFromUnfinishedID(
       unfinishedID,
       conversation,
       events,
@@ -158,7 +152,7 @@ export const determineLogLine = (
     if (seen && seen.length > 0) {
       const lastExchange = seen.pop()!;
       return {
-        time: formatMoment(moment(createdAt)),
+        time: formatMoment(moment(updatedAt)),
         content: convertMessageToString(lastExchange.messageContent),
       };
     }
@@ -166,6 +160,7 @@ export const determineLogLine = (
   if (routeEvent == null) {
     const lastExchange = conversation.exchanges.slice(-1)[0];
     const date = moment(lastExchange?.time || '');
+
     const message = getLastMessageFromExchanges(lastExchange.exchanges);
     return {
       time: formatMoment(date),
@@ -174,7 +169,7 @@ export const determineLogLine = (
   } else {
     const message = getLastMessageFromExchanges(routeEvent.exchanges);
     return {
-      time: formatMoment(moment(routeEvent.createdAt)),
+      time: formatMoment(moment(routeEvent.updatedAt)),
       content: convertMessageToString(message),
     };
   }
@@ -190,7 +185,7 @@ export const digestPathFromUnfinishedID = (
   if (event && route && event.chosen && event.atIndex) {
     const path = convertToPathExchanges(route.routes[event.chosen]);
     const seen = path.splice(0, event.atIndex);
-    return [event.createdAt, event.chosen, seen, path] as const;
+    return [event.updatedAt, event.chosen, seen, path] as const;
   } else {
     return [undefined, undefined, undefined, undefined] as const;
   }

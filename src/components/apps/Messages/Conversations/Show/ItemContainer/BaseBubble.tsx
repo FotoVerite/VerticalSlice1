@@ -1,7 +1,10 @@
 import React, {FC, useEffect, useRef} from 'react';
 import Animated, {
   SharedValue,
+  measure,
   runOnJS,
+  runOnUI,
+  useAnimatedRef,
   useAnimatedStyle,
   useSharedValue,
   withTiming,
@@ -126,6 +129,7 @@ export const BaseBubble: FC<{
       }
       await delayFor(delay);
       scrollRef.current?.scrollToEnd({animated: true});
+      handlePress();
       opacity.value = withTiming(1, {duration: 300}, finished => {
         if (finished) {
           runOnJS(continueRoute)();
@@ -147,6 +151,17 @@ export const BaseBubble: FC<{
       mounted = false;
     };
   }, []);
+
+  const animatedRef = useAnimatedRef<Animated.View>();
+
+  const handlePress = () => {
+    runOnUI(() => {
+      const measurement = measure(animatedRef);
+      if (measurement === null) {
+        return;
+      }
+    })();
+  };
 
   return (
     <Animated.View
@@ -174,7 +189,9 @@ export const BaseBubble: FC<{
           />
         )}
         <View>
-          {renderBubbleType(dispatch, item, index, scrollHandler, scrollRef)}
+          <Animated.View ref={animatedRef}>
+            {renderBubbleType(dispatch, item, index, scrollHandler, scrollRef)}
+          </Animated.View>
           {group && item.avatar && item.name !== 'Self' && (
             <P size="s" style={styles.name}>
               {item.name}
