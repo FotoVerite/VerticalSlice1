@@ -1,6 +1,7 @@
 import React, {FC, useContext, useEffect, useRef} from 'react';
 
 import {
+  Platform,
   StyleSheet,
   TouchableWithoutFeedback,
   View,
@@ -60,12 +61,15 @@ const ConversationHeader: FC<{shrink: SharedValue<number>}> = ({shrink}) => {
 
   return (
     <Animated.View style={[styles.header, popInAndTranslateAnimation]}>
-      <BlurView
-        style={styles.blur}
-        blurType="light"
-        blurAmount={10}
-        reducedTransparencyFallbackColor="white"
-      />
+      {Platform.OS === 'ios' && (
+        <BlurView
+          style={styles.blur}
+          blurType="light"
+          blurAmount={5}
+          reducedTransparencyFallbackColor="white"
+        />
+      )}
+      {Platform.OS !== 'ios' && <View style={styles.blur} />}
       <Row style={styles.row}>
         <View style={styles.spacer}>
           <Row style={styles.row}>
@@ -123,6 +127,7 @@ const styles = StyleSheet.create({
     width: '100%',
     height: '100%',
     borderRadius: 10,
+    backgroundColor: theme.colors.muted,
   },
   row: {
     alignItems: 'center',

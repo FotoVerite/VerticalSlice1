@@ -58,24 +58,31 @@ const Notifications: FC<PropsWithChildren> = ({children}) => {
         }}>
         <View style={[styles.layout]}>
           <NotificationsList left={left} />
-          <Canvas
+          <View
             pointerEvents="none"
             style={[
               {width: width, height: height - insets.top - insets.bottom},
               {marginTop: insets.top},
               styles.background,
             ]}>
-            {snapshotContext.background.state && (
-              <Image
-                x={0}
-                y={0}
-                width={width}
-                height={height}
-                image={snapshotContext.background.state}>
-                <Blur blur={blur} />
-              </Image>
-            )}
-          </Canvas>
+            <Canvas
+              style={[
+                {width: width, height: height - insets.top - insets.bottom},
+                {marginTop: insets.top},
+                styles.background,
+              ]}>
+              {snapshotContext.background.state && (
+                <Image
+                  x={0}
+                  y={0}
+                  width={width}
+                  height={height}
+                  image={snapshotContext.background.state}>
+                  <Blur blur={blur} />
+                </Image>
+              )}
+            </Canvas>
+          </View>
           {children}
         </View>
       </PanGestureHandler>

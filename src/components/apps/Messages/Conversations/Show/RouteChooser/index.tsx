@@ -6,7 +6,7 @@ import React, {
   useMemo,
   useState,
 } from 'react';
-import {StyleSheet, useWindowDimensions} from 'react-native';
+import {Platform, StyleSheet, useWindowDimensions} from 'react-native';
 import {BlurView} from '@react-native-community/blur';
 import Animated from 'react-native-reanimated';
 
@@ -95,7 +95,9 @@ const MessageInput: FC<
 
   return (
     <Animated.View style={[{width: width}, styles.container]}>
-      <BlurView style={styles.blur} blurType="light" blurAmount={5} />
+      {Platform.OS === 'ios' && (
+        <BlurView style={styles.blur} blurType="light" blurAmount={5} />
+      )}
       <MessageTextInput
         text={displayedText}
         cb={callback}

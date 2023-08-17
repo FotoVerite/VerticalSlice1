@@ -74,8 +74,4 @@ const styles = StyleSheet.create({
     marginVertical: 10,
     backgroundColor: 'gray',
   },
-  screen: {
-    zIndex: 2,
-    position: 'absolute',
-  },
 });
