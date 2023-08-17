@@ -11,7 +11,7 @@ import {TypingBubble} from './TypingBubble';
 import {ConversationReducerActionsType} from 'components/apps/Messages/reducers/conversationReducer/types';
 
 const ListItem: FC<{
-  dispatch: (action: ConversationReducerActionsType) => Promise<void>;
+  dispatch: (action: ConversationReducerActionsType) => void;
   item: DigestedConversationListItem;
   index: number;
   scrollHandler: SharedValue<number>;

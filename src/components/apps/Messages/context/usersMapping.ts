@@ -65,7 +65,7 @@ export const contactConsts: {[key in CONTACT_NAMES]: UserMappingType} = {
     avatar: defaultAvatar,
     colors: ['#6b6b6d', '#363243'],
   },
-  Mileena: {avatar: meleenaAvatar, colors: ['#ff0095', '#cdbbc6']},
+  Mileena: {avatar: meleenaAvatar, colors: ['#ff0095', '#80194d']},
   'Maybe: Michael': {avatar: gregAvatar, colors: ['#f54295', '#8900fa']},
   'Movie Night': {avatar: darkoAvatar, colors: ['#6b6b6d', '#363243']},
   Self: {avatar: defaultAvatar, colors: ['blue', '#363243']},
