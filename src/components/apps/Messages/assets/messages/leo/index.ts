@@ -26,7 +26,7 @@ export const leo: ConversationType = {
           name: CONTACT_NAMES.SELF,
           messages: [
             "I don't know what to do with myself",
-            {type: MESSAGE_TYPE.VCARD, message: mileena},
+            //{type: MESSAGE_TYPE.VCARD, message: mileena},
           ],
         },
       ],

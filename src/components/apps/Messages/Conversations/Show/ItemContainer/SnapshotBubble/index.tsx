@@ -19,6 +19,7 @@ import {
   CONVERSATION_REDUCER_ACTIONS,
   ConversationReducerActionsType,
 } from 'components/apps/Messages/reducers/conversationReducer/types';
+import {P} from 'common/styles/StyledText';
 
 export const SnapshotBubble: FC<
   DigestedConversationSnapShotItemType & {
@@ -29,11 +30,12 @@ export const SnapshotBubble: FC<
     group?: boolean;
   }
 > = props => {
+  const {content, dispatch, index, width} = props;
+  const {backup, image, filename} = content;
   const snapshotContext = useContext(SnapShotContext);
 
   const opacity = useSharedValue(props.content.image ? 1 : 0);
   const [renderWaiting, setRenderWaiting] = useState(true);
-  const [image, setImage] = useState<SkImage | undefined>(props.content.image);
 
   const clip = BubblePath(props.width, props.height, 16, true);
 
@@ -43,38 +45,46 @@ export const SnapshotBubble: FC<
 
   useEffect(() => {
     if (!image) {
-      snapshotContext.takeSnapShot.set(props.content.filename);
+      snapshotContext.takeSnapShot.set(filename);
     }
   });
 
   useEffect(() => {
-    if (snapshotContext.takeSnapShot && snapshotContext.image) {
+    if (snapshotContext.takeSnapShot && snapshotContext.image && !image) {
       const snapshotImage = snapshotContext.image;
       const aspectRation = snapshotImage.height() / snapshotImage.width();
-      const imageHeight = props.width * aspectRation;
-      props.dispatch({
+      const imageHeight = width * aspectRation;
+      dispatch({
         type: CONVERSATION_REDUCER_ACTIONS.UPDATE_MESSAGE,
         payload: {
-          index: props.index,
+          index: index,
           props: {
             content: {
               image: snapshotImage,
-              filename: props.content.filename,
-              backup: props.content.backup,
+              filename: filename,
+              backup: backup,
             },
             height: imageHeight,
           },
         },
       });
-      setImage(snapshotContext.image);
     }
-  }, [snapshotContext.takeSnapShot, snapshotContext.image]);
+  }, [
+    snapshotContext.takeSnapShot,
+    snapshotContext.image,
+    width,
+    dispatch,
+    index,
+    filename,
+    backup,
+    image,
+  ]);
 
   useEffect(() => {
     if (!renderWaiting) {
-      props.dispatch({type: CONVERSATION_REDUCER_ACTIONS.CONTINUE_ROUTE});
+      dispatch({type: CONVERSATION_REDUCER_ACTIONS.CONTINUE_ROUTE});
     }
-  }, [renderWaiting]);
+  }, [dispatch, renderWaiting]);
 
   useEffect(() => {
     if (

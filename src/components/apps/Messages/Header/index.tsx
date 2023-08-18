@@ -7,10 +7,10 @@ import {Row} from 'common/styles/layout';
 import {screenParams} from 'navigation/screens';
 import {View, StyleSheet, TouchableWithoutFeedback} from 'react-native';
 import {Icon} from 'react-native-elements';
-
-import theme from 'themes';
-import {MessagesContext, baseConversation} from '../context';
 import {CONVERSATION_REDUCER_ACTIONS} from '../reducers/conversationReducer/types';
+
+import {MessagesContext, baseConversation} from '../context';
+import theme from 'themes';
 
 const Header: FC = () => {
   const context = useContext(MessagesContext);

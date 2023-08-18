@@ -146,6 +146,8 @@ export const BaseBubble: FC<{
       renderNextMessage(
         item.messageDelay + (item.leftSide ? (item.typingDelay || 0) + 850 : 0),
       );
+    } else {
+      sentDispatch.current = true;
     }
     return () => {
       mounted = false;

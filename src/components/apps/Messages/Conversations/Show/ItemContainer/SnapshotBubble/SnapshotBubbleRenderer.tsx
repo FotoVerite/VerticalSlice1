@@ -29,48 +29,38 @@ export const SnapshotBubbleRenderer: FC<
     return null;
   }
   return (
-    <Row style={styles.row}>
-      {leftSide && (
-        <View style={styles.avatarContainer}>
-          {avatar && <Image source={avatar} style={styles.avatar} />}
-        </View>
-      )}
-      <TouchableWithoutFeedback
-        onPress={() => {
-          context.media.set(
-            <MediaImageElement
-              source={{
-                uri: 'data:image/png;base64,' + image.encodeToBase64(),
-              }}
-              aspectRatio={width / height}
-            />,
-          );
-        }}>
-        <View>
-          {reaction && (
-            <Reaction reaction={reaction} left={leftSide} colors={colors} />
-          )}
-          <Canvas
-            style={[
-              {
-                width: width,
-                height: height,
-              },
-            ]}>
-            <Group clip={clip}>
-              <SkiaImage
-                image={image}
-                fit="fill"
-                x={0}
-                y={0}
-                width={width}
-                height={height}
-              />
-            </Group>
-          </Canvas>
-        </View>
-      </TouchableWithoutFeedback>
-    </Row>
+    <TouchableWithoutFeedback
+      onPress={() => {
+        context.media.set(
+          <MediaImageElement
+            source={{
+              uri: 'data:image/png;base64,' + image.encodeToBase64(),
+            }}
+            aspectRatio={width / height}
+          />,
+        );
+      }}>
+      <View>
+        <Canvas
+          style={[
+            {
+              width: width,
+              height: height,
+            },
+          ]}>
+          <Group clip={clip}>
+            <SkiaImage
+              image={image}
+              fit="fill"
+              x={0}
+              y={0}
+              width={width}
+              height={height}
+            />
+          </Group>
+        </Canvas>
+      </View>
+    </TouchableWithoutFeedback>
   );
 };
 

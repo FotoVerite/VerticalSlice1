@@ -12,7 +12,6 @@ import {
   Vector,
 } from '@shopify/react-native-skia';
 import {CONTACT_NAMES} from '../../../context/usersMapping';
-import {ReactElement} from 'react';
 
 export enum MESSAGE_TYPE {
   EMOJI = 'emoji',
@@ -129,15 +128,17 @@ export interface DigestedConversationVCardItemType
   type: MESSAGE_TYPE.VCARD;
 }
 
-export type BubbleItemType =
+export type DigestedConversationListItem =
   | DigestedConversationEmojiItemType
   | DigestedConversationImageItemType
   | DigestedConversationGlyphItemType
   | DigestedConversationNumberItemType
+  | DigestedConversationTimeType
   | DigestedConversationSnapShotItemType
   | DigestedConversationStringItemType
   | DigestedConversationVCardItemType;
 
-export type DigestedConversationListItem =
-  | BubbleItemType
-  | DigestedConversationTimeType;
+export type BubbleItemType = Exclude<
+  DigestedConversationListItem,
+  DigestedConversationTimeType
+>;

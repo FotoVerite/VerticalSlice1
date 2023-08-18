@@ -14,7 +14,7 @@ export const how_is_the_phone_coming: EventBasedRouteType = {
   exchanges: [
     {
       name: CONTACT_NAMES.ZOLA,
-      messages: ['How is the phone coming along?'],
+      messages: ["How's the new phone coming along?"],
     },
   ],
 };
