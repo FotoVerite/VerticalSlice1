@@ -69,7 +69,9 @@ const ConversationHeader: FC<{shrink: SharedValue<number>}> = ({shrink}) => {
           reducedTransparencyFallbackColor="white"
         />
       )}
-      {Platform.OS !== 'ios' && <View style={styles.blur} />}
+      {Platform.OS !== 'ios' && (
+        <View style={[styles.blur, {backgroundColor: theme.colors.muted}]} />
+      )}
       <Row style={styles.row}>
         <View style={styles.spacer}>
           <Row style={styles.row}>
@@ -127,7 +129,6 @@ const styles = StyleSheet.create({
     width: '100%',
     height: '100%',
     borderRadius: 10,
-    backgroundColor: theme.colors.muted,
   },
   row: {
     alignItems: 'center',

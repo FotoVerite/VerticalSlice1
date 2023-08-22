@@ -68,7 +68,6 @@ const Notifications: FC<PropsWithChildren> = ({children}) => {
             <Canvas
               style={[
                 {width: width, height: height - insets.top - insets.bottom},
-                {marginTop: insets.top},
                 styles.background,
               ]}>
               {snapshotContext.background.state && (

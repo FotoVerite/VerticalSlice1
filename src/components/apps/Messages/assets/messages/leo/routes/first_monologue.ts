@@ -83,20 +83,31 @@ export const leo_first_monologue: MessageRouteType = {
       {
         name: SELF,
         messages: [
-          "I'm just acting",
-          "I feel like I'm drowned, my lungs full  of bile and sea water",
-          'No room to breath, no direction besides down',
-          'God, one hour with my thoughts and this is what I become',
-          "I loose access to my account and I don't even know what to do with myself.",
+          "I'm angry",
+          'all the time',
+          'What the fuck is wrong with me these days',
         ],
       },
       {
         name: SELF,
         messages: [
-          "I'm just txting myself, and thinking of you",
-          "I can't even remember either of my brothers' cell phones",
-          "I'm such a looser",
-          "I don't know what that says.",
+          'Leo I...',
+          'Why am I doing this',
+          'Why am I doing any of this?',
+        ],
+      },
+      {
+        name: SELF,
+        messages: [
+          "I'm just txting myself",
+          'Why at my worst do I always think of you',
+          "I loose access to my account and I don't even know what to do with myself.",
+        ],
+      },
+
+      {
+        name: SELF,
+        messages: [
           'I miss you Leo, every day',
           "I know it's not my fault",
           'I know...',

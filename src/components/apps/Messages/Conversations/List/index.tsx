@@ -70,6 +70,7 @@ const Conversations: FC = ({}) => {
         keyExtractor={(item: ConversationType, index) =>
           index + `-conversation-${item.name}`
         }
+        ListHeaderComponent={ListHeader}
         scrollEventThrottle={16}
         ListFooterComponent={ListHeader}
       />

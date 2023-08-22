@@ -3,7 +3,7 @@ import Fuse from 'fuse.js';
 
 import theme from 'themes';
 import Icon from 'react-native-vector-icons/FontAwesome';
-import {StyleSheet, TextInput} from 'react-native';
+import {StyleSheet, TextInput, useWindowDimensions} from 'react-native';
 import {ConversationType} from '../../context/types';
 import Animated, {
   Extrapolate,
@@ -26,6 +26,8 @@ const Search: FC<{
 
     keys: ['name', 'tags'],
   };
+
+  const {width} = useWindowDimensions();
 
   const fuse = new Fuse<ConversationType>(conversations.state, options);
   const context = useContext(MessagesContext);
@@ -50,7 +52,12 @@ const Search: FC<{
   }, [scrollOffset.value]);
 
   return (
-    <Animated.View style={[styles.searchInput]}>
+    <Animated.View
+      style={[
+        styles.searchInput,
+        {width: width - theme.spacing.p2},
+        heightAnimation,
+      ]}>
       <AnimatedIcon
         name={'search'}
         size={20}
@@ -87,6 +94,8 @@ const styles = StyleSheet.create({
     paddingHorizontal: 12,
     flexDirection: 'row',
     marginBottom: 4,
+    position: 'absolute',
+    zIndex: 2,
   },
   textInput: {
     flexGrow: 1,
