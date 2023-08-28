@@ -83,9 +83,9 @@ export const leo_first_monologue: MessageRouteType = {
       {
         name: SELF,
         messages: [
-          "I'm angry",
+          "I'm so angry",
           'all the time',
-          'What the fuck is wrong with me these days',
+          'What the fuck is wrong with me',
         ],
       },
       {
