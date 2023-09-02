@@ -47,7 +47,6 @@ const routeChosenSelected = (
   if (chosen == null) {
     return true;
   }
-
   return chosen.includes(viewed.chosen);
 };
 
@@ -97,7 +96,7 @@ const routeHasBeenChosenCheck = (
       viewedRoutes[key] != null &&
       routeFinished(routeCondition.finished, viewedRoutes[key]) &&
       routeChosenSelected(routeCondition.chosen, viewedRoutes[key]) &&
-      routeNotChosenSelected(routeCondition.chosen, viewedRoutes[key])
+      routeNotChosenSelected(routeCondition.not_chosen, viewedRoutes[key])
     );
   }, true);
 };

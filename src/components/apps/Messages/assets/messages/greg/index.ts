@@ -37,6 +37,42 @@ export const greg: ConversationType = {
           messages: ['Agreed, and this morning'],
         },
         {
+          name: CONTACT_NAMES.GREG,
+          messages: ['Agreed, and this morning'],
+        },
+        {
+          name: CONTACT_NAMES.GREG,
+          messages: ['Agreed, and this morning'],
+        },
+        {
+          name: CONTACT_NAMES.GREG,
+          messages: ['Agreed, and this morning'],
+        },
+        {
+          name: CONTACT_NAMES.GREG,
+          messages: ['Agreed, and this morning'],
+        },
+        {
+          name: CONTACT_NAMES.GREG,
+          messages: ['Agreed, and this morning'],
+        },
+        {
+          name: CONTACT_NAMES.GREG,
+          messages: ['Agreed, and this morning'],
+        },
+        {
+          name: CONTACT_NAMES.GREG,
+          messages: ['Agreed, and this morning'],
+        },
+        {
+          name: CONTACT_NAMES.GREG,
+          messages: ['Agreed, and this morning'],
+        },
+        {
+          name: CONTACT_NAMES.GREG,
+          messages: ['Agreed, and this morning'],
+        },
+        {
           name: CONTACT_NAMES.SELF,
           messages: ['Mmmhm'],
         },

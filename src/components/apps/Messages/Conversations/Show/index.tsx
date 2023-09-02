@@ -24,6 +24,12 @@ import {MessagesContext} from '../../context';
 import List from './List';
 import theme from 'themes';
 import RouteChooser from './RouteChooser';
+import {
+  DigestedConversationListItem,
+  MESSAGE_TYPE,
+} from '../../reducers/conversationReducer/digestion/types';
+import {CONTACT_NAMES} from '../../context/usersMapping';
+import {produce} from 'immer';
 
 export type ConversationShowRefs = {
   footerHeight: SharedValue<number>;
@@ -44,7 +50,9 @@ const Conversation: FC<{shrink: SharedValue<number>}> = ({shrink}) => {
     context.conversation.state != null &&
     digestedConversation.current !== context.conversation.state
   ) {
-    digestedConversation.current = context.conversation.state;
+    const state = {...context.conversation.state};
+    state.exchanges = updateForLastMessage(state.exchanges);
+    digestedConversation.current = state;
   }
 
   useEffect(() => {
@@ -146,3 +154,28 @@ const styles = StyleSheet.create({
     backgroundColor: theme.colors.muted,
   },
 });
+
+const DELIVERED_READ_HEIGHT = 20;
+const updateForLastMessage = (_exchanges: DigestedConversationListItem[]) => {
+  const lastMessageSent = _exchanges
+    .filter(
+      item =>
+        item.type !== MESSAGE_TYPE.TIME && item.name === CONTACT_NAMES.SELF,
+    )
+    .slice(-1)[0];
+  let _lastMessageSentIndex = _exchanges.indexOf(lastMessageSent);
+  if (_lastMessageSentIndex === -1) {
+    return _exchanges;
+  }
+  _exchanges = produce(_exchanges, draft => {
+    draft[_lastMessageSentIndex].lastMessageSent = true;
+    draft[_lastMessageSentIndex].height += DELIVERED_READ_HEIGHT;
+    _lastMessageSentIndex += 1;
+    while (_lastMessageSentIndex < draft.length - 1) {
+      draft[_lastMessageSentIndex].offset += DELIVERED_READ_HEIGHT;
+      _lastMessageSentIndex += 1;
+    }
+    return draft;
+  });
+  return _exchanges;
+};

@@ -61,6 +61,8 @@ const conversationReducer = produce(
         return updateMessage(draft, action.payload.props, action.payload.index);
       case CONVERSATION_REDUCER_ACTIONS.RESET:
         return null;
+      case CONVERSATION_REDUCER_ACTIONS.SKIP_ROUTE:
+        return _skipRoute(config, draft);
       default:
         return draft;
     }
@@ -230,6 +232,45 @@ const continueRoute = (
       },
     };
   }
+  return draft;
+};
+
+const _skipRoute = (
+  config: ConversationReducerConfigurationType,
+  draft: DigestedConversationType | undefined,
+) => {
+  if (draft?.activePath == null || draft?.activePath.length === 0) {
+    return draft;
+  }
+  if (draft.availableRoute == null) {
+    return draft;
+  }
+  let offset = getListHeight(draft.exchanges);
+  draft.activePath.forEach(message => {
+    const skMessage = createSkBubbleFromMessage(
+      {...config, ...{group: draft.group || false, positionAcc: offset}},
+      message.messageContent,
+      message.name,
+      message.tail,
+    );
+    draft.exchanges.push(skMessage);
+    offset += skMessage.height;
+  });
+
+  draft.eventAction = {
+    type: EVENTS_REDUCER_ACTIONS.MESSAGE_APP_ROUTE_UPDATE,
+    payload: {
+      routeId: draft.availableRoute.id,
+      name: draft.name,
+      finished: true,
+    },
+  };
+  draft.activePath = [];
+  draft.nextMessageInQueue = undefined;
+  draft.availableRoute = undefined;
+  draft.routeAtIndex = undefined;
+  draft.chosenRoute = undefined;
+
   return draft;
 };
 

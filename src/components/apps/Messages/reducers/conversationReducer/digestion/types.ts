@@ -60,6 +60,9 @@ export interface AbstractDigestedConversationItemType {
   paddingBottom: number;
   messageDelay?: number;
   typingDelay?: number;
+  lastMessageSent?: boolean;
+  deliveredOnly?: boolean;
+  readTimeStamp?: Date;
 }
 
 export interface DigestedConversationTimeType

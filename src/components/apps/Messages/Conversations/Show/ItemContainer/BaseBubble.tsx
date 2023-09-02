@@ -4,19 +4,19 @@ import Animated, {
   measure,
   runOnJS,
   runOnUI,
+  useAnimatedReaction,
   useAnimatedRef,
   useAnimatedStyle,
   useSharedValue,
   withTiming,
 } from 'react-native-reanimated';
-import {Image, View} from 'react-native';
+import {Image, Text, View} from 'react-native';
 
 import {Row} from 'common/styles/layout';
 import {StyleSheet} from 'react-native';
 import theme from 'themes';
 import {
   BubbleItemType,
-  DigestedConversationListItem,
   MESSAGE_TYPE,
 } from 'components/apps/Messages/reducers/conversationReducer/digestion/types';
 import {delayFor} from 'common';
@@ -33,6 +33,9 @@ import Reaction from './Reaction';
 import {P} from 'common/styles/StyledText';
 import {VCardBubble} from './VCardBubble';
 import {NumberBubble} from './NumberBubble';
+import {original} from 'immer';
+import {useTiming} from 'react-native-redash';
+import {CONTACT_NAMES} from 'components/apps/Messages/context/usersMapping';
 
 const renderBubbleType = (
   dispatch: (action: ConversationReducerActionsType) => Promise<void>,
@@ -90,13 +93,22 @@ const renderBubbleType = (
 };
 
 export const BaseBubble: FC<{
+  contactName: CONTACT_NAMES;
   dispatch: (action: ConversationReducerActionsType) => Promise<void>;
   item: BubbleItemType;
   index: number;
   scrollHandler: SharedValue<number>;
   scrollRef: React.RefObject<Animated.ScrollView>;
   group: boolean;
-}> = ({dispatch, item, index, group, scrollRef, scrollHandler}) => {
+}> = ({
+  contactName,
+  dispatch,
+  item,
+  index,
+  group,
+  scrollRef,
+  scrollHandler,
+}) => {
   const {
     avatar,
     alignItems,
@@ -106,6 +118,8 @@ export const BaseBubble: FC<{
     paddingBottom,
     reaction,
   } = item;
+  const originalHeight = useSharedValue<number>(item.height);
+  const deliveredOpacity = useSharedValue(item.lastMessageSent ? 1 : 0);
   const opacity = useSharedValue(
     item.messageDelay && item.type !== MESSAGE_TYPE.SNAPSHOT ? 0 : 1,
   );
@@ -128,7 +142,14 @@ export const BaseBubble: FC<{
         return;
       }
       await delayFor(delay);
-      scrollRef.current?.scrollToEnd({animated: true});
+      if (item.name !== CONTACT_NAMES.SELF && item.height > 45) {
+        scrollRef.current?.scrollToOffset({
+          offset: scrollHandler.value + item.height - 45,
+          animated: true,
+        });
+      } else {
+        scrollRef.current?.scrollToEnd({animated: true});
+      }
       handlePress();
       opacity.value = withTiming(1, {duration: 300}, finished => {
         if (finished) {
@@ -165,14 +186,20 @@ export const BaseBubble: FC<{
     })();
   };
 
+  useEffect(() => {
+    if (originalHeight.value !== item.height) {
+      originalHeight.value = withTiming(item.height);
+    }
+  }, [deliveredOpacity, item.height, originalHeight]);
+
   return (
     <Animated.View
       style={[
         styles.container,
         {
-          height: height,
+          height: originalHeight,
           alignItems: alignItems,
-          marginBottom: paddingBottom,
+          marginBottom: item.paddingBottom,
         },
         fadeInAnimation,
       ]}>
@@ -190,7 +217,7 @@ export const BaseBubble: FC<{
             activeRoute={item.messageDelay != null}
           />
         )}
-        <View>
+        <View style={{alignSelf: 'flex-start'}}>
           <Animated.View ref={animatedRef}>
             {renderBubbleType(dispatch, item, index, scrollHandler, scrollRef)}
           </Animated.View>
@@ -198,6 +225,14 @@ export const BaseBubble: FC<{
             <P size="s" style={styles.name}>
               {item.name}
             </P>
+          )}
+          {item.lastMessageSent && (
+            <Animated.Text style={[styles.delivered]}>
+              {item.deliveredOnly || contactName === CONTACT_NAMES.LEO
+                ? 'Delivered'
+                : 'Read'}
+              {item.readTimeStamp?.toDateString()}
+            </Animated.Text>
           )}
         </View>
       </Row>
@@ -208,6 +243,14 @@ export const BaseBubble: FC<{
 const styles = StyleSheet.create({
   container: {
     justifyContent: 'center',
+  },
+  delivered: {
+    textAlign: 'right',
+    margin: 0,
+    padding: 0,
+    marginRight: theme.spacing.p2,
+    marginTop: -20,
+    height: 20,
   },
   name: {
     marginTop: -20,

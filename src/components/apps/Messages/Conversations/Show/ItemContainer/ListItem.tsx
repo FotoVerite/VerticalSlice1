@@ -11,13 +11,22 @@ import {TypingBubble} from './TypingBubble';
 import {ConversationReducerActionsType} from 'components/apps/Messages/reducers/conversationReducer/types';
 
 const ListItem: FC<{
+  contactName: string;
   dispatch: (action: ConversationReducerActionsType) => void;
   item: DigestedConversationListItem;
   index: number;
   scrollHandler: SharedValue<number>;
   scrollRef: React.RefObject<Animated.ScrollView>;
   group: boolean;
-}> = ({dispatch, item, index, scrollHandler, scrollRef, group}) => {
+}> = ({
+  contactName,
+  dispatch,
+  item,
+  index,
+  scrollHandler,
+  scrollRef,
+  group,
+}) => {
   if (item.type === MESSAGE_TYPE.TIME) {
     return <BlockTimeStamp dispatch={dispatch} {...item} />;
   } else if (item.messageDelay && item.leftSide) {
@@ -34,6 +43,7 @@ const ListItem: FC<{
   } else {
     return (
       <BaseBubble
+        contactName={contactName}
         dispatch={dispatch}
         item={item}
         index={index}

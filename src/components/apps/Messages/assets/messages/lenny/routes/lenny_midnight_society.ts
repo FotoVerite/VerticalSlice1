@@ -67,8 +67,63 @@ const exchanges: ExchangeBlockType[] = [
       'Their communities have seen a sharp drop-off of engagement',
       'The few post that have appeared talk about a new feeling of dread and exhaustion',
       "That their obsessions have run they're course and there's nothing left to do or to say.",
-      'They look at the screen and instead of light they just see an ocean of black',
+      'They look at a screen and they just see an sea of black',
     ],
+  },
+  {
+    name: SELF,
+    messages: ["So they're acrophobic and complex depression now"],
+  },
+  {
+    name: LENNY,
+    messages: [
+      'No this is literal, not figural. Literal sea of black.',
+      'Every bit of technology from computers to digital clocks',
+      'To them nothing seems to be on',
+      "Even to the few ones that can venture out the curse doesn't seem to lift.",
+      "They can't even view how much they owe at a convince store, or take out money from an ATM",
+      'Their lives even more then before seem to have stagnated and nobody can figure out the cause',
+    ],
+  },
+  {
+    name: SELF,
+    messages: ['Ahuh, fascinating', 'And how did they post then on reddit?'],
+  },
+  {
+    name: LENNY,
+    messages: ["Normally it's a parent"],
+  },
+  {
+    name: SELF,
+    messages: [
+      'Creepy story.',
+      'Really gets you to think about what a prison technology has become for us',
+      'Maybe all become a luddite now, or a team up with a nice amish girl.',
+      'I mean they hate everything about me but this really shows how I need to get back to the land',
+      'Be a prepper and self reliant',
+      'Hunt some motherfuckin game, grow my own crops, use solar power!',
+      'Compost my own shit',
+    ],
+  },
+  {
+    name: LENNY,
+    messages: ['Why is it that you can never just enjoy a story'],
+  },
+  {
+    name: SELF,
+    messages: [
+      "Because it's nonsensical",
+      "Because it's so concerned with it's messaging that it has no life to it. ",
+      "Because it's trite",
+    ],
+  },
+  {
+    name: LENNY,
+    messages: ["What if it's actually happening?"],
+  },
+  {
+    name: SELF,
+    messages: ["And? It's not happening to me?"],
   },
 ];
 

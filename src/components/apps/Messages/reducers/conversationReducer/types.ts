@@ -17,6 +17,7 @@ export enum CONVERSATION_REDUCER_ACTIONS {
   DIGEST_CONVERSATION,
   REFRESH_AVAILABLE_ROUTE,
   START_ROUTE,
+  SKIP_ROUTE,
   UPDATE_MESSAGE,
   RESET,
 }
@@ -74,6 +75,9 @@ type StartRouteActionType = {
     chosenOption: string;
   };
 };
+type SkipRouteActionType = {
+  type: CONVERSATION_REDUCER_ACTIONS.SKIP_ROUTE;
+};
 
 type UpdateMessageActionType = {
   type: CONVERSATION_REDUCER_ACTIONS.UPDATE_MESSAGE;
@@ -103,4 +107,5 @@ export type ConversationReducerActionsType =
   | RefreshAvailableRouteActionType
   | ResetConversationActionType
   | StartRouteActionType
+  | SkipRouteActionType
   | UpdateMessageActionType;

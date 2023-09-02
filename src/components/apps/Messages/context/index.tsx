@@ -52,6 +52,7 @@ export const MessagesContext = React.createContext<MessagesContextTypeDigested>(
   {},
 );
 const conversations: ConversationType[] = [
+  greg,
   zola,
   spam1,
   micheal,

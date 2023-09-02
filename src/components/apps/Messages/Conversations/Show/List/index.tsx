@@ -1,6 +1,6 @@
 import {DigestedConversationListItem} from 'components/apps/Messages/reducers/conversationReducer/digestion/types';
 import {DigestedConversationType} from 'components/apps/Messages/context/types';
-import React, {FC, useEffect} from 'react';
+import React, {FC} from 'react';
 import {View, useWindowDimensions, StyleSheet} from 'react-native';
 import Animated, {useScrollViewOffset} from 'react-native-reanimated';
 import theme from 'themes';
@@ -17,6 +17,8 @@ function NewMessageListHeader() {
   return <View />;
 }
 
+export const DELIVERED_READ_HEIGHT = 20;
+
 const List: FC<
   {
     conversation: DigestedConversationType | undefined;
@@ -26,6 +28,7 @@ const List: FC<
 > = ({animatedScrollRef, conversation, dispatch, footerHeight, newMessage}) => {
   const {width} = useWindowDimensions();
   const scrollHandler = useScrollViewOffset(animatedScrollRef);
+
   return (
     <Animated.FlatList
       ref={animatedScrollRef}
@@ -34,6 +37,7 @@ const List: FC<
       data={conversation?.exchanges}
       renderItem={({item, index}) => (
         <ListItem
+          contactName={conversation?.name}
           dispatch={dispatch}
           item={item}
           group={conversation?.group || false}
@@ -46,7 +50,9 @@ const List: FC<
         `${conversation?.name}-${index}`
       }
       ListHeaderComponent={newMessage ? NewMessageListHeader : ListHeader}
-      ListFooterComponent={<Footer footerHeight={footerHeight} />}
+      ListFooterComponent={
+        <Footer footerHeight={footerHeight} dispatch={dispatch} />
+      }
       getItemLayout={(data, index) => ({
         length: data[index].height + data[index].paddingBottom,
         offset: data[index].offset,

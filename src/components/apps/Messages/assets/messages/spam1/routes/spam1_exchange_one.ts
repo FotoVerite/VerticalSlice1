@@ -25,10 +25,6 @@ const exchanges: ExchangeBlockType[] = [
       {type: MESSAGE_TYPE.IMAGE, message: spam1_image},
     ],
   },
-  {
-    name: SELF,
-    messages: ['Of fucking course.'],
-  },
 ];
 
 export const spam1_exchange_one: MessageRouteType = {

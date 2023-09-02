@@ -62,11 +62,11 @@ export const TypingBubble: FC<{
   useEffect(() => {
     if (scrollRef) {
       scrollRef.current?.scrollToOffset({
-        offset: scrollHandler.value + 40,
+        offset: scrollHandler.value + 45,
         animated: true,
       });
     }
-  }, []);
+  }, [scrollRef, scrollHandler]);
 
   return (
     <Animated.View
