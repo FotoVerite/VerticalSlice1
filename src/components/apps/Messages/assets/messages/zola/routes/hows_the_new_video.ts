@@ -3,6 +3,9 @@ import {CONTACT_NAMES} from 'components/apps/Messages/context/usersMapping';
 import {ZARA_ROUTE_IDS} from './routes';
 import {MESSAGE_TYPE} from 'components/apps/Messages/reducers/conversationReducer/digestion/types';
 
+// Description: OP and ZARA discuss her latest video.
+// Point: Explains what Zara does fora  living and give more context for their dynamic.
+
 export enum ZARA_YOUR_NEW_VIDEO_OPTIONS {
   A = "How's the grind going?",
   B = 'Do you still want me to work on your outro?',
@@ -55,7 +58,7 @@ export const your_new_video: MessageRouteType = {
       {
         name: ZARA,
         messages: [
-          'Miserable, views are down, conversions are down, I have no new ideas and regurgitating content',
+          "Miserable, views are down, conversions are down, I have no new ideas and I'm just regurgitating content",
           'I just feel burnt-out',
         ],
       },
@@ -91,7 +94,9 @@ export const your_new_video: MessageRouteType = {
         name: ZARA,
         messages: [
           "No, I'm just running low on inspiration and ideas. I don't want to do yet another best korean sunscreen video",
-          'Or do another clay mask, never agian. The last one broke me out something fierce',
+          'Or do another clay mask',
+          'never again!',
+          'The last one broke me out something fierce',
           'I STILL SEE THE FUCKING OUTLINE OF WHERE I APPLIED IT',
         ],
       },
@@ -117,17 +122,18 @@ export const your_new_video: MessageRouteType = {
         name: ZARA,
         messages: [
           'Never doing a spon again without trying the actual product first.',
-          "They're were great allowing me to post my allergic reaction take but I don't want to be in that position again",
+          "It's great they allowed me to post my allergic reaction video but I don't want to be in that position again",
         ],
       },
       {
         name: SELF,
-        messages: ['Why did they allow you?'],
+        messages: ['How did you get away with that'],
       },
       {
         name: ZARA,
         messages: [
           'Because their contract forced them to pay, and at least I was able to have a good dialog about products/allergies and how none will be right for everybody.',
+          "It's like I said, they chemical that probably broke me out isn't a bad chemical just bad for me",
         ],
       },
       {

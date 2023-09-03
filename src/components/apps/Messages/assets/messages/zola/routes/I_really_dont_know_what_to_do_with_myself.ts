@@ -6,6 +6,9 @@ import {CONTACT_NAMES} from 'components/apps/Messages/context/usersMapping';
 import {ZARA_ROUTE_IDS} from './routes';
 import {MESSAGE_TYPE} from 'components/apps/Messages/reducers/conversationReducer/digestion/types';
 
+// Description: OP and ZARA discuss OP feelings of alienation.
+// Point: Gives more personality to OP and discuss some central themes.
+
 export enum ZARA_DO_WITH_MYSELF {
   A = 'I joke but...',
   B = "I'm bored, make them fix my account faster!",
@@ -110,7 +113,17 @@ export const i_dont_know_what_to_do_with_myself: MessageRouteType = {
         messages: [
           "I don't know, I'm just frustrated I think.",
           'Frustrated in general',
+          "Like I'm waiting for something",
+          'Not even for something to happen, just for something',
         ],
+      },
+      {
+        name: ZARA,
+        messages: ['Hmmm, is this something named Godot?'],
+      },
+      {
+        name: SELF,
+        messages: ['Hah'],
       },
       {
         name: ZARA,
