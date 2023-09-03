@@ -21,7 +21,7 @@ FASTLANE_APPLE_APPLICATION_SPECIFIC_PASSWORD = "xver-mfts-cyfb-ynaq"
 platform :ios do
   desc "Push a new beta build to TestFlight"
   lane :beta do
-    # increment_build_number(xcodeproj: "/Users/fotoverite/node/VerticalSlice1/ios/VerticalSliceAHideousStrength.xcodeproj")
+    increment_build_number(xcodeproj: "/Users/fotoverite/node/VerticalSlice1/ios/VerticalSliceAHideousStrength.xcodeproj")
     # get_certificates( # Create or get certificate, and install it
     #   output_path: "./builds", # Download certificate in the build folder (you don't need to create the folder)
     # )
@@ -37,7 +37,7 @@ platform :ios do
     # )
     # update_project_team( # Set the right team on your project
     #   teamid: CredentialsManager::AppfileConfig.try_fetch_value(:team_id),
-    # )
+    # # )
     get_certificates           # invokes cert
     get_provisioning_profile
     build_app(xcargs: "-allowProvisioningUpdates", scheme: "TestFlight")

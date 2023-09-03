@@ -73,9 +73,9 @@ android {
 
     compileSdkVersion rootProject.ext.compileSdkVersion
 
-    namespace "com.verticalsliceahideousstrength"
+    namespace "com.fotoverite.yourenottheonedemoone"
     defaultConfig {
-        applicationId "com.verticalsliceahideousstrength"
+        applicationId "com.fotoverite.yourenottheonedemoone"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 1
