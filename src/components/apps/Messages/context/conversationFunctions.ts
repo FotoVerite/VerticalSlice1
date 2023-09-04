@@ -111,8 +111,9 @@ export const conversationHasExchange = (
 
 export const viewableConversations =
   (events: EventOrchestraObjectType) => (conversation: ConversationType) =>
-    !conversation.conditions ||
-    messageAppConditionsMet(events.Message, conversation.conditions);
+    !conversation.blocked &&
+    (!conversation.conditions ||
+      messageAppConditionsMet(events.Message, conversation.conditions));
 
 export const sortConversations =
   (events: EventOrchestraObjectType) =>

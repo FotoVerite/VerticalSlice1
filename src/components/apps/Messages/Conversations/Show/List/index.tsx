@@ -51,7 +51,11 @@ const List: FC<
       }
       ListHeaderComponent={newMessage ? NewMessageListHeader : ListHeader}
       ListFooterComponent={
-        <Footer footerHeight={footerHeight} dispatch={dispatch} />
+        <Footer
+          footerHeight={footerHeight}
+          blockable={conversation?.blockable}
+          dispatch={dispatch}
+        />
       }
       getItemLayout={(data, index) => ({
         length: data[index].height + data[index].paddingBottom,

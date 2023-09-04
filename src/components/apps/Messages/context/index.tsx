@@ -46,6 +46,7 @@ import {greg} from '../assets/messages/greg';
 import {NOTIFICATIONS_REDUCER_ACTIONS} from 'components/Notifications/reducers/notificationsReducer/types';
 import {leo} from '../assets/messages/leo';
 import {lenny} from '../assets/messages/lenny';
+import {spam2} from '../assets/messages/spam2';
 
 //defaults for empty app
 export const MessagesContext = React.createContext<MessagesContextTypeDigested>(
@@ -55,6 +56,7 @@ const conversations: ConversationType[] = [
   greg,
   zola,
   spam1,
+  spam2,
   micheal,
   chris,
   mileena,

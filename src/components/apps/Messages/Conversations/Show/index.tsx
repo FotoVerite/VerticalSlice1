@@ -51,6 +51,7 @@ const Conversation: FC<{shrink: SharedValue<number>}> = ({shrink}) => {
     digestedConversation.current !== context.conversation.state
   ) {
     const state = {...context.conversation.state};
+    console.log(state);
     state.exchanges = updateForLastMessage(state.exchanges);
     digestedConversation.current = state;
   }

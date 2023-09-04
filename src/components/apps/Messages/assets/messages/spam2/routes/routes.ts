@@ -1,0 +1,4 @@
+export enum SPAM2_IDS {
+  YOU_DISGUST_ME,
+  FIRST_EXCHANGE,
+}

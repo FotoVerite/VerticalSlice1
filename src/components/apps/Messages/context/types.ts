@@ -84,6 +84,7 @@ export type EventBasedRouteType = {
 
 export type ConversationType = {
   availableEventRoutes?: number[];
+  blocked?: boolean;
   conditions?: RouteConditionsType;
   effects?: MessageEffectType[];
   eventBasedRoutes?: EventBasedRouteType[];
@@ -102,6 +103,8 @@ export type ConversationType = {
 export type DigestedConversationType = {
   activePath: AddMessagePayloadType[];
   availableRoute?: MessageRouteType;
+  blockable?: boolean;
+  blocked?: boolean;
   chosenRoute?: string;
   eventAction?: EventsReducerActionsType;
   pendingMessages: AddMessagePayloadType[];

@@ -37,6 +37,7 @@ export type MessageRouteEventType = {
 export type MessageAppEvents = {
   views: Date[];
   routes: MessageRouteEventType;
+  blocked: boolean;
 };
 
 export type MessageEventType = {

@@ -13,6 +13,7 @@ export enum CONVERSATION_REDUCER_ACTIONS {
   ADD_CONVERSATION,
   ADD_MESSAGE,
   ADD_MESSAGE_FROM_BLOCK,
+  BLOCK,
   CONTINUE_ROUTE,
   DIGEST_CONVERSATION,
   REFRESH_AVAILABLE_ROUTE,
@@ -47,6 +48,9 @@ type AddMessageActionType = {
   payload: {block: ExchangeBlockType; index: number};
 };
 
+type BlockActionType = {
+  type: CONVERSATION_REDUCER_ACTIONS.BLOCK;
+};
 type ContinueRouteActionType = {
   type: CONVERSATION_REDUCER_ACTIONS.CONTINUE_ROUTE;
 };
@@ -102,6 +106,7 @@ export type ConversationReducerActionsType =
   | AddMessageActionType
   | AddMessageFromBlockActionType
   | AddConversationActionType
+  | BlockActionType
   | ContinueRouteActionType
   | DigestConversationActionType
   | RefreshAvailableRouteActionType

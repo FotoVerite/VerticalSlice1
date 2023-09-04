@@ -24,6 +24,7 @@ import {
 import {isMessageWithMeta} from './routing/seen';
 import {DigestedConversationListItem, MESSAGE_TYPE} from './digestion/types';
 import {BubblePath} from './digestion/BubblePath';
+import {SPAM2_BLOCKABLE_TRIGGER_MESSAGE} from '../../assets/messages/spam2/routes/first_exchange';
 
 const createConversationReducer =
   (config: ConversationReducerConfigurationType) =>
@@ -51,6 +52,8 @@ const conversationReducer = produce(
         );
       case CONVERSATION_REDUCER_ACTIONS.ADD_MESSAGE:
         return addMessage(config, draft, action.payload);
+      case CONVERSATION_REDUCER_ACTIONS.BLOCK:
+        return block(draft);
       case CONVERSATION_REDUCER_ACTIONS.CONTINUE_ROUTE:
         return continueRoute(config, draft);
       case CONVERSATION_REDUCER_ACTIONS.REFRESH_AVAILABLE_ROUTE:
@@ -169,6 +172,14 @@ const addMessageFromBlock = (
   return newState;
 };
 
+const block = (draft: DigestedConversationType | undefined) => {
+  if (draft == null) {
+    return draft;
+  }
+  draft.blocked = true;
+  return draft;
+};
+
 const continueRoute = (
   config: ConversationReducerConfigurationType,
   draft: DigestedConversationType | undefined,
@@ -197,6 +208,7 @@ const continueRoute = (
 
     return draft;
   }
+
   if (
     nextMessage?.name === CONTACT_NAMES.SELF &&
     draft.nextMessageInQueue == null
@@ -218,6 +230,14 @@ const continueRoute = (
     if (message.name === CONTACT_NAMES.SELF) {
       message.clip = BubblePath(message.width, message.height, 16, true);
       removePreviousTail(previousMessage);
+    }
+    //Hacky but easiest way to make messages blockable programmatically
+    if (
+      [SPAM2_BLOCKABLE_TRIGGER_MESSAGE].includes(
+        convertMessageToString(nextMessage.messageContent),
+      )
+    ) {
+      draft.blockable = true;
     }
     draft.exchanges.push(message);
     draft.activePath.shift();

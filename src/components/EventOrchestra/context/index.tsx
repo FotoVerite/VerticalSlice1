@@ -20,7 +20,7 @@ const EventOrchestraContextProvider: FC<
   const setDefaultMessageEventState = (state: MessageAppContactsEventType) => {
     for (const name of Object.values(CONTACT_NAMES)) {
       if (state[name] === undefined) {
-        state[name] = {views: [], routes: {}};
+        state[name] = {views: [], routes: {}, blocked: false};
       }
     }
     return state;
