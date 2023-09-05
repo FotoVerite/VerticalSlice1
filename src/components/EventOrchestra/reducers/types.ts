@@ -3,6 +3,7 @@ import {APP_NAMES} from 'components/apps/types';
 
 export enum EVENTS_REDUCER_ACTIONS {
   MESSAGE_APP_CONVERSATION_SEEN,
+  MESSAGE_APP_CONVERSATION_BLOCK,
   MESSAGE_APP_ROUTE_CREATE,
   MESSAGE_APP_ROUTE_UPDATE,
 }
@@ -51,6 +52,10 @@ export type AddMessageAppConversationSeenEventAction = {
   type: EVENTS_REDUCER_ACTIONS.MESSAGE_APP_CONVERSATION_SEEN;
   payload: {name: CONTACT_NAMES};
 };
+export type BlockMessageAppConversationEventAction = {
+  type: EVENTS_REDUCER_ACTIONS.MESSAGE_APP_CONVERSATION_BLOCK;
+  payload: {name: CONTACT_NAMES};
+};
 
 export type CreateMessageAppRouteEventAction = {
   type: EVENTS_REDUCER_ACTIONS.MESSAGE_APP_ROUTE_CREATE;
@@ -75,5 +80,6 @@ export type UpdateMessageAppRouteEventAction = {
 
 export type EventsReducerActionsType =
   | AddMessageAppConversationSeenEventAction
+  | BlockMessageAppConversationEventAction
   | CreateMessageAppRouteEventAction
   | UpdateMessageAppRouteEventAction;

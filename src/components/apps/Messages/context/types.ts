@@ -53,6 +53,10 @@ export type RouteChosenConditionType = {
   [key: string]: {chosen?: string[]; not_chosen?: string[]; finished?: boolean};
 };
 
+export type RouteBlockedConditionType = {
+  [key: string]: {blocked: boolean};
+};
+
 export type RouteViewedConditionType = {
   lt?: number;
   lte?: number;
@@ -64,6 +68,7 @@ export type RouteConditionsType = {
   [key in CONTACT_NAMES]?: {
     views?: RouteViewedConditionType;
     routes?: RouteChosenConditionType;
+    blocked?: RouteBlockedConditionType;
   };
 };
 

@@ -176,7 +176,10 @@ const block = (draft: DigestedConversationType | undefined) => {
   if (draft == null) {
     return draft;
   }
-  draft.blocked = true;
+  draft.eventAction = {
+    type: EVENTS_REDUCER_ACTIONS.MESSAGE_APP_CONVERSATION_BLOCK,
+    payload: {name: draft.name},
+  };
   return draft;
 };
 

@@ -47,12 +47,13 @@ import {NOTIFICATIONS_REDUCER_ACTIONS} from 'components/Notifications/reducers/n
 import {leo} from '../assets/messages/leo';
 import {lenny} from '../assets/messages/lenny';
 import {spam2} from '../assets/messages/spam2';
+import {produce} from 'immer';
 
 //defaults for empty app
 export const MessagesContext = React.createContext<MessagesContextTypeDigested>(
   {},
 );
-const conversations: ConversationType[] = [
+const conversationStartingState: ConversationType[] = [
   greg,
   zola,
   spam1,
@@ -84,7 +85,7 @@ const MessagesContextProvider: FC<MessagesContextTypeDigest> = props => {
 
   const eventDispatch = eventContext.events.dispatch;
   const events = eventContext.events.state;
-
+  const [conversations, setConversations] = useState(conversationStartingState);
   const [media, setMedia] = useState<ReactElement>();
   const [listCovered, setListCovered] = useState<boolean>(false);
   const [sendNotifications, setSendNotifications] = useState<
@@ -105,7 +106,7 @@ const MessagesContextProvider: FC<MessagesContextTypeDigest> = props => {
         return c;
       })
       .sort(sortConversations(events));
-  }, [events]);
+  }, [conversations, events]);
 
   const [prevConversations, setPreConversations] = useState(
     filteredConversations,
@@ -184,7 +185,7 @@ const MessagesContextProvider: FC<MessagesContextTypeDigest> = props => {
       _conversation.availableEventRoutes = available.map(a => a.id);
       return _conversation;
     });
-  }, [events]);
+  }, [conversations, events]);
 
   useEffect(() => {
     if (conversation?.eventAction != null) {
@@ -197,6 +198,35 @@ const MessagesContextProvider: FC<MessagesContextTypeDigest> = props => {
       eventDispatch(newMessage.eventAction);
     }
   }, [newMessage?.eventAction, eventDispatch]);
+
+  useEffect(() => {
+    const toBlock = Object.entries(events.Message)
+      .filter(contact => contact[1].blocked)
+      .map(contact => contact[0] as CONTACT_NAMES);
+    const prevBlocked = conversations.filter(c => c.blocked).map(c => c.name);
+    const needToBlock = toBlock.filter(b => !prevBlocked.includes(b));
+    if (needToBlock.length > 0) {
+      const update = produce(conversations, draft => {
+        needToBlock.forEach(name => {
+          const index = draft.findIndex(c => c.name === name);
+          draft[index].blocked = true;
+        });
+        return draft;
+      });
+      setConversations(update);
+    }
+  }, [conversations, events]);
+
+  useEffect(() => {
+    const blocked = conversations.filter(c => c.blocked).map(c => c.name);
+    if (conversation && blocked.includes(conversation.name)) {
+      dispatchConversation({type: CONVERSATION_REDUCER_ACTIONS.RESET});
+    }
+
+    if (newMessage && blocked.includes(newMessage.name)) {
+      dispatchNewMessage({type: CONVERSATION_REDUCER_ACTIONS.RESET});
+    }
+  }, [conversation, conversations, newMessage]);
 
   useEffect(() => {
     dispatchConversation({

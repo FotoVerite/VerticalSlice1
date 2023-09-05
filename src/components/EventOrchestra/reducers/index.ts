@@ -14,6 +14,9 @@ const eventsReducer = produce(
       case EVENTS_REDUCER_ACTIONS.MESSAGE_APP_CONVERSATION_SEEN:
         draft.Message[action.payload.name].views.push(new Date());
         return draft;
+      case EVENTS_REDUCER_ACTIONS.MESSAGE_APP_CONVERSATION_BLOCK:
+        draft.Message[action.payload.name].blocked = true;
+        return draft;
       case EVENTS_REDUCER_ACTIONS.MESSAGE_APP_ROUTE_CREATE: {
         const {routeId, ...props} = action.payload;
         const routeInfo = draft.Message[action.payload.name].routes;

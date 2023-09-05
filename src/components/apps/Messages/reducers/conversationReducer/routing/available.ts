@@ -78,6 +78,23 @@ const routeFinished = (
   return finished == viewed.finished;
 };
 
+const routeHasBeenBlockedCheck = (
+  name: CONTACT_NAMES,
+  messageEvents: MessageAppContactsEventType,
+  conditions: RouteConditionsType,
+) => {
+  const routeConditions = conditions[name]?.blocked || {};
+  const routeConditionsKeys = Object.keys(routeConditions);
+  if (routeConditionsKeys.length === 0) {
+    return true;
+  }
+  const blockedBoolean = messageEvents[name]?.blocked || undefined;
+  return routeConditionsKeys.reduce((acc, key) => {
+    const routeCondition = routeConditions[key] || [];
+    return acc && routeCondition.blocked === blockedBoolean;
+  }, true);
+};
+
 const routeHasBeenChosenCheck = (
   name: CONTACT_NAMES,
   messageEvents: MessageAppContactsEventType,
@@ -114,6 +131,8 @@ export const messageAppConditionsMet = (
       ret && contactHasBeenViewedCheck(key as CONTACT_NAMES, state, conditions);
     ret =
       ret && routeHasBeenChosenCheck(key as CONTACT_NAMES, state, conditions);
+    ret =
+      ret && routeHasBeenBlockedCheck(key as CONTACT_NAMES, state, conditions);
   });
   return ret;
 };
