@@ -314,7 +314,10 @@ const resolveSnapshotAndUpdateOffset = async (
   item: DigestedConversationListItem,
 ) => {
   const acc = await memo;
-  if (item.type !== MESSAGE_TYPE.SNAPSHOT) {
+  if (
+    item.type !== MESSAGE_TYPE.SNAPSHOT &&
+    item.type !== MESSAGE_TYPE.BACKGROUND_SNAPSHOT
+  ) {
     item.offset += acc.offset;
     acc.arr.push(item);
     return acc;

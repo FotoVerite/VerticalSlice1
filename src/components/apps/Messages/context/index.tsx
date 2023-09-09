@@ -6,6 +6,7 @@ import React, {
   useEffect,
   useMemo,
   useReducer,
+  useRef,
   useState,
 } from 'react';
 import {
@@ -30,7 +31,7 @@ import {
   sortConversations,
   sendNotification,
   determineLogLine,
-  convertMessageToString,
+  createSpam,
 } from './conversationFunctions';
 import {NotificationsContext} from 'components/Notifications/context';
 import {spam1} from '../assets/messages/spam1';
@@ -42,22 +43,22 @@ import {chris} from '../assets/messages/chris';
 import {customer_service} from '../assets/messages/customer_service';
 import {CONTACT_NAMES} from './usersMapping';
 import {getUnfinishedRouteID} from '../reducers/conversationReducer/routing/seen';
-import {greg} from '../assets/messages/greg';
-import {NOTIFICATIONS_REDUCER_ACTIONS} from 'components/Notifications/reducers/notificationsReducer/types';
 import {leo} from '../assets/messages/leo';
 import {lenny} from '../assets/messages/lenny';
 import {spam2} from '../assets/messages/spam2';
 import {produce} from 'immer';
+import NotificationEmitter, {EMITTER_EVENTS} from 'emitter';
+import {spam3} from '../assets/messages/spam3';
 
 //defaults for empty app
 export const MessagesContext = React.createContext<MessagesContextTypeDigested>(
   {},
 );
 const conversationStartingState: ConversationType[] = [
-  greg,
   zola,
   spam1,
   spam2,
+  spam3,
   micheal,
   chris,
   mileena,
@@ -91,6 +92,7 @@ const MessagesContextProvider: FC<MessagesContextTypeDigest> = props => {
   const [sendNotifications, setSendNotifications] = useState<
     SendNotificationType[]
   >([]);
+  const beganSpamAttack = useRef(false);
 
   const filteredConversations = useMemo(() => {
     const state = conversations.map(c => {
@@ -302,39 +304,30 @@ const MessagesContextProvider: FC<MessagesContextTypeDigest> = props => {
   ]);
 
   useEffect(() => {
-    const unsentNotifications = [] as SendNotificationType[];
-    sendNotifications.forEach(notification => {
-      const {routeID, message} = notification;
-      const foundEvent = Object.keys(
-        events.Message[notification.conversation.name].routes,
-      ).find(id => id === routeID.toString());
-      if (foundEvent) {
-        notificationContext.notifications.dispatch({
-          type: NOTIFICATIONS_REDUCER_ACTIONS.ADD,
-          payload: {
-            data: {
-              active: true,
-              title: `Message From ${notification.conversation.name}`,
-              content: convertMessageToString(message),
-              timestamp: new Date(),
-              image: notification.conversation.heroImage,
-              onPress: () => digestConvo(notification.conversation),
-            },
-          },
-        });
-      } else {
-        unsentNotifications.push(notification);
-      }
+    NotificationEmitter.on(EMITTER_EVENTS.NOTIFICATION, name => {
+      const _conversation = conversations.filter(c => c.name === name)[0];
+      digestConvo(_conversation);
     });
-    if (unsentNotifications.length !== sendNotifications.length) {
-      setSendNotifications(unsentNotifications);
-    }
-  }, [
-    sendNotifications,
-    events.Message,
-    notificationContext.notifications,
-    digestConvo,
-  ]);
+    return () => {
+      NotificationEmitter.off(EMITTER_EVENTS.NOTIFICATION, () => {});
+    };
+  }, [conversations, digestConvo]);
+
+  // useEffect(() => {
+  //   if (!beganSpamAttack.current) {
+  //     const index = conversations.findIndex(
+  //       c => c.name === CONTACT_NAMES.SPAM3,
+  //     );
+  //     const spam = conversations[index];
+  //     if (spam.blocked) {
+  //       const update = produce(conversations, draft => {
+  //         draft.push(createSpam());
+  //       });
+  //       setConversations(update);
+  //       beganSpamAttack.current = true;
+  //     }
+  //   }
+  // }, [conversations]);
 
   return (
     <MessagesContext.Provider

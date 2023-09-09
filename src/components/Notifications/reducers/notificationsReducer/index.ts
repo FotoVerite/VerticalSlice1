@@ -13,7 +13,7 @@ const notificationReducer = produce(
     switch (action.type) {
       case NOTIFICATIONS_REDUCER_ACTIONS.ADD:
         action.payload.data.timestamp ||= new Date();
-        const notification = Object.assign(action.payload.data, {
+        const notification = Object.assign({}, action.payload.data, {
           index: draft.length,
         });
         draft.push(notification);

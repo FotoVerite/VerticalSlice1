@@ -51,7 +51,6 @@ const Conversation: FC<{shrink: SharedValue<number>}> = ({shrink}) => {
     digestedConversation.current !== context.conversation.state
   ) {
     const state = {...context.conversation.state};
-    console.log(state);
     state.exchanges = updateForLastMessage(state.exchanges);
     digestedConversation.current = state;
   }
@@ -60,8 +59,10 @@ const Conversation: FC<{shrink: SharedValue<number>}> = ({shrink}) => {
     if (context.conversation.state) {
       showConversation.value = withDelay(
         300,
-        withTiming(1, {duration: 750}, () => {
-          runOnJS(context.listCovered.set)(true);
+        withTiming(1, {duration: 750}, finished => {
+          if (finished) {
+            runOnJS(context.listCovered.set)(true);
+          }
         }),
       );
     } else {
@@ -119,6 +120,7 @@ const Conversation: FC<{shrink: SharedValue<number>}> = ({shrink}) => {
       <List
         dispatch={context.conversation.dispatch}
         animatedScrollRef={animatedScrollRef}
+        animationFinished={context.listCovered.state}
         conversation={digestedConversation.current}
         footerHeight={footerHeight}
         key={digestedConversation.current?.name}

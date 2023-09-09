@@ -21,11 +21,19 @@ export const DELIVERED_READ_HEIGHT = 20;
 
 const List: FC<
   {
+    animationFinished: boolean;
     conversation: DigestedConversationType | undefined;
     dispatch: (action: ConversationReducerActionsType) => void;
     newMessage?: boolean;
   } & ConversationShowRefs
-> = ({animatedScrollRef, conversation, dispatch, footerHeight, newMessage}) => {
+> = ({
+  animationFinished,
+  animatedScrollRef,
+  conversation,
+  dispatch,
+  footerHeight,
+  newMessage,
+}) => {
   const {width} = useWindowDimensions();
   const scrollHandler = useScrollViewOffset(animatedScrollRef);
 
@@ -37,6 +45,7 @@ const List: FC<
       data={conversation?.exchanges}
       renderItem={({item, index}) => (
         <ListItem
+          animationFinished={animationFinished}
           contactName={conversation?.name}
           dispatch={dispatch}
           item={item}
@@ -46,9 +55,9 @@ const List: FC<
           scrollRef={animatedScrollRef}
         />
       )}
-      keyExtractor={(item: DigestedConversationListItem, index) =>
-        `${conversation?.name}-${index}`
-      }
+      keyExtractor={(item: DigestedConversationListItem, index) => {
+        return `${conversation?.name}-${index}`;
+      }}
       ListHeaderComponent={newMessage ? NewMessageListHeader : ListHeader}
       ListFooterComponent={
         <Footer

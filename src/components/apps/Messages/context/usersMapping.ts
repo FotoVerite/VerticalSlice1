@@ -37,7 +37,9 @@ export enum CONTACT_NAMES {
   DEFAULT = 'Default',
   SEAMLESS = '30368',
   SPAM1 = '1-222-666-1337',
-  SPAM2 = '1-223-666-1337',
+  SPAM2 = '1-225-666-1337',
+  SPAM3 = '1-226-666-1337',
+  SPAM4 = '1-227-666-1337',
 }
 
 export type UserMappingType = {
@@ -71,6 +73,14 @@ export const contactConsts: {[key in CONTACT_NAMES]: UserMappingType} = {
   'Movie Night': {avatar: darkoAvatar, colors: ['#6b6b6d', '#363243']},
   Self: {avatar: defaultAvatar, colors: ['blue', '#363243']},
   [CONTACT_NAMES.SPAM2]: {
+    avatar: defaultAvatar,
+    colors: ['#6b6b6d', '#363243'],
+  },
+  [CONTACT_NAMES.SPAM3]: {
+    avatar: defaultAvatar,
+    colors: ['#6b6b6d', '#363243'],
+  },
+  [CONTACT_NAMES.SPAM4]: {
     avatar: defaultAvatar,
     colors: ['#6b6b6d', '#363243'],
   },

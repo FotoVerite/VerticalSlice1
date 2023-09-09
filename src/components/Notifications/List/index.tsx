@@ -31,13 +31,22 @@ const styles = StyleSheet.create({
   },
 
   list: {
-    paddingHorizontal: theme.spacing.p2,
     flexGrow: 1,
+    paddingHorizontal: 24,
+  },
+
+  listFooter: {
+    height: 0,
+    marginBottom: theme.spacing.p2 + 50,
   },
 });
 
 function Separator() {
   return <View style={styles.itemSeparator} />;
+}
+
+function ListFooter() {
+  return <View style={styles.listFooter} />;
 }
 
 const renderItem: ListRenderItem<NotificationType> = ({item}) => (
@@ -64,14 +73,16 @@ const NotificationsList: FC<{left: SharedValue<number>}> = ({left}) => {
         {width: width, height: height, left: width},
         {left: left},
       ]}>
-      <View style={[styles.list, {marginTop: inset.top}]}>
+      <View style={[{marginTop: inset.top}]}>
         <Animated.FlatList
+          style={styles.list}
           ref={aref}
           data={notificationsContext.notifications.state}
           renderItem={renderItem}
           ListHeaderComponent={HEADER}
           ItemSeparatorComponent={Separator}
           keyExtractor={(item: any, index) => index + '-notification'}
+          ListFooterComponent={ListFooter()}
           scrollEventThrottle={16}
         />
       </View>

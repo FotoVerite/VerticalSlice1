@@ -12,6 +12,7 @@ const eventsReducer = produce(
   ): EventOrchestraObjectType => {
     switch (action.type) {
       case EVENTS_REDUCER_ACTIONS.MESSAGE_APP_CONVERSATION_SEEN:
+        console.log('MESSAGE_APP_CONVERSATION_SEEN', action.payload.name);
         draft.Message[action.payload.name].views.push(new Date());
         return draft;
       case EVENTS_REDUCER_ACTIONS.MESSAGE_APP_CONVERSATION_BLOCK:
@@ -27,7 +28,15 @@ const eventsReducer = produce(
           position: position,
           ...props,
         };
-        console.log('MESSAGE_APP_ROUTE_CREATE', routeInfo[routeId.toString()]);
+        console.log(
+          'MESSAGE_APP_ROUTE_CREATE',
+          routeId.toString(),
+          routeInfo[routeId.toString()],
+        );
+        if (action.payload.notification) {
+          console.log('NOTIFICATION', action.payload.notification.title);
+          draft.NOTIFICATIONS.push(action.payload.notification);
+        }
         return draft;
       }
       case EVENTS_REDUCER_ACTIONS.MESSAGE_APP_ROUTE_UPDATE: {

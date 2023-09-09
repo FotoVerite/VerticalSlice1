@@ -68,7 +68,7 @@ export type RouteConditionsType = {
   [key in CONTACT_NAMES]?: {
     views?: RouteViewedConditionType;
     routes?: RouteChosenConditionType;
-    blocked?: RouteBlockedConditionType;
+    blocked?: boolean;
   };
 };
 
@@ -82,6 +82,7 @@ export type MessageRouteType = {
 
 export type EventBasedRouteType = {
   id: number;
+  backgroundColor?: string;
   delay?: number;
   conditions?: RouteConditionsType;
   exchanges: ExchangeBlockType[];
@@ -138,6 +139,7 @@ export type ExchangeBlockType = {
 export type MessageType = string | MessageWithMetaType;
 
 export type MessageWithMetaType =
+  | BackgroundSnapshotMessageWithMeta
   | EmojiMessageWithMeta
   | GlyphMessageWithMeta
   | ImageMessageWithMeta
@@ -179,6 +181,12 @@ export interface NumberMessageWithMeta extends AbstractMessageWithMetaType {
 
 export interface SnapshotMessageWithMeta extends AbstractMessageWithMetaType {
   type: MESSAGE_TYPE.SNAPSHOT;
+  message: {backup: string; filename: string};
+}
+
+export interface BackgroundSnapshotMessageWithMeta
+  extends AbstractMessageWithMetaType {
+  type: MESSAGE_TYPE.BACKGROUND_SNAPSHOT;
   message: {backup: string; filename: string};
 }
 

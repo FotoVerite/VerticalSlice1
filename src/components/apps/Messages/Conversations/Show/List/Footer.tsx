@@ -4,7 +4,10 @@ import {
   ConversationReducerActionsType,
 } from 'components/apps/Messages/reducers/conversationReducer/types';
 import React, {FC} from 'react';
-import {TouchableHighlight} from 'react-native-gesture-handler';
+import {
+  TouchableHighlight,
+  TouchableWithoutFeedback,
+} from 'react-native-gesture-handler';
 import Animated, {SharedValue, useAnimatedStyle} from 'react-native-reanimated';
 
 import theme from 'themes';
@@ -29,11 +32,11 @@ const Footer: FC<{
           <P style={{textAlign: 'right'}}>skip conversation</P>
         </TouchableHighlight>
       )}
-      {blockable && (
-        <TouchableHighlight
+      {true && (
+        <TouchableWithoutFeedback
           onPress={() => dispatch({type: CONVERSATION_REDUCER_ACTIONS.BLOCK})}>
           <P style={{textAlign: 'center'}}>Block This Phone Number</P>
-        </TouchableHighlight>
+        </TouchableWithoutFeedback>
       )}
     </Animated.View>
   );

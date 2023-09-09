@@ -11,6 +11,7 @@ import {TypingBubble} from './TypingBubble';
 import {ConversationReducerActionsType} from 'components/apps/Messages/reducers/conversationReducer/types';
 
 const ListItem: FC<{
+  animationFinished: boolean;
   contactName: string;
   dispatch: (action: ConversationReducerActionsType) => void;
   item: DigestedConversationListItem;
@@ -19,6 +20,7 @@ const ListItem: FC<{
   scrollRef: React.RefObject<Animated.ScrollView>;
   group: boolean;
 }> = ({
+  animationFinished,
   contactName,
   dispatch,
   item,
@@ -43,6 +45,7 @@ const ListItem: FC<{
   } else {
     return (
       <BaseBubble
+        animationFinished={animationFinished}
         contactName={contactName}
         dispatch={dispatch}
         item={item}

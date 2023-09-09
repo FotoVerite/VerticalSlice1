@@ -20,9 +20,10 @@ import theme from 'themes';
 
 const ActiveNotificationContainer: FC<{
   dispatch: React.Dispatch<NotificationsReducerActionsType>;
+  displayIndex: number;
   index: number;
   notification: NotificationType;
-}> = ({dispatch, index, notification}) => {
+}> = ({displayIndex, dispatch, index, notification}) => {
   const {width} = useWindowDimensions();
 
   const visible = useSharedValue(0);
@@ -124,7 +125,7 @@ const ActiveNotificationContainer: FC<{
         ]}
         onLayout={(layout: LayoutChangeEvent) => {
           const itemHeight = layout.nativeEvent.layout.height;
-          setNotificationHeight(itemHeight);
+          setNotificationHeight(itemHeight + displayIndex * 10);
         }}>
         {
           <Notification

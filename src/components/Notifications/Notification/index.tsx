@@ -10,6 +10,21 @@ import {TouchableWithoutFeedback} from 'react-native-gesture-handler';
 import Sound from 'react-native-sound';
 import pingSound from '../assets/basic-ping.mp3';
 
+const popoverStyle = (popup: boolean) => {
+  if (!popup) {
+    return {};
+  }
+  return {
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: -3,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+  };
+};
+
 const Notification: FC<{
   notification: NotificationType;
   popup?: boolean;
@@ -44,6 +59,13 @@ const Notification: FC<{
     }
   }, [props.popup]);
 
+  const backgroundColor = () => {
+    if (!props.popup) {
+      ('#b2b0b092');
+    }
+    return props.notification.backgroundColor || '#dbdbd9';
+  };
+
   return (
     <TouchableWithoutFeedback
       onPress={() => {
@@ -56,9 +78,10 @@ const Notification: FC<{
         style={[
           styles.container,
           {
-            backgroundColor: props.popup ? '#dbdbd9' : '#b2b0b092',
+            backgroundColor: backgroundColor(),
             width: width - theme.spacing.p4,
           },
+          popoverStyle(props.popup),
         ]}>
         <Row>
           <Image source={image} style={styles.image} />
@@ -83,9 +106,13 @@ export default Notification;
 
 const styles = StyleSheet.create({
   container: {
-    borderRadius: 25,
+    borderRadius: 20,
     backgroundColor: '#b2b0b092',
     padding: theme.spacing.p1,
+    borderColor: '#b2b0b092',
+    borderWidth: 1,
+
+    elevation: 5,
   },
   contentContainer: {
     flexGrow: 1,

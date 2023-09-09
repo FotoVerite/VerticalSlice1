@@ -25,6 +25,7 @@ const ActiveNotifications: FC = () => {
           key={`${notification.index}-notification-${notification.title}`}
           notification={notification}
           dispatch={notificationsContext.notifications.dispatch}
+          displayIndex={idx}
           index={notification.index}
         />
       ))}

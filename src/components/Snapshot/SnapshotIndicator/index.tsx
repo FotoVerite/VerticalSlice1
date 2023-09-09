@@ -107,7 +107,7 @@ const SnapshotIndicator: FC = () => {
   };
 
   useEffect(() => {
-    if (snapshotContext.image) {
+    if (snapshotContext.image && !snapshotContext.takeQuietly.state) {
       setSnapshot(snapshotContext.image);
       snapshotContext.indicatorRunning.set(true);
     }

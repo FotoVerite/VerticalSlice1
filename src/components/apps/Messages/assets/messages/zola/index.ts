@@ -18,14 +18,21 @@ import {zara_contact_conversation} from './routes/contact_conversation';
 import {i_dont_feel_secure} from './routes/i_dont_feel_secure';
 import {can_i_have_chris} from './routes/can_i_have_chris';
 import {can_i_have_mileena} from './routes/can_i_have_mileena';
+import {update_on_the_phone} from './routes/update_on_phone';
+import {i_am_being_harassed} from './routes/i_am_being_harassed';
 
 export const zola: ConversationType = {
   name: CONTACT_NAMES.ZOLA,
   tags: [CONTACT_NAMES.ZOLA, 'Zara', 'Hopescope', 'Panopticon', 'Ads', 'Money'],
   heroImage: zolaAvatar,
   interfaceColor: getColorFromContacts(CONTACT_NAMES.ZOLA)[0],
-  eventBasedRoutes: [how_is_the_phone_coming, zara_do_you_want_any_contacts],
+  eventBasedRoutes: [
+    how_is_the_phone_coming,
+    zara_do_you_want_any_contacts,
+    update_on_the_phone,
+  ],
   routes: [
+    i_am_being_harassed,
     borked_phone,
     your_new_video,
     i_fell_for_a_spam_did_not_send_images,

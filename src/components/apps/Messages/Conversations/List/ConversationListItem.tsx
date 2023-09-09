@@ -48,7 +48,9 @@ const ConversationListItem: FC<{conversation: ConversationType}> = ({
   return (
     <TouchableOpacity
       onPress={() => {
-        context.conversation.digest(conversation);
+        if (!context.conversation.state) {
+          context.conversation.digest(conversation);
+        }
       }}>
       <Row>
         <View

@@ -75,7 +75,7 @@ const routeFinished = (
   if (finished == null) {
     return true;
   }
-  return finished == viewed.finished;
+  return finished === viewed.finished;
 };
 
 const routeHasBeenBlockedCheck = (
@@ -83,16 +83,12 @@ const routeHasBeenBlockedCheck = (
   messageEvents: MessageAppContactsEventType,
   conditions: RouteConditionsType,
 ) => {
-  const routeConditions = conditions[name]?.blocked || {};
-  const routeConditionsKeys = Object.keys(routeConditions);
-  if (routeConditionsKeys.length === 0) {
+  const blockCondition = conditions[name]?.blocked;
+  if (!blockCondition) {
     return true;
   }
-  const blockedBoolean = messageEvents[name]?.blocked || undefined;
-  return routeConditionsKeys.reduce((acc, key) => {
-    const routeCondition = routeConditions[key] || [];
-    return acc && routeCondition.blocked === blockedBoolean;
-  }, true);
+  const blockedBoolean = messageEvents[name]?.blocked || false;
+  return blockedBoolean === blockCondition;
 };
 
 const routeHasBeenChosenCheck = (
@@ -106,6 +102,9 @@ const routeHasBeenChosenCheck = (
     return true;
   }
   const viewedRoutes = messageEvents[name]?.routes || {};
+  if (name === CONTACT_NAMES.SPAM3) {
+    return true;
+  }
   return routeConditionsKeys.reduce((acc, key) => {
     const routeCondition = routeConditions[key] || [];
     return (

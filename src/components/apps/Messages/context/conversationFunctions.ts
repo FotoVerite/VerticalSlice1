@@ -4,7 +4,12 @@ import {
   getLastSeenRoute,
   getUnfinishedRouteID,
 } from '../reducers/conversationReducer/routing/seen';
-import {ConversationType, ExchangeBlockType, MessageType} from './types';
+import {
+  ConversationType,
+  EventBasedRouteType,
+  ExchangeBlockType,
+  MessageType,
+} from './types';
 import {
   findAvailableRoutes,
   messageAppConditionsMet,
@@ -21,6 +26,9 @@ import {
 } from 'components/EventOrchestra/reducers/types';
 import {convertToPathExchanges} from '../reducers/conversationReducer/digestion';
 import {SendNotificationType} from '.';
+import NotificationEmitter, {EMITTER_EVENTS} from 'emitter';
+import {createSpamAccount, createSpamNotification} from './spamFactory';
+import {interpolateColor} from 'react-native-reanimated';
 
 export const sendNotification = async (
   conversation: ConversationType,
@@ -30,37 +38,54 @@ export const sendNotification = async (
     React.SetStateAction<SendNotificationType[]>
   >,
 ) => {
-  let message: MessageType | undefined;
-
-  const route = findAvailableRoutes(
+  findAvailableRoutes(
     conversation.name,
     conversation.eventBasedRoutes || [],
     events,
-  ).shift();
-  await delayFor(route?.delay || 0);
+  ).forEach(route =>
+    dispatchEvent(conversation, eventDispatch, setSendNotifications, route),
+  );
+};
 
-  if (route) {
-    eventDispatch({
-      type: EVENTS_REDUCER_ACTIONS.MESSAGE_APP_ROUTE_CREATE,
-      payload: {routeId: route.id, name: conversation.name, finished: true},
-    });
-    message = getLastMessageFromExchanges(route.exchanges);
-    setSendNotifications(arr => {
-      return arr.concat({
-        conversation: conversation,
-        routeID: route.id,
-        message: message,
-      });
-    });
-  } else if (conversation.exchanges.length > 0) {
-    message = conversation.exchanges
-      .slice(-1)[0]
-      .exchanges.slice(-1)[0]
-      .messages.slice(-1)[0];
-  }
-  if (message == null) {
+const dispatchEvent = async (
+  conversation: ConversationType,
+  eventDispatch: (action: EventsReducerActionsType) => void,
+  setSendNotifications: React.Dispatch<
+    React.SetStateAction<SendNotificationType[]>
+  >,
+  route?: EventBasedRouteType,
+) => {
+  if (route == null) {
     return;
   }
+  await delayFor(route?.delay || 0);
+  const message = getLastMessageFromExchanges(route.exchanges);
+  const notification = {
+    active: true,
+    backgroundColor: route.backgroundColor,
+    title: `Message From ${conversation.name}`,
+    content: convertMessageToString(message),
+    timestamp: new Date(),
+    image: conversation.heroImage,
+    onPress: () =>
+      NotificationEmitter.emit(EMITTER_EVENTS.NOTIFICATION, conversation.name),
+  };
+  eventDispatch({
+    type: EVENTS_REDUCER_ACTIONS.MESSAGE_APP_ROUTE_CREATE,
+    payload: {
+      routeId: route.id,
+      name: conversation.name,
+      finished: true,
+      notification: notification,
+    },
+  });
+  setSendNotifications(arr => {
+    return arr.concat({
+      conversation: conversation,
+      routeID: route.id.toString(),
+      message: message,
+    });
+  });
 };
 
 const determineTime = (
@@ -213,6 +238,8 @@ export const convertMessageToString = (message: MessageType) => {
         return `${message.message.name}`;
       case MESSAGE_TYPE.SNAPSHOT:
         return 'Send Snapshot';
+      case MESSAGE_TYPE.BACKGROUND_SNAPSHOT:
+        return 'Send Snapshot';
       case MESSAGE_TYPE.VCARD:
         return `${message.message.name} Contact Card`;
       default:
@@ -221,4 +248,44 @@ export const convertMessageToString = (message: MessageType) => {
   } else {
     return message;
   }
+};
+
+export const createSpam = () => {
+  const spam4 = createSpamAccount();
+  const startingNotification = ['Are you happy now?'].map((message, index) =>
+    createSpamNotification(
+      index,
+      spam4.name,
+      message,
+      undefined,
+      index * 1000 + 1000,
+    ),
+  );
+  const messages = [
+    "You're so worthless you know that",
+    "I'd slit my own throat if I was you",
+    'Kike',
+    "I'd rape you if I could",
+    'Faggot',
+    'You never got people, you never got yourself, you never got anything',
+    "You're a parasite, a rat, a cockroach",
+    'Fucking die',
+    'Everyone would be better off without you',
+  ];
+  const color = (size: number, index: number) =>
+    interpolateColor(index, [0, size], ['#f2edee', '#db2121']);
+  const notifications = startingNotification.concat(
+    messages.map((message, index) => {
+      const multiplier = index + 1;
+      return createSpamNotification(
+        index + 1,
+        spam4.name,
+        message,
+        color(messages.length, index),
+        multiplier * 2000 - multiplier * 100,
+      );
+    }),
+  );
+  spam4.eventBasedRoutes = notifications;
+  return spam4;
 };

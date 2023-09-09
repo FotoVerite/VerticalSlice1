@@ -19,6 +19,7 @@ export enum MESSAGE_TYPE {
   IMAGE = 'image',
   GLYPH = 'glyph',
   NUMBER = 'number',
+  BACKGROUND_SNAPSHOT = 'background-snapshot',
   SNAPSHOT = 'snapshot',
   STRING = 'string',
   VCARD = 'vcard',
@@ -27,6 +28,7 @@ export enum EFFECT_TYPE {
   FULL_REPLACEMENT,
   GLITCH,
   LOGLINE_REPLACEMENT,
+  SNAPSHOT,
 }
 
 export type MessageEffectType = {
@@ -124,6 +126,12 @@ export interface DigestedConversationSnapShotItemType
   type: MESSAGE_TYPE.SNAPSHOT;
 }
 
+export interface DigestedConversationBackgroundSnapShotItemType
+  extends AbstractMetaDigestedConversationItemType {
+  content: {image?: SkImage; backup: string; filename: string};
+  type: MESSAGE_TYPE.BACKGROUND_SNAPSHOT;
+}
+
 export interface DigestedConversationVCardItemType
   extends AbstractMetaDigestedConversationItemType {
   content: ConversationType;
@@ -137,6 +145,7 @@ export type DigestedConversationListItem =
   | DigestedConversationGlyphItemType
   | DigestedConversationNumberItemType
   | DigestedConversationTimeType
+  | DigestedConversationBackgroundSnapShotItemType
   | DigestedConversationSnapShotItemType
   | DigestedConversationStringItemType
   | DigestedConversationVCardItemType;

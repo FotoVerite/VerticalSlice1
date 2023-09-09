@@ -1,14 +1,15 @@
-import React, {FC, useCallback, useReducer, useState} from 'react';
+import React, {FC, useCallback, useReducer} from 'react';
 import {
   EventOrchestraContextTypeDigest,
   EventOrchestraContextTypeDigested,
-  EventOrchestraObjectType,
-  MessageAppContactsEventType,
 } from './types';
 import {APP_NAMES} from 'components/apps/types';
 import {CONTACT_NAMES} from 'components/apps/Messages/context/usersMapping';
 import eventsReducer from '../reducers';
-import {EventsReducerActionsType} from '../reducers/types';
+import {
+  EventsReducerActionsType,
+  MessageAppContactsEventType,
+} from '../reducers/types';
 
 //defaults for empty app
 export const EventOrchestraContext =
@@ -27,6 +28,7 @@ const EventOrchestraContextProvider: FC<
   };
 
   const [events, dispatch] = useReducer(eventsReducer, {
+    NOTIFICATIONS: [],
     [APP_NAMES.MESSAGE]: setDefaultMessageEventState({}),
   });
 

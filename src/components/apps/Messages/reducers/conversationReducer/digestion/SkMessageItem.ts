@@ -131,6 +131,13 @@ const calculateWidthHeightAndContent = (
         content: message.message,
         cursorVector: {x: itemWidth + 2, y: 0},
       };
+    case MESSAGE_TYPE.BACKGROUND_SNAPSHOT:
+      return {
+        width: itemWidth,
+        height: 1000,
+        content: message.message,
+        cursorVector: {x: itemWidth + 2, y: 0},
+      };
     case MESSAGE_TYPE.IMAGE:
       const imageDimensions = Image.resolveAssetSource(
         message.message as ImageSourcePropType,

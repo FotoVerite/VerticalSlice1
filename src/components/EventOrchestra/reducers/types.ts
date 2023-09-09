@@ -1,3 +1,4 @@
+import {NotificationDataType} from 'components/Notifications/reducers/notificationsReducer/types';
 import {CONTACT_NAMES} from 'components/apps/Messages/context/usersMapping';
 import {APP_NAMES} from 'components/apps/types';
 
@@ -11,16 +12,6 @@ export enum EVENTS_REDUCER_ACTIONS {
 export type MessageAppContactsEventType = {
   [key in CONTACT_NAMES]: MessageAppEvents;
 };
-
-export type NotificationsEventType = {}[];
-export enum NOTIFICATION_EVENT_TYPE {
-  MESSAGE,
-}
-export type MessageNotificationEventType = {
-  type: NOTIFICATION_EVENT_TYPE.MESSAGE;
-  payload: {name: CONTACT_NAMES; content: string};
-};
-export type NotificationEvent = MessageNotificationEventType[];
 
 export type MessageRouteEventDataType = {
   createdAt: Date;
@@ -42,7 +33,7 @@ export type MessageAppEvents = {
 };
 
 export type MessageEventType = {
-  ['Notifications']: NotificationsEventType;
+  ['NOTIFICATIONS']: NotificationDataType[];
   [APP_NAMES.MESSAGE]: MessageAppContactsEventType;
 };
 
@@ -50,7 +41,7 @@ export type EventOrchestraObjectType = MessageEventType;
 
 export type AddMessageAppConversationSeenEventAction = {
   type: EVENTS_REDUCER_ACTIONS.MESSAGE_APP_CONVERSATION_SEEN;
-  payload: {name: CONTACT_NAMES};
+  payload: {name: CONTACT_NAMES; notification?: NotificationDataType};
 };
 export type BlockMessageAppConversationEventAction = {
   type: EVENTS_REDUCER_ACTIONS.MESSAGE_APP_CONVERSATION_BLOCK;
@@ -65,6 +56,7 @@ export type CreateMessageAppRouteEventAction = {
     chosen?: string;
     finished?: boolean;
     atIndex?: number;
+    notification?: NotificationDataType;
   };
 };
 

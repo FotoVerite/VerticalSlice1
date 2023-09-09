@@ -1,5 +1,5 @@
 import React, {FC, useContext} from 'react';
-import {TouchableWithoutFeedback, View, StyleSheet} from 'react-native';
+import {TouchableWithoutFeedback, View} from 'react-native';
 
 import {
   Canvas,
@@ -11,15 +11,17 @@ import {
 
 import {MessagesContext} from 'components/apps/Messages/context';
 
-import {DigestedConversationSnapShotItemType} from 'components/apps/Messages/reducers/conversationReducer/digestion/types';
+import {DigestedConversationBackgroundSnapShotItemType} from 'components/apps/Messages/reducers/conversationReducer/digestion/types';
 
 import {MediaImageElement} from '../../MediaViewer';
+import {getSnapshotPath} from 'components/Snapshot/context';
 
-import theme from 'themes';
-
-export const SnapshotBubbleRenderer: FC<
-  DigestedConversationSnapShotItemType & {clip: SkPath; image?: SkImage}
-> = ({avatar, leftSide, width, height, reaction, colors, clip, image}) => {
+export const BackgroundSnapshotRenderer: FC<
+  DigestedConversationBackgroundSnapShotItemType & {
+    clip: SkPath;
+    image?: SkImage;
+  }
+> = ({width, height, clip, image}) => {
   const context = useContext(MessagesContext);
 
   if (!image) {
@@ -60,25 +62,3 @@ export const SnapshotBubbleRenderer: FC<
     </TouchableWithoutFeedback>
   );
 };
-
-const styles = StyleSheet.create({
-  row: {
-    alignItems: 'flex-end',
-    padding: 0,
-    margin: 0,
-  },
-  avatarContainer: {
-    width: 30,
-    height: 30,
-    marginEnd: theme.spacing.p1,
-  },
-  avatar: {
-    width: 30,
-    height: 30,
-    borderRadius: theme.BorderRadius.normal,
-  },
-  time: {
-    fontSize: 10,
-    textAlign: 'center',
-  },
-});

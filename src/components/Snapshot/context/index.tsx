@@ -11,6 +11,8 @@ export const SnapShotContext = React.createContext<SnapShotContextTypeDigested>(
 const SnapShotContextProvider: FC<SnapShotContextTypeDigest> = props => {
   const [takeSnapShot, setTakeSnapShot] = useState<string>();
   const [takeBackground, setTakeBackground] = useState<boolean>();
+  const [takeQuietly, setTakeQuietly] = useState<string>();
+
   const [background, setBackground] = useState<SkImage>();
 
   const [image, setImage] = useState<undefined | null | SkImage>();
@@ -46,6 +48,18 @@ const SnapShotContextProvider: FC<SnapShotContextTypeDigest> = props => {
 
   useEffect(() => {
     const snapShot = async () => {
+      if (snapShotRef.current) {
+        const image = await makeImageFromView(snapShotRef.current);
+        setImage(image);
+      }
+    };
+    if (takeQuietly) {
+      snapShot().catch(console.error);
+    }
+  }, [snapShotRef, takeQuietly]);
+
+  useEffect(() => {
+    const snapShot = async () => {
       if (image && takeSnapShot) {
         await ReactNativeBlobUtil.fs.writeFile(
           getSnapshotPath(takeSnapShot),
@@ -61,10 +75,28 @@ const SnapShotContextProvider: FC<SnapShotContextTypeDigest> = props => {
     }
   }, [image, takeSnapShot]);
 
+  useEffect(() => {
+    const snapShot = async () => {
+      if (image && takeQuietly) {
+        await ReactNativeBlobUtil.fs.writeFile(
+          getSnapshotPath(takeQuietly),
+          image.encodeToBase64(),
+          'base64',
+        );
+        setTakeQuietly(undefined);
+        setImage(undefined);
+      }
+    };
+    if (image && takeQuietly) {
+      snapShot().catch(console.error);
+    }
+  }, [image, takeQuietly]);
+
   return (
     <SnapShotContext.Provider
       value={{
         background: {set: setBackground, state: background},
+        takeQuietly: {set: setTakeQuietly, state: takeQuietly},
         takeBackground: {state: takeBackground, set: setTakeBackground},
         takeSnapShot: {state: takeSnapShot, set: setTakeSnapShot},
         indicatorRunning: {state: indicatorRunning, set: setIndicatorRunning},

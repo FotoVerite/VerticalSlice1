@@ -9,6 +9,7 @@ import {ImageSourcePropType} from 'react-native';
 
 export type NotificationDataType = {
   active: boolean;
+  backgroundColor?: string;
   title: string;
   content: string;
   timestamp: Date;

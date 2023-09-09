@@ -1,4 +1,4 @@
-import React, {FC, useEffect, useRef} from 'react';
+import React, {FC, useContext, useEffect, useRef} from 'react';
 import Animated, {
   SharedValue,
   measure,
@@ -17,6 +17,7 @@ import {StyleSheet} from 'react-native';
 import theme from 'themes';
 import {
   BubbleItemType,
+  EFFECT_TYPE,
   MESSAGE_TYPE,
 } from 'components/apps/Messages/reducers/conversationReducer/digestion/types';
 import {delayFor} from 'common';
@@ -27,15 +28,15 @@ import {
 import {EmojiBubble} from './EmojiBubble';
 import {GlyphBubble} from './GlyphBubble';
 import {ImageBubble} from './ImageBubble';
-import {SnapshotBubble} from './SnapshotBubble';
 import {TextBubble} from './TextBubble';
 import Reaction from './Reaction';
 import {P} from 'common/styles/StyledText';
 import {VCardBubble} from './VCardBubble';
 import {NumberBubble} from './NumberBubble';
-import {original} from 'immer';
-import {useTiming} from 'react-native-redash';
 import {CONTACT_NAMES} from 'components/apps/Messages/context/usersMapping';
+import {SnapShotContext} from 'components/Snapshot/context';
+import {SnapshotBubble} from './SnapshotBubble';
+import {BackgroundSnapshotBubble} from './BackgroundSnapshot';
 
 const renderBubbleType = (
   dispatch: (action: ConversationReducerActionsType) => Promise<void>,
@@ -69,6 +70,16 @@ const renderBubbleType = (
           scrollRef={scrollRef}
         />
       );
+    case MESSAGE_TYPE.BACKGROUND_SNAPSHOT:
+      return (
+        <BackgroundSnapshotBubble
+          dispatch={dispatch}
+          {...item}
+          index={index}
+          scrollHandler={scrollHandler}
+          scrollRef={scrollRef}
+        />
+      );
     case MESSAGE_TYPE.STRING:
       return (
         <TextBubble
@@ -93,6 +104,7 @@ const renderBubbleType = (
 };
 
 export const BaseBubble: FC<{
+  animationFinished: boolean;
   contactName: CONTACT_NAMES;
   dispatch: (action: ConversationReducerActionsType) => Promise<void>;
   item: BubbleItemType;
@@ -101,6 +113,7 @@ export const BaseBubble: FC<{
   scrollRef: React.RefObject<Animated.ScrollView>;
   group: boolean;
 }> = ({
+  animationFinished,
   contactName,
   dispatch,
   item,
@@ -113,16 +126,21 @@ export const BaseBubble: FC<{
     avatar,
     alignItems,
     colors,
+    effect,
     height,
     leftSide,
     paddingBottom,
     reaction,
   } = item;
+  const SNAPSHOT_TYPES = [
+    MESSAGE_TYPE.SNAPSHOT,
+    MESSAGE_TYPE.BACKGROUND_SNAPSHOT,
+  ];
+  const isSnapshot = SNAPSHOT_TYPES.includes(item.type);
+  const snapshotContext = useContext(SnapShotContext);
   const originalHeight = useSharedValue<number>(item.height);
   const deliveredOpacity = useSharedValue(item.lastMessageSent ? 1 : 0);
-  const opacity = useSharedValue(
-    item.messageDelay && item.type !== MESSAGE_TYPE.SNAPSHOT ? 0 : 1,
-  );
+  const opacity = useSharedValue(item.messageDelay && !isSnapshot ? 0 : 1);
   const sentDispatch = useRef(false);
 
   const fadeInAnimation = useAnimatedStyle(() => {
@@ -158,11 +176,7 @@ export const BaseBubble: FC<{
       });
     };
     let mounted = true;
-    if (
-      !sentDispatch.current &&
-      item.messageDelay &&
-      item.type !== MESSAGE_TYPE.SNAPSHOT
-    ) {
+    if (!sentDispatch.current && item.messageDelay && !isSnapshot) {
       sentDispatch.current = true;
       renderNextMessage(
         item.messageDelay + (item.leftSide ? (item.typingDelay || 0) + 850 : 0),
@@ -191,6 +205,16 @@ export const BaseBubble: FC<{
       originalHeight.value = withTiming(item.height);
     }
   }, [deliveredOpacity, item.height, originalHeight]);
+
+  useEffect(() => {
+    const takeSnapshot = async () => {
+      await delayFor(100);
+      snapshotContext.takeQuietly.set(effect?.data);
+    };
+    if (animationFinished && effect?.type === EFFECT_TYPE.SNAPSHOT) {
+      takeSnapshot();
+    }
+  }, [animationFinished, effect]);
 
   return (
     <Animated.View

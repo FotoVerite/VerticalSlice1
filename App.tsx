@@ -47,7 +47,6 @@ function App(): JSX.Element {
       ['NotoColor']: NotoColor,
       ['HelveticaNeue']: HelveticaNeue,
     };
-
     return (
       <GestureHandlerRootView style={{flex: 1}}>
         <SafeAreaProvider>
